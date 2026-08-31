@@ -1,0 +1,2590 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Practice 0 — Review Session — Review</title>
+
+<!-- =========================================================
+     PYODIDE
+     ========================================================= -->
+
+<script
+    src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js">
+</script>
+
+
+<!-- =========================================================
+     STYLE
+     ========================================================= -->
+
+<style>
+
+:root {
+
+    --comillas-blue: #004A98;
+    --comillas-dark-blue: #00356E;
+    --comillas-gold: #D6A900;
+
+    --background: #F4F6F9;
+    --card-background: #FFFFFF;
+
+    --soft-blue: #EEF4FB;
+    --soft-gold: #FFF8E1;
+    --soft-green: #EDF8F1;
+    --soft-red: #FCEEEE;
+
+    --text-main: #2F343B;
+    --text-muted: #68717D;
+
+    --border: #D9DEE7;
+
+    --success: #287A4B;
+    --error: #B53C3C;
+
+    --shadow:
+        0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================================================
+   GENERAL
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    background:
+        var(--background);
+
+    color:
+        var(--text-main);
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    line-height: 1.55;
+}
+
+
+.container {
+
+    max-width: 1050px;
+
+    margin:
+        32px auto 60px;
+
+    padding:
+        0 24px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.header {
+
+    background:
+        var(--comillas-blue);
+
+    color: white;
+
+    border-bottom:
+        5px solid var(--comillas-gold);
+}
+
+
+.header-inner {
+
+    max-width: 1050px;
+
+    margin: 0 auto;
+
+    padding:
+        27px 32px 29px;
+}
+
+
+.course-name {
+
+    margin: 0;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    letter-spacing:
+        0.04em;
+
+    text-transform:
+        uppercase;
+
+    opacity: 0.85;
+}
+
+
+.practice-title {
+
+    margin:
+        4px 0 0;
+
+    font-size:
+        29px;
+
+    line-height:
+        1.2;
+
+    font-weight:
+        700;
+}
+
+
+.practice-subtitle {
+
+    margin:
+        8px 0 0;
+
+    font-size:
+        15px;
+
+    opacity:
+        0.88;
+}
+
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.student-card,
+.practice-info-card,
+.question-card,
+.summary-card {
+
+    background:
+        var(--card-background);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        10px;
+
+    box-shadow:
+        var(--shadow);
+
+    padding:
+        24px;
+
+    margin-bottom:
+        24px;
+}
+
+
+.student-card {
+
+    background:
+        var(--soft-blue);
+
+    border-left:
+        4px solid var(--comillas-blue);
+}
+
+
+.summary-card {
+
+    border-top:
+        4px solid var(--comillas-gold);
+}
+
+
+/* =========================================================
+   TEXT
+   ========================================================= */
+
+.section-label {
+
+    color:
+        var(--comillas-blue);
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        0.07em;
+
+    margin-bottom:
+        4px;
+}
+
+
+.question-title {
+
+    color:
+        var(--comillas-blue);
+
+    font-size:
+        21px;
+
+    line-height:
+        1.3;
+
+    margin:
+        2px 0 14px;
+}
+
+
+.instructions {
+
+    margin-bottom:
+        20px;
+}
+
+
+.instructions code {
+
+    background:
+        #EEF1F5;
+
+    border-radius:
+        4px;
+
+    padding:
+        2px 5px;
+
+    font-size:
+        0.95em;
+}
+
+
+/* =========================================================
+   STUDENT ID
+   ========================================================= */
+
+.student-id-label {
+
+    display:
+        block;
+
+    font-weight:
+        600;
+
+    margin:
+        8px 0 6px;
+}
+
+
+.student-id {
+
+    width:
+        300px;
+
+    max-width:
+        100%;
+
+    padding:
+        10px 12px;
+
+    border:
+        1px solid #BCC5D1;
+
+    border-radius:
+        6px;
+
+    background:
+        white;
+
+    font-size:
+        15px;
+}
+
+
+.student-id:focus {
+
+    outline:
+        2px solid rgba(0, 74, 152, 0.18);
+
+    border-color:
+        var(--comillas-blue);
+}
+
+
+/* =========================================================
+   CODE EDITOR
+   ========================================================= */
+
+.editor-label {
+
+    display:
+        block;
+
+    margin:
+        18px 0 7px;
+
+    font-weight:
+        600;
+}
+
+
+.code-editor {
+
+    width:
+        100%;
+
+    min-height:
+        260px;
+
+    resize:
+        vertical;
+
+    padding:
+        15px;
+
+    background:
+        #F8FAFC;
+
+    border:
+        1px solid #C9D1DC;
+
+    border-radius:
+        7px;
+
+    color:
+        #20252B;
+
+    font-family:
+        "Consolas",
+        "Courier New",
+        monospace;
+
+    font-size:
+        14px;
+
+    line-height:
+        1.5;
+
+    tab-size:
+        4;
+}
+
+
+.code-editor:focus {
+
+    outline:
+        2px solid rgba(0, 74, 152, 0.15);
+
+    border-color:
+        var(--comillas-blue);
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.button-row {
+
+    display:
+        flex;
+
+    gap:
+        10px;
+
+    flex-wrap:
+        wrap;
+
+    margin-top:
+        14px;
+}
+
+
+button {
+
+    border:
+        none;
+
+    border-radius:
+        6px;
+
+    padding:
+        10px 18px;
+
+    font-size:
+        14px;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+    transition:
+        background 0.15s ease,
+        opacity 0.15s ease;
+}
+
+
+button:disabled {
+
+    opacity:
+        0.52;
+
+    cursor:
+        not-allowed;
+}
+
+
+.run-button {
+
+    background:
+        var(--comillas-blue);
+
+    color:
+        white;
+}
+
+
+.run-button:hover:not(:disabled) {
+
+    background:
+        var(--comillas-dark-blue);
+}
+
+
+.check-button {
+
+    background:
+        var(--soft-gold);
+
+    color:
+        #493900;
+
+    border:
+        1px solid #E1C55E;
+}
+
+
+.check-button:hover:not(:disabled) {
+
+    background:
+        #FFF0B7;
+}
+
+
+.submit-button {
+
+    background:
+        var(--comillas-blue);
+
+    color:
+        white;
+
+    padding:
+        12px 23px;
+
+    font-size:
+        15px;
+}
+
+
+.submit-button:hover:not(:disabled) {
+
+    background:
+        var(--comillas-dark-blue);
+}
+
+
+/* =========================================================
+   OUTPUT
+   ========================================================= */
+
+.output-container {
+
+    margin-top:
+        20px;
+}
+
+
+.output-title {
+
+    margin-bottom:
+        6px;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+
+    color:
+        var(--text-muted);
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        0.04em;
+}
+
+
+.output-box {
+
+    margin:
+        0;
+
+    min-height:
+        48px;
+
+    padding:
+        13px 15px;
+
+    background:
+        #F7F8FA;
+
+    border-left:
+        4px solid var(--comillas-blue);
+
+    border-radius:
+        4px;
+
+    white-space:
+        pre-wrap;
+
+    overflow-wrap:
+        anywhere;
+
+    font-family:
+        "Consolas",
+        "Courier New",
+        monospace;
+
+    font-size:
+        13px;
+}
+
+
+/* =========================================================
+   ASSESSMENT
+   ========================================================= */
+
+.assessment {
+
+    margin-top:
+        19px;
+}
+
+
+.assessment-title {
+
+    margin-bottom:
+        7px;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+
+    color:
+        var(--text-muted);
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        0.04em;
+}
+
+
+.not-checked {
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        14px;
+}
+
+
+.test-row {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+    padding:
+        9px 0;
+
+    border-bottom:
+        1px solid #ECEFF3;
+}
+
+
+.test-row:last-child {
+
+    border-bottom:
+        none;
+}
+
+
+.test-description {
+
+    flex:
+        1;
+}
+
+
+.test-points {
+
+    white-space:
+        nowrap;
+
+    font-weight:
+        600;
+}
+
+
+.test-pass {
+
+    color:
+        var(--success);
+}
+
+
+.test-fail {
+
+    color:
+        var(--error);
+}
+
+
+.question-score {
+
+    margin-top:
+        14px;
+
+    padding-top:
+        12px;
+
+    border-top:
+        1px solid var(--border);
+
+    color:
+        var(--comillas-blue);
+
+    font-size:
+        17px;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   OVERALL SCORE
+   ========================================================= */
+
+.overall-score {
+
+    margin:
+        5px 0 8px;
+
+    color:
+        var(--comillas-blue);
+
+    font-size:
+        30px;
+
+    font-weight:
+        700;
+}
+
+
+.score-note {
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        14px;
+
+    margin-bottom:
+        20px;
+}
+
+
+/* =========================================================
+   SUBMISSION STATUS
+   ========================================================= */
+
+.submit-status {
+
+    margin-top:
+        14px;
+
+    padding:
+        0;
+
+    font-size:
+        14px;
+
+    font-weight:
+        600;
+}
+
+
+.submit-success {
+
+    color:
+        var(--success);
+}
+
+
+.submit-error {
+
+    color:
+        var(--error);
+}
+
+
+/* =========================================================
+   PYTHON STATUS
+   ========================================================= */
+
+.python-status {
+
+    display:
+        inline-block;
+
+    margin-top:
+        8px;
+
+    padding:
+        5px 9px;
+
+    background:
+        rgba(255, 255, 255, 0.13);
+
+    border-radius:
+        4px;
+
+    font-size:
+        12px;
+}
+
+
+.python-ready {
+
+    background:
+        rgba(230, 255, 235, 0.18);
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.footer {
+
+    margin-top:
+        40px;
+
+    text-align:
+        center;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        12px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .header-inner {
+
+        padding:
+            22px 20px;
+    }
+
+
+    .practice-title {
+
+        font-size:
+            24px;
+    }
+
+
+    .container {
+
+        padding:
+            0 14px;
+
+        margin-top:
+            20px;
+    }
+
+
+    .question-card,
+    .student-card,
+    .practice-info-card,
+    .summary-card {
+
+        padding:
+            18px;
+    }
+
+
+    .code-editor {
+
+        min-height:
+            230px;
+    }
+
+
+    .test-row {
+
+        align-items:
+            flex-start;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
+<header class="header">
+
+    <div class="header-inner">
+
+        <p
+            class="course-name"
+            id="courseName">
+        </p>
+
+        <h1
+            class="practice-title"
+            id="practiceTitle">
+        </h1>
+
+        <p
+            class="practice-subtitle"
+            id="practiceSubtitle">
+        </p>
+
+        <div
+            class="python-status"
+            id="pythonStatus">
+            Loading Python environment...
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+     ========================================================= -->
+
+<main class="container">
+
+
+    <!-- =====================================================
+         STUDENT
+         ===================================================== -->
+
+    <section
+        class="student-card"
+        id="studentCard">
+
+        <div class="section-label">
+            Student
+        </div>
+
+        <label
+            class="student-id-label"
+            for="studentId">
+            Comillas Student ID
+        </label>
+
+        <input
+            class="student-id"
+            id="studentId"
+            type="text"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="Enter your Student ID"
+        >
+
+    </section>
+
+
+    <!-- =====================================================
+         PRACTICE INFORMATION
+         ===================================================== -->
+
+    <section
+        class="practice-info-card"
+        id="practiceInfoCard"
+        style="display:none;">
+
+        <div class="section-label">
+            Instructions
+        </div>
+
+        <div
+            id="practiceInstructions">
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         QUESTIONS ARE GENERATED HERE
+         ===================================================== -->
+
+    <div id="questionsContainer"></div>
+
+
+    <!-- =====================================================
+         FINAL SCORE + SUBMIT
+         ===================================================== -->
+
+    <section class="summary-card">
+
+        <div class="section-label">
+            Practice Summary
+        </div>
+
+        <div
+            class="overall-score"
+            id="overallScore">
+
+            Score: 0 / 0
+
+        </div>
+
+        <div
+            class="score-note"
+            id="scoreNote">
+
+            Check every question at least once before
+            submitting a practice attempt.
+
+        </div>
+
+
+        <button
+            class="submit-button"
+            id="submitButton"
+            disabled>
+
+            Submit Practice Attempt
+
+        </button>
+
+
+        <div
+            class="submit-status"
+            id="submitStatus">
+        </div>
+
+    </section>
+
+
+    <footer class="footer">
+
+        Financial Econometrics ·
+        Python Practice Grader
+
+    </footer>
+
+</main>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
+<script>
+
+
+// ============================================================
+// GOOGLE APPS SCRIPT ENDPOINT
+// ============================================================
+//
+// IMPORTANT:
+// Replace the text below ONCE with your deployed Apps Script
+// web-app URL ending in /exec.
+//
+// ============================================================
+
+const SUBMIT_URL =
+    "https://script.google.com/macros/s/AKfycbyVgCDZdg9wulWgk4ihH4Hm0bdl-gq6bYC4A8x9RZ-hc7O6NrlhYxIO4bmZeBUZo8SUDg/exec";
+
+
+// ============================================================
+// PRACTICE CONFIGURATION
+// ============================================================
+//
+// generate_practice.py replaces this placeholder automatically.
+//
+// ============================================================
+
+const PRACTICE =
+    {"practice_id": "P00", "course": "Financial Econometrics", "title": "Practice 0 — Review Session", "mode": "review", "max_points": 10, "questions": [{"id": "Q1", "title": "Standardizing Returns", "instructions": "\n<p>\nConsider the following vector of financial returns.\n<\/p>\n\n<p>\nCreate a variable called <code>z_returns<\/code> containing\nthe standardized returns:\n<\/p>\n\n<p style=\"text-align:center; font-size:1.1em;\">\n<strong>\nz = (x - mean(x)) / std(x)\n<\/strong>\n<\/p>\n\n<p>\nUse the <strong>sample standard deviation<\/strong>\n(<code>ddof=1<\/code>).\n<\/p>\n", "starter_code": "import numpy as np\n\nreturns = np.array([\n    0.012, -0.008, 0.015, 0.004, -0.011,\n    0.009, 0.021, -0.006, 0.003, 0.014\n])\n\n# Write your code below\n\n\n", "max_points": 10, "tests": [{"name": "z_returns exists", "points": 2, "code": "\npassed = \"z_returns\" in globals()\n"}, {"name": "Correct dimensions", "points": 2, "code": "\npassed = (\n    \"z_returns\" in globals()\n    and isinstance(z_returns, np.ndarray)\n    and z_returns.shape == returns.shape\n)\n"}, {"name": "Correct values", "points": 4, "code": "\nexpected = (\n    returns - np.mean(returns)\n) / np.std(returns, ddof=1)\n\npassed = (\n    \"z_returns\" in globals()\n    and np.allclose(\n        z_returns,\n        expected,\n        rtol=1e-6,\n        atol=1e-8\n    )\n)\n"}, {"name": "Mean approximately zero", "points": 1, "code": "\npassed = (\n    \"z_returns\" in globals()\n    and np.isclose(\n        np.mean(z_returns),\n        0.0,\n        atol=1e-10\n    )\n)\n"}, {"name": "Standard deviation approximately one", "points": 1, "code": "\npassed = (\n    \"z_returns\" in globals()\n    and np.isclose(\n        np.std(z_returns, ddof=1),\n        1.0,\n        atol=1e-10\n    )\n)\n"}]}], "subtitle": "Python warm-up based on the Review Session", "instructions": "\nThis practice reviews some of the mathematical and statistical\nconcepts covered in the Review Session.\n\nYou may run and check your answers as many times as you wish\nbefore submitting a practice attempt.\n\nYour final practice score is calculated from the most recently\nchecked version of each question.\n"};
+
+
+// ============================================================
+// GLOBAL STATE
+// ============================================================
+
+let pyodide = null;
+
+let pythonReady = false;
+
+
+// Stores the most recent checked result for each question.
+
+const questionState = {};
+
+
+// ============================================================
+// HTML ELEMENTS
+// ============================================================
+
+const courseName =
+    document.getElementById("courseName");
+
+const practiceTitle =
+    document.getElementById("practiceTitle");
+
+const practiceSubtitle =
+    document.getElementById("practiceSubtitle");
+
+const pythonStatus =
+    document.getElementById("pythonStatus");
+
+const practiceInfoCard =
+    document.getElementById("practiceInfoCard");
+
+const practiceInstructions =
+    document.getElementById("practiceInstructions");
+
+const questionsContainer =
+    document.getElementById("questionsContainer");
+
+const overallScore =
+    document.getElementById("overallScore");
+
+const scoreNote =
+    document.getElementById("scoreNote");
+
+const submitButton =
+    document.getElementById("submitButton");
+
+const submitStatus =
+    document.getElementById("submitStatus");
+
+
+// ============================================================
+// ESCAPE HTML
+// ============================================================
+
+function escapeHtml(value) {
+
+    return String(value)
+
+        .replaceAll("&", "&amp;")
+
+        .replaceAll("<", "&lt;")
+
+        .replaceAll(">", "&gt;")
+
+        .replaceAll('"', "&quot;")
+
+        .replaceAll("'", "&#039;");
+}
+
+
+// ============================================================
+// BUILD PAGE HEADER
+// ============================================================
+
+function buildHeader() {
+
+    courseName.textContent =
+        PRACTICE.course;
+
+    practiceTitle.textContent =
+        PRACTICE.title;
+
+
+    if (PRACTICE.subtitle) {
+
+        practiceSubtitle.textContent =
+            PRACTICE.subtitle;
+
+    } else {
+
+        practiceSubtitle.style.display =
+            "none";
+    }
+
+
+    if (PRACTICE.instructions) {
+
+        practiceInfoCard.style.display =
+            "block";
+
+        practiceInstructions.innerHTML =
+            PRACTICE.instructions;
+    }
+
+}
+
+
+// ============================================================
+// BUILD QUESTIONS
+// ============================================================
+
+function buildQuestions() {
+
+    questionsContainer.innerHTML = "";
+
+
+    PRACTICE.questions.forEach(
+        (question, index) => {
+
+            // ------------------------------------------------
+            // Initialize question state
+            // ------------------------------------------------
+
+            questionState[question.id] = {
+
+                checked: false,
+
+                score: 0,
+
+                maxScore:
+                    question.max_points,
+
+                tests: null,
+
+                code: null
+            };
+
+
+            // ------------------------------------------------
+            // Question card
+            // ------------------------------------------------
+
+            const card =
+                document.createElement("section");
+
+            card.className =
+                "question-card";
+
+
+            // ------------------------------------------------
+            // Header
+            // ------------------------------------------------
+
+            const label =
+                document.createElement("div");
+
+            label.className =
+                "section-label";
+
+            label.textContent =
+                `Question ${index + 1}`;
+
+
+            const title =
+                document.createElement("h2");
+
+            title.className =
+                "question-title";
+
+            title.textContent =
+                question.title;
+
+
+            // ------------------------------------------------
+            // Instructions
+            // ------------------------------------------------
+
+            const instructions =
+                document.createElement("div");
+
+            instructions.className =
+                "instructions";
+
+            instructions.innerHTML =
+                question.instructions;
+
+
+            // ------------------------------------------------
+            // Editor
+            // ------------------------------------------------
+
+            const editorLabel =
+                document.createElement("label");
+
+            editorLabel.className =
+                "editor-label";
+
+            editorLabel.textContent =
+                "Your Python code";
+
+
+            const editor =
+                document.createElement("textarea");
+
+            editor.className =
+                "code-editor";
+
+            editor.id =
+                `editor-${question.id}`;
+
+            editor.value =
+                question.starter_code;
+
+            editor.spellcheck =
+                false;
+
+
+            // ------------------------------------------------
+            // Buttons
+            // ------------------------------------------------
+
+            const buttonRow =
+                document.createElement("div");
+
+            buttonRow.className =
+                "button-row";
+
+
+            const runButton =
+                document.createElement("button");
+
+            runButton.className =
+                "run-button";
+
+            runButton.id =
+                `run-${question.id}`;
+
+            runButton.textContent =
+                "Run Code";
+
+            runButton.disabled =
+                true;
+
+
+            const checkButton =
+                document.createElement("button");
+
+            checkButton.className =
+                "check-button";
+
+            checkButton.id =
+                `check-${question.id}`;
+
+            checkButton.textContent =
+                "Check Answer";
+
+            checkButton.disabled =
+                true;
+
+
+            buttonRow.appendChild(
+                runButton
+            );
+
+            buttonRow.appendChild(
+                checkButton
+            );
+
+
+            // ------------------------------------------------
+            // Output
+            // ------------------------------------------------
+
+            const outputContainer =
+                document.createElement("div");
+
+            outputContainer.className =
+                "output-container";
+
+
+            const outputTitle =
+                document.createElement("div");
+
+            outputTitle.className =
+                "output-title";
+
+            outputTitle.textContent =
+                "Output";
+
+
+            const output =
+                document.createElement("pre");
+
+            output.className =
+                "output-box";
+
+            output.id =
+                `output-${question.id}`;
+
+            output.textContent =
+                "Python is loading...";
+
+
+            outputContainer.appendChild(
+                outputTitle
+            );
+
+            outputContainer.appendChild(
+                output
+            );
+
+
+            // ------------------------------------------------
+            // Assessment
+            // ------------------------------------------------
+
+            const assessment =
+                document.createElement("div");
+
+            assessment.className =
+                "assessment";
+
+            assessment.id =
+                `assessment-${question.id}`;
+
+
+            assessment.innerHTML = `
+
+                <div class="assessment-title">
+                    Assessment
+                </div>
+
+                <div class="not-checked">
+                    Answer not checked yet.
+                </div>
+
+            `;
+
+
+            // ------------------------------------------------
+            // Assemble card
+            // ------------------------------------------------
+
+            card.appendChild(
+                label
+            );
+
+            card.appendChild(
+                title
+            );
+
+            card.appendChild(
+                instructions
+            );
+
+            card.appendChild(
+                editorLabel
+            );
+
+            card.appendChild(
+                editor
+            );
+
+            card.appendChild(
+                buttonRow
+            );
+
+            card.appendChild(
+                outputContainer
+            );
+
+            card.appendChild(
+                assessment
+            );
+
+
+            questionsContainer.appendChild(
+                card
+            );
+
+
+            // ------------------------------------------------
+            // Button events
+            // ------------------------------------------------
+
+            runButton.addEventListener(
+                "click",
+                () => runQuestion(question)
+            );
+
+
+            checkButton.addEventListener(
+                "click",
+                () => checkQuestion(question)
+            );
+
+        }
+    );
+
+
+    updateOverallScore();
+}
+
+
+// ============================================================
+// INITIALIZE PYTHON
+// ============================================================
+
+async function initializePython() {
+
+    pythonStatus.textContent =
+        "Loading Python environment...";
+
+
+    try {
+
+        pyodide =
+            await loadPyodide();
+
+
+        // NumPy is used by the current grader.
+        // Additional packages can be loaded later as needed.
+
+        await pyodide.loadPackage(
+            "numpy"
+        );
+
+
+        pythonReady =
+            true;
+
+
+        pythonStatus.textContent =
+            "✓ Python ready";
+
+        pythonStatus.classList.add(
+            "python-ready"
+        );
+
+
+        // Enable all question buttons.
+
+        PRACTICE.questions.forEach(
+            question => {
+
+                document.getElementById(
+                    `run-${question.id}`
+                ).disabled = false;
+
+
+                document.getElementById(
+                    `check-${question.id}`
+                ).disabled = false;
+
+
+                document.getElementById(
+                    `output-${question.id}`
+                ).textContent =
+                    "Python ready. You can run your code.";
+
+            }
+        );
+
+
+    } catch (error) {
+
+        pythonStatus.textContent =
+            "✗ Python failed to load";
+
+
+        PRACTICE.questions.forEach(
+            question => {
+
+                document.getElementById(
+                    `output-${question.id}`
+                ).textContent =
+                    "Could not initialize Python.\n\n"
+                    + error;
+
+            }
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// RESET PYTHON NAMESPACE
+// ============================================================
+//
+// Questions should not accidentally inherit variables created
+// in a different question.
+//
+// We keep built-ins but remove student-created globals.
+//
+// ============================================================
+
+async function resetPythonNamespace() {
+
+    await pyodide.runPythonAsync(`
+
+protected_names = {
+    "__name__",
+    "__doc__",
+    "__package__",
+    "__loader__",
+    "__spec__",
+    "__annotations__",
+    "__builtins__"
+}
+
+for _name in list(globals().keys()):
+
+    if _name not in protected_names:
+
+        globals().pop(_name, None)
+
+`);
+}
+
+
+// ============================================================
+// RUN QUESTION
+// ============================================================
+
+async function runQuestion(question) {
+
+    if (!pythonReady) {
+        return;
+    }
+
+
+    const runButton =
+        document.getElementById(
+            `run-${question.id}`
+        );
+
+
+    const checkButton =
+        document.getElementById(
+            `check-${question.id}`
+        );
+
+
+    const editor =
+        document.getElementById(
+            `editor-${question.id}`
+        );
+
+
+    const output =
+        document.getElementById(
+            `output-${question.id}`
+        );
+
+
+    runButton.disabled =
+        true;
+
+    checkButton.disabled =
+        true;
+
+    runButton.textContent =
+        "Running...";
+
+    output.textContent =
+        "Running your code...";
+
+
+    try {
+
+        await resetPythonNamespace();
+
+
+        let capturedOutput = "";
+
+
+        pyodide.setStdout({
+
+            batched: text => {
+
+                capturedOutput +=
+                    text + "\n";
+            }
+        });
+
+
+        pyodide.setStderr({
+
+            batched: text => {
+
+                capturedOutput +=
+                    text + "\n";
+            }
+        });
+
+
+        await pyodide.runPythonAsync(
+            editor.value
+        );
+
+
+        if (
+            capturedOutput.trim() === ""
+        ) {
+
+            output.textContent =
+                "✓ Code executed successfully.\n"
+                + "No output was printed.";
+
+        } else {
+
+            output.textContent =
+                "✓ Code executed successfully.\n\n"
+                + capturedOutput;
+        }
+
+
+    } catch (error) {
+
+        output.textContent =
+            "✗ Python error:\n\n"
+            + error;
+
+
+    } finally {
+
+        runButton.disabled =
+            false;
+
+        checkButton.disabled =
+            false;
+
+        runButton.textContent =
+            "Run Code";
+    }
+
+}
+
+
+// ============================================================
+// CHECK QUESTION
+// ============================================================
+
+async function checkQuestion(question) {
+
+    if (!pythonReady) {
+        return;
+    }
+
+
+    const runButton =
+        document.getElementById(
+            `run-${question.id}`
+        );
+
+
+    const checkButton =
+        document.getElementById(
+            `check-${question.id}`
+        );
+
+
+    const editor =
+        document.getElementById(
+            `editor-${question.id}`
+        );
+
+
+    const output =
+        document.getElementById(
+            `output-${question.id}`
+        );
+
+
+    const assessment =
+        document.getElementById(
+            `assessment-${question.id}`
+        );
+
+
+    runButton.disabled =
+        true;
+
+    checkButton.disabled =
+        true;
+
+    checkButton.textContent =
+        "Checking...";
+
+
+    assessment.innerHTML = `
+
+        <div class="assessment-title">
+            Assessment
+        </div>
+
+        <div class="not-checked">
+            Checking your answer...
+        </div>
+
+    `;
+
+
+    try {
+
+        // ----------------------------------------------------
+        // Clean namespace
+        // ----------------------------------------------------
+
+        await resetPythonNamespace();
+
+
+        // ----------------------------------------------------
+        // Execute student code
+        // ----------------------------------------------------
+
+        await pyodide.runPythonAsync(
+            editor.value
+        );
+
+
+        // ----------------------------------------------------
+        // Run tests individually
+        // ----------------------------------------------------
+
+        const results = [];
+
+        let score = 0;
+
+
+        for (
+            const test of question.tests
+        ) {
+
+            let passed = false;
+
+
+            try {
+
+                // Each test must assign True/False
+                // to a Python variable named "passed".
+
+                await pyodide.runPythonAsync(
+                    test.code
+                );
+
+
+                passed =
+                    Boolean(
+                        pyodide.globals.get(
+                            "passed"
+                        )
+                    );
+
+
+            } catch (testError) {
+
+                passed =
+                    false;
+            }
+
+
+            const earnedPoints =
+                passed
+                ? test.points
+                : 0;
+
+
+            score +=
+                earnedPoints;
+
+
+            results.push({
+
+                name:
+                    test.name,
+
+                passed:
+                    passed,
+
+                points:
+                    earnedPoints,
+
+                max_points:
+                    test.points
+            });
+
+        }
+
+
+        // ----------------------------------------------------
+        // Save question state
+        // ----------------------------------------------------
+
+        questionState[
+            question.id
+        ] = {
+
+            checked:
+                true,
+
+            score:
+                score,
+
+            maxScore:
+                question.max_points,
+
+            tests:
+                results,
+
+            code:
+                editor.value
+        };
+
+
+        // ----------------------------------------------------
+        // Render assessment
+        // ----------------------------------------------------
+
+        renderAssessment(
+            question,
+            results,
+            score
+        );
+
+
+        // ----------------------------------------------------
+        // Output
+        // ----------------------------------------------------
+
+        output.textContent =
+            "✓ Code executed and answer checked.";
+
+
+    } catch (error) {
+
+        // Student code itself failed.
+
+        questionState[
+            question.id
+        ] = {
+
+            checked:
+                true,
+
+            score:
+                0,
+
+            maxScore:
+                question.max_points,
+
+            tests:
+                [],
+
+            code:
+                editor.value
+        };
+
+
+        assessment.innerHTML = `
+
+            <div class="assessment-title">
+                Assessment
+            </div>
+
+            <div class="test-fail">
+                ✗ Your code could not be executed.
+            </div>
+
+            <pre class="output-box"
+                 style="margin-top:10px;">${escapeHtml(error)}</pre>
+
+            <div class="question-score">
+                Score: 0 / ${question.max_points}
+            </div>
+
+        `;
+
+
+        output.textContent =
+            "✗ Python error. Review the assessment below.";
+
+
+    } finally {
+
+        runButton.disabled =
+            false;
+
+        checkButton.disabled =
+            false;
+
+        checkButton.textContent =
+            "Check Answer";
+
+
+        updateOverallScore();
+    }
+
+}
+
+
+// ============================================================
+// RENDER ASSESSMENT
+// ============================================================
+
+function renderAssessment(
+    question,
+    results,
+    score
+) {
+
+    const assessment =
+        document.getElementById(
+            `assessment-${question.id}`
+        );
+
+
+    let html = `
+
+        <div class="assessment-title">
+            Assessment
+        </div>
+
+    `;
+
+
+    results.forEach(
+        test => {
+
+            const symbol =
+                test.passed
+                ? "✓"
+                : "✗";
+
+
+            const statusClass =
+                test.passed
+                ? "test-pass"
+                : "test-fail";
+
+
+            html += `
+
+                <div class="test-row">
+
+                    <div
+                        class="test-description ${statusClass}">
+
+                        ${symbol}
+                        ${escapeHtml(test.name)}
+
+                    </div>
+
+                    <div class="test-points">
+
+                        ${test.points}
+                        /
+                        ${test.max_points}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+        <div class="question-score">
+
+            Question score:
+            ${score}
+            /
+            ${question.max_points}
+
+        </div>
+
+    `;
+
+
+    assessment.innerHTML =
+        html;
+}
+
+
+// ============================================================
+// UPDATE OVERALL SCORE
+// ============================================================
+
+function updateOverallScore() {
+
+    let score = 0;
+
+    let checkedQuestions = 0;
+
+
+    PRACTICE.questions.forEach(
+        question => {
+
+            const state =
+                questionState[
+                    question.id
+                ];
+
+
+            if (
+                state &&
+                state.checked
+            ) {
+
+                checkedQuestions += 1;
+
+                score +=
+                    state.score;
+            }
+
+        }
+    );
+
+
+    overallScore.textContent =
+        `Score: ${score} / ${PRACTICE.max_points}`;
+
+
+    const allChecked =
+        checkedQuestions ===
+        PRACTICE.questions.length;
+
+
+    if (allChecked) {
+
+        submitButton.disabled =
+            false;
+
+
+        scoreNote.textContent =
+            "All questions have been checked. "
+            + "You may submit this practice attempt.";
+
+    } else {
+
+        submitButton.disabled =
+            true;
+
+
+        const remaining =
+            PRACTICE.questions.length
+            - checkedQuestions;
+
+
+        scoreNote.textContent =
+            `${remaining} question`
+            + (remaining === 1 ? "" : "s")
+            + " still need"
+            + (remaining === 1 ? "s" : "")
+            + " to be checked before submission.";
+    }
+
+}
+
+
+// ============================================================
+// STUDENT ID VALIDATION
+// ============================================================
+
+function validStudentId(
+    studentId
+) {
+
+    // Digits only.
+    // Allows 6–12 digits so the template is not tied too
+    // tightly to a single cohort format.
+
+    return /^\d{6,12}$/.test(
+        studentId
+    );
+}
+
+
+// ============================================================
+// BUILD SUBMISSION
+// ============================================================
+
+function buildSubmission() {
+
+    const studentId =
+        document
+            .getElementById(
+                "studentId"
+            )
+            .value
+            .trim();
+
+
+    const questions = {};
+
+
+    PRACTICE.questions.forEach(
+        question => {
+
+            const state =
+                questionState[
+                    question.id
+                ];
+
+
+            questions[
+                question.id
+            ] = {
+
+                title:
+                    question.title,
+
+                score:
+                    state.score,
+
+                max_score:
+                    state.maxScore,
+
+                code:
+                    state.code,
+
+                tests:
+                    state.tests
+            };
+
+        }
+    );
+
+
+    let totalScore = 0;
+
+
+    Object.values(
+        questions
+    ).forEach(
+        question => {
+
+            totalScore +=
+                question.score;
+        }
+    );
+
+
+    return {
+
+        student_id:
+            studentId,
+
+        practice_id:
+            PRACTICE.practice_id,
+
+        practice:
+            PRACTICE.title,
+
+        score:
+            totalScore,
+
+        max_score:
+            PRACTICE.max_points,
+
+        questions:
+            questions
+    };
+
+}
+
+
+// ============================================================
+// SUBMIT PRACTICE ATTEMPT
+// ============================================================
+
+submitButton.addEventListener(
+    "click",
+    async () => {
+
+        submitStatus.textContent =
+            "";
+
+        submitStatus.className =
+            "submit-status";
+
+
+        // ----------------------------------------------------
+        // Validate Student ID
+        // ----------------------------------------------------
+
+        const studentId =
+            document
+                .getElementById(
+                    "studentId"
+                )
+                .value
+                .trim();
+
+
+        if (!studentId) {
+
+            submitStatus.textContent =
+                "✗ Please enter your Student ID.";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+
+        if (
+            !validStudentId(
+                studentId
+            )
+        ) {
+
+            submitStatus.textContent =
+                "✗ Please enter a valid Student ID "
+                + "(digits only).";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // Ensure all questions have been checked
+        // ----------------------------------------------------
+
+        const allChecked =
+            PRACTICE.questions.every(
+                question =>
+
+                    questionState[
+                        question.id
+                    ].checked
+            );
+
+
+        if (!allChecked) {
+
+            submitStatus.textContent =
+                "✗ Check every question before submitting.";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // Check endpoint configuration
+        // ----------------------------------------------------
+
+        if (
+            SUBMIT_URL.includes(
+                "PASTE_YOUR"
+            )
+        ) {
+
+            submitStatus.textContent =
+                "✗ Submission endpoint has not been configured.";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // Build payload
+        // ----------------------------------------------------
+
+        const payload =
+            buildSubmission();
+
+
+        // ----------------------------------------------------
+        // Submit
+        // ----------------------------------------------------
+
+        submitButton.disabled =
+            true;
+
+        submitButton.textContent =
+            "Submitting...";
+
+
+        submitStatus.textContent =
+            "Submitting your practice attempt...";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    SUBMIT_URL,
+                    {
+
+                        method:
+                            "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "text/plain;charset=utf-8"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                payload
+                            )
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (
+                result.success
+            ) {
+
+                submitStatus.textContent =
+                    `✓ Attempt ${result.attempt} `
+                    + `submitted successfully. `
+                    + `Score: ${payload.score}`
+                    + `/${payload.max_score}.`;
+
+
+                submitStatus.classList.add(
+                    "submit-success"
+                );
+
+
+            } else {
+
+                submitStatus.textContent =
+                    "✗ Submission failed: "
+                    + result.error;
+
+
+                submitStatus.classList.add(
+                    "submit-error"
+                );
+            }
+
+
+        } catch (error) {
+
+            submitStatus.textContent =
+                "✗ Could not submit attempt: "
+                + error;
+
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+
+        } finally {
+
+            submitButton.disabled =
+                false;
+
+            submitButton.textContent =
+                "Submit Practice Attempt";
+        }
+
+    }
+);
+
+
+// ============================================================
+// APPLY PRACTICE MODE
+// ============================================================
+
+function applyPracticeMode() {
+
+    const studentCard =
+        document.getElementById(
+            "studentCard"
+        );
+
+
+    // ========================================================
+    // GRADED VERSION
+    // ========================================================
+
+    if (
+        PRACTICE.mode === "graded"
+    ) {
+
+        studentCard.style.display =
+            "block";
+
+
+        submitButton.style.display =
+            "inline-block";
+
+
+        return;
+    }
+
+
+    // ========================================================
+    // REVIEW VERSION
+    // ========================================================
+
+    studentCard.style.display =
+        "none";
+
+
+    submitButton.style.display =
+        "none";
+
+
+    scoreNote.innerHTML = `
+
+        <strong>Review version.</strong>
+
+        You may run and check your answers as many times
+        as you wish.
+
+        Results from this version are not submitted
+        or recorded.
+
+    `;
+
+
+    // --------------------------------------------------------
+    // Add visible review notice to header
+    // --------------------------------------------------------
+
+    const reviewNotice =
+        document.createElement(
+            "div"
+        );
+
+
+    reviewNotice.style.marginTop =
+        "12px";
+
+    reviewNotice.style.padding =
+        "7px 10px";
+
+    reviewNotice.style.background =
+        "rgba(255,255,255,0.15)";
+
+    reviewNotice.style.borderRadius =
+        "5px";
+
+    reviewNotice.style.fontSize =
+        "13px";
+
+    reviewNotice.style.display =
+        "inline-block";
+
+
+    reviewNotice.innerHTML =
+        "<strong>Review version</strong> · "
+        + "Submissions are disabled";
+
+
+    document
+        .querySelector(
+            ".header-inner"
+        )
+        .appendChild(
+            reviewNotice
+        );
+
+}
+
+// ============================================================
+// INITIALIZE PAGE
+// ============================================================
+
+buildHeader();
+
+buildQuestions();
+
+applyPracticeMode();
+
+initializePython();
+
+
+</script>
+
+
+</body>
+
+</html>
