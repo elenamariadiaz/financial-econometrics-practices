@@ -1102,7 +1102,7 @@ const SUBMIT_URL =
 // ============================================================
 
 const PRACTICE =
-    {"practice_id": "P00", "course": "Financial Econometrics", "title": "Practice 0 — Review Session", "mode": "review", "max_points": 10.0, "questions": [{"id": "Q1", "title": "Matrix Operations", "instructions": "\n<p>\nConsider the following matrices:\n<\/p>\n\n\\[\nA =\n\\begin{pmatrix}\n4 & 2 \\\\\n1 & 3\n\\end{pmatrix},\n\\qquad\nB =\n\\begin{pmatrix}\n2 & 1 \\\\\n5 & 4\n\\end{pmatrix}\n\\]\n\n<p>\nFirst, create the matrices <code>A<\/code> and <code>B<\/code>\nas NumPy arrays.\n<\/p>\n\n<p>\nThen create the following variables:\n<\/p>\n\n<ul>\n\n    <li>\n        <code>A_plus_B<\/code>:\n        the sum \\(A+B\\).\n    <\/li>\n\n    <li>\n        <code>AB<\/code>:\n        the matrix product \\(AB\\).\n    <\/li>\n\n    <li>\n        <code>A_inv<\/code>:\n        the inverse \\(A^{-1}\\).\n    <\/li>\n\n<\/ul>\n\n<p>\nUse matrix operations rather than hard-coding the numerical answers.\n<\/p>\n", "starter_code": "import numpy as np\n\n# Write your code below\n\n\n", "max_points": 2.0, "tests": [{"name": "Matrix A is correctly defined", "points": 0.25, "code": "\nexpected_A = np.array([\n    [4.0, 2.0],\n    [1.0, 3.0]\n])\n\npassed = (\n    \"A\" in globals()\n    and isinstance(A, np.ndarray)\n    and A.shape == (2, 2)\n    and np.allclose(A, expected_A)\n)\n"}, {"name": "Matrix B is correctly defined", "points": 0.25, "code": "\nexpected_B = np.array([\n    [2.0, 1.0],\n    [5.0, 4.0]\n])\n\npassed = (\n    \"B\" in globals()\n    and isinstance(B, np.ndarray)\n    and B.shape == (2, 2)\n    and np.allclose(B, expected_B)\n)\n"}, {"name": "A_plus_B is correct", "points": 0.4, "code": "\nexpected_A = np.array([\n    [4.0, 2.0],\n    [1.0, 3.0]\n])\n\nexpected_B = np.array([\n    [2.0, 1.0],\n    [5.0, 4.0]\n])\n\nexpected = expected_A + expected_B\n\npassed = (\n    \"A_plus_B\" in globals()\n    and isinstance(A_plus_B, np.ndarray)\n    and A_plus_B.shape == (2, 2)\n    and np.allclose(A_plus_B, expected)\n)\n"}, {"name": "AB is the correct matrix product", "points": 0.55, "code": "\nexpected_A = np.array([\n    [4.0, 2.0],\n    [1.0, 3.0]\n])\n\nexpected_B = np.array([\n    [2.0, 1.0],\n    [5.0, 4.0]\n])\n\nexpected = expected_A @ expected_B\n\npassed = (\n    \"AB\" in globals()\n    and isinstance(AB, np.ndarray)\n    and AB.shape == (2, 2)\n    and np.allclose(AB, expected)\n)\n"}, {"name": "A_inv is correct", "points": 0.55, "code": "\nexpected_A = np.array([\n    [4.0, 2.0],\n    [1.0, 3.0]\n])\n\nexpected = np.linalg.inv(expected_A)\n\npassed = (\n    \"A_inv\" in globals()\n    and isinstance(A_inv, np.ndarray)\n    and A_inv.shape == (2, 2)\n    and np.allclose(A_inv, expected)\n)\n"}]}, {"id": "Q2", "title": "Standardizing Financial Returns", "instructions": "\n<p>\nConsider the vector of financial returns below.\n<\/p>\n\n<p>\nCreate a variable called <code>z_returns<\/code> containing\nthe standardized returns according to:\n<\/p>\n\n\\[\nZ_i =\n\\frac{X_i-\\bar{X}}\n{\\hat{\\sigma}_X}\n\\]\n\n<p>\nwhere \\(\\bar{X}\\) is the sample mean and\n\\(\\hat{\\sigma}_X\\) is the <strong>sample standard deviation<\/strong>.\n<\/p>\n", "starter_code": "import numpy as np\n\nreturns = np.array([\n    0.012, -0.008, 0.015, 0.004, -0.011,\n    0.009, 0.021, -0.006, 0.003, 0.014\n])\n\n# Write your code below\n\n\n", "max_points": 2.0, "tests": [{"name": "z_returns exists", "points": 0.25, "code": "\npassed = \"z_returns\" in globals()\n"}, {"name": "z_returns has the correct dimensions", "points": 0.25, "code": "\npassed = (\n    \"z_returns\" in globals()\n    and isinstance(z_returns, np.ndarray)\n    and z_returns.shape == returns.shape\n)\n"}, {"name": "Standardized values are correct", "points": 1.0, "code": "\nexpected = (\n    returns - np.mean(returns)\n) / np.std(returns, ddof=1)\n\npassed = (\n    \"z_returns\" in globals()\n    and np.allclose(\n        z_returns,\n        expected,\n        rtol=1e-6,\n        atol=1e-8\n    )\n)\n"}, {"name": "Mean of standardized returns is approximately zero", "points": 0.25, "code": "\npassed = (\n    \"z_returns\" in globals()\n    and np.isclose(\n        np.mean(z_returns),\n        0.0,\n        atol=1e-10\n    )\n)\n"}, {"name": "Sample standard deviation is approximately one", "points": 0.25, "code": "\npassed = (\n    \"z_returns\" in globals()\n    and np.isclose(\n        np.std(z_returns, ddof=1),\n        1.0,\n        atol=1e-10\n    )\n)\n"}]}, {"id": "Q3", "title": "Normal Distribution and Cumulative Probability", "instructions": "\n<p>\nSuppose that the random variable \\(X\\) is normally distributed:\n<\/p>\n\n\\[\nX \\sim N(100,15^2)\n\\]\n\n<p>\nCalculate:\n<\/p>\n\n\\[\nP(X \\leq 130)\n\\]\n\n<p>\nCreate the following variables:\n<\/p>\n\n<ul>\n\n    <li>\n        <code>z<\/code>:\n        the standardized value corresponding to \\(x=130\\).\n    <\/li>\n\n    <li>\n        <code>cum_prob<\/code>:\n        the cumulative probability \\(P(X \\leq 130)\\).\n    <\/li>\n\n<\/ul>\n\n<p>\nYou may use <code>NormalDist()<\/code> from Python's\n<code>statistics<\/code> module to represent the standard Normal\ndistribution.\n<\/p>\n", "starter_code": "from statistics import NormalDist\n\n# Write your code below\n\n\n", "max_points": 2.0, "tests": [{"name": "z-score is correct", "points": 0.75, "code": "\nexpected_z = (130 - 100) / 15\n\npassed = (\n    \"z\" in globals()\n    and np.ndim(z) == 0\n    and abs(z - expected_z) < 1e-10\n)\n"}, {"name": "Cumulative probability is correct", "points": 1.25, "code": "\nexpected_prob = NormalDist().cdf(\n    (130 - 100) / 15\n)\n\npassed = (\n    \"cum_prob\" in globals()\n    and np.ndim(cum_prob) == 0\n    and abs(cum_prob - expected_prob) < 1e-6\n)\n"}]}, {"id": "Q4", "title": "Descriptive Statistics and Association", "instructions": "\n<p>\nThe arrays below contain returns for two assets,\n<code>returns_A<\/code> and <code>returns_B<\/code>.\n<\/p>\n\n<p>\nCreate the following variables:\n<\/p>\n\n<ul>\n\n    <li>\n        <code>mean_A<\/code>:\n        mean return of Asset A.\n    <\/li>\n\n    <li>\n        <code>median_A<\/code>:\n        median return of Asset A.\n    <\/li>\n\n    <li>\n        <code>var_A<\/code>:\n        sample variance of Asset A.\n    <\/li>\n\n    <li>\n        <code>std_A<\/code>:\n        sample standard deviation of Asset A.\n    <\/li>\n\n    <li>\n        <code>cov_AB<\/code>:\n        the sample covariance\n        \\(\\operatorname{Cov}(A,B)\\).\n        Store this as a single numerical value.\n    <\/li>\n\n    <li>\n        <code>corr_AB<\/code>:\n        the correlation\n        \\(\\rho_{A,B}\\).\n        Store this as a single numerical value.\n    <\/li>\n\n<\/ul>\n", "starter_code": "import numpy as np\n\nreturns_A = np.array([\n    0.012, 0.018, -0.006, 0.021, 0.007,\n    -0.003, 0.015, 0.011, -0.009, 0.019\n])\n\nreturns_B = np.array([\n    0.008, 0.015, -0.004, 0.017, 0.005,\n    -0.001, 0.012, 0.009, -0.006, 0.016\n])\n\n# Write your code below\n\n\n", "max_points": 2.0, "tests": [{"name": "Mean is correct", "points": 0.25, "code": "\npassed = (\n    \"mean_A\" in globals()\n    and np.ndim(mean_A) == 0\n    and np.isclose(\n        mean_A,\n        np.mean(returns_A)\n    )\n)\n"}, {"name": "Median is correct", "points": 0.25, "code": "\npassed = (\n    \"median_A\" in globals()\n    and np.ndim(median_A) == 0\n    and np.isclose(\n        median_A,\n        np.median(returns_A)\n    )\n)\n"}, {"name": "Sample variance is correct", "points": 0.375, "code": "\npassed = (\n    \"var_A\" in globals()\n    and np.ndim(var_A) == 0\n    and np.isclose(\n        var_A,\n        np.var(\n            returns_A,\n            ddof=1\n        )\n    )\n)\n"}, {"name": "Sample standard deviation is correct", "points": 0.375, "code": "\npassed = (\n    \"std_A\" in globals()\n    and np.ndim(std_A) == 0\n    and np.isclose(\n        std_A,\n        np.std(\n            returns_A,\n            ddof=1\n        )\n    )\n)\n"}, {"name": "Sample covariance is correct and stored as a scalar", "points": 0.375, "code": "\nexpected_cov = np.cov(\n    returns_A,\n    returns_B,\n    ddof=1\n)[0, 1]\n\npassed = (\n    \"cov_AB\" in globals()\n    and np.ndim(cov_AB) == 0\n    and np.isclose(\n        cov_AB,\n        expected_cov\n    )\n)\n"}, {"name": "Correlation is correct and stored as a scalar", "points": 0.375, "code": "\nexpected_corr = np.corrcoef(\n    returns_A,\n    returns_B\n)[0, 1]\n\npassed = (\n    \"corr_AB\" in globals()\n    and np.ndim(corr_AB) == 0\n    and np.isclose(\n        corr_AB,\n        expected_corr\n    )\n)\n"}]}, {"id": "Q5", "title": "Future Value and Net Present Value", "instructions": "\n<p>\nAn investor deposits <strong>€5,000 today<\/strong> in an account\nearning an annual interest rate of <strong>4%<\/strong>.\n<\/p>\n\n<p>\nCreate a variable called <code>future_value<\/code> containing the\nvalue of this investment after <strong>5 years<\/strong>.\n<\/p>\n\n<p>\nRecall that:\n<\/p>\n\n\\[\nFV = PV(1+r)^T\n\\]\n\n<hr style=\"border:none; border-top:1px solid #E1E5EB; margin:22px 0;\">\n\n<p>\nA separate project requires an initial investment of\n<strong>€8,000 at time 0<\/strong>.\n<\/p>\n\n<p>\nThe project generates:\n<\/p>\n\n\\[\nCF_0=-8000,\\qquad\nCF_1=2500,\\qquad\nCF_2=3000,\\qquad\nCF_3=3500\n\\]\n\n<p>\nThe discount rate is <strong>6%<\/strong>.\n<\/p>\n\n<p>\nCreate a variable called <code>npv<\/code> containing the net present\nvalue of the project.\n<\/p>\n\n<p>\nRecall that:\n<\/p>\n\n\\[\nNPV =\n\\sum_{t=0}^{T}\n\\frac{CF_t}{(1+r)^t}\n\\]\n\n<p>\nYou may create any intermediate variables you consider useful.\nOnly <code>future_value<\/code> and <code>npv<\/code> are required\noutputs.\n<\/p>\n", "starter_code": "import numpy as np\n\n# Write your code below\n\n\n", "max_points": 2.0, "tests": [{"name": "Future value is correct", "points": 0.75, "code": "\nexpected_fv = (\n    5000\n    * (1 + 0.04) ** 5\n)\n\npassed = (\n    \"future_value\" in globals()\n    and np.ndim(future_value) == 0\n    and np.isclose(\n        future_value,\n        expected_fv\n    )\n)\n"}, {"name": "Net present value is correct", "points": 1.25, "code": "\nexpected_npv = (\n    -8000\n    + 2500 / (1 + 0.06) ** 1\n    + 3000 / (1 + 0.06) ** 2\n    + 3500 / (1 + 0.06) ** 3\n)\n\npassed = (\n    \"npv\" in globals()\n    and np.ndim(npv) == 0\n    and np.isclose(\n        npv,\n        expected_npv\n    )\n)\n"}]}], "subtitle": "Python warm-up and review of essential prerequisites", "instructions": "\n<p>\nThis practice reviews some of the mathematical, statistical,\nand financial concepts covered in the Review Session.\n<\/p>\n\n<p>\nYou may <strong>run<\/strong> and <strong>check<\/strong> your answers\nas many times as you wish before submitting a practice attempt.\n<\/p>\n\n<p>\nEach question is independent. Your practice score is calculated\nfrom the most recently checked version of each question.\n<\/p>\n"};
+    {"practice_id": "P00", "course": "Financial Econometrics", "title": "Practice 0 — Review Session", "mode": "review", "max_points": 10.0, "questions": [{"id": "Q1", "title": "Matrix Operations", "instructions": "\n<p>\nConsider the following matrices:\n<\/p>\n\n\\[\nA =\n\\begin{pmatrix}\n4 & 2 \\\\\n1 & 3\n\\end{pmatrix},\n\\qquad\nB =\n\\begin{pmatrix}\n2 & 1 \\\\\n5 & 4\n\\end{pmatrix}\n\\]\n\n<p>\nFirst, create the matrices <code>A<\/code> and <code>B<\/code>\nas NumPy arrays.\n<\/p>\n\n<p>\nThen create the following variables:\n<\/p>\n\n<ul>\n\n    <li>\n        <code>A_plus_B<\/code>:\n        the sum \\(A+B\\).\n    <\/li>\n\n    <li>\n        <code>AB<\/code>:\n        the matrix product \\(AB\\).\n    <\/li>\n\n    <li>\n        <code>A_inv<\/code>:\n        the inverse \\(A^{-1}\\).\n    <\/li>\n\n<\/ul>\n\n<p>\nUse matrix operations rather than hard-coding the numerical answers.\n<\/p>\n", "setup_code": "", "imports": [], "exports": [], "starter_code": "import numpy as np\n\n# Write your code below\n\n\n", "max_points": 2.0, "tests": [{"name": "Matrix A is correctly defined", "points": 0.25, "code": "\nexpected_A = np.array([\n    [4.0, 2.0],\n    [1.0, 3.0]\n])\n\npassed = (\n    \"A\" in globals()\n    and isinstance(A, np.ndarray)\n    and A.shape == (2, 2)\n    and np.allclose(A, expected_A)\n)\n"}, {"name": "Matrix B is correctly defined", "points": 0.25, "code": "\nexpected_B = np.array([\n    [2.0, 1.0],\n    [5.0, 4.0]\n])\n\npassed = (\n    \"B\" in globals()\n    and isinstance(B, np.ndarray)\n    and B.shape == (2, 2)\n    and np.allclose(B, expected_B)\n)\n"}, {"name": "A_plus_B is correct", "points": 0.4, "code": "\nexpected_A = np.array([\n    [4.0, 2.0],\n    [1.0, 3.0]\n])\n\nexpected_B = np.array([\n    [2.0, 1.0],\n    [5.0, 4.0]\n])\n\nexpected = expected_A + expected_B\n\npassed = (\n    \"A_plus_B\" in globals()\n    and isinstance(A_plus_B, np.ndarray)\n    and A_plus_B.shape == (2, 2)\n    and np.allclose(A_plus_B, expected)\n)\n"}, {"name": "AB is the correct matrix product", "points": 0.55, "code": "\nexpected_A = np.array([\n    [4.0, 2.0],\n    [1.0, 3.0]\n])\n\nexpected_B = np.array([\n    [2.0, 1.0],\n    [5.0, 4.0]\n])\n\nexpected = expected_A @ expected_B\n\npassed = (\n    \"AB\" in globals()\n    and isinstance(AB, np.ndarray)\n    and AB.shape == (2, 2)\n    and np.allclose(AB, expected)\n)\n"}, {"name": "A_inv is correct", "points": 0.55, "code": "\nexpected_A = np.array([\n    [4.0, 2.0],\n    [1.0, 3.0]\n])\n\nexpected = np.linalg.inv(expected_A)\n\npassed = (\n    \"A_inv\" in globals()\n    and isinstance(A_inv, np.ndarray)\n    and A_inv.shape == (2, 2)\n    and np.allclose(A_inv, expected)\n)\n"}]}, {"id": "Q2", "title": "Standardizing Financial Returns", "instructions": "\n<p>\nConsider the vector of financial returns below.\n<\/p>\n\n<p>\nCreate a variable called <code>z_returns<\/code> containing\nthe standardized returns according to:\n<\/p>\n\n\\[\nZ_i =\n\\frac{X_i-\\bar{X}}\n{\\hat{\\sigma}_X}\n\\]\n\n<p>\nwhere \\(\\bar{X}\\) is the sample mean and\n\\(\\hat{\\sigma}_X\\) is the <strong>sample standard deviation<\/strong>.\n<\/p>\n", "setup_code": "", "imports": [], "exports": [], "starter_code": "import numpy as np\n\nreturns = np.array([\n    0.012, -0.008, 0.015, 0.004, -0.011,\n    0.009, 0.021, -0.006, 0.003, 0.014\n])\n\n# Write your code below\n\n\n", "max_points": 2.0, "tests": [{"name": "z_returns exists", "points": 0.25, "code": "\npassed = \"z_returns\" in globals()\n"}, {"name": "z_returns has the correct dimensions", "points": 0.25, "code": "\npassed = (\n    \"z_returns\" in globals()\n    and isinstance(z_returns, np.ndarray)\n    and z_returns.shape == returns.shape\n)\n"}, {"name": "Standardized values are correct", "points": 1.0, "code": "\nexpected = (\n    returns - np.mean(returns)\n) / np.std(returns, ddof=1)\n\npassed = (\n    \"z_returns\" in globals()\n    and np.allclose(\n        z_returns,\n        expected,\n        rtol=1e-6,\n        atol=1e-8\n    )\n)\n"}, {"name": "Mean of standardized returns is approximately zero", "points": 0.25, "code": "\npassed = (\n    \"z_returns\" in globals()\n    and np.isclose(\n        np.mean(z_returns),\n        0.0,\n        atol=1e-10\n    )\n)\n"}, {"name": "Sample standard deviation is approximately one", "points": 0.25, "code": "\npassed = (\n    \"z_returns\" in globals()\n    and np.isclose(\n        np.std(z_returns, ddof=1),\n        1.0,\n        atol=1e-10\n    )\n)\n"}]}, {"id": "Q3", "title": "Normal Distribution and Cumulative Probability", "instructions": "\n<p>\nSuppose that the random variable \\(X\\) is normally distributed:\n<\/p>\n\n\\[\nX \\sim N(100,15^2)\n\\]\n\n<p>\nCalculate:\n<\/p>\n\n\\[\nP(X \\leq 130)\n\\]\n\n<p>\nCreate the following variables:\n<\/p>\n\n<ul>\n\n    <li>\n        <code>z<\/code>:\n        the standardized value corresponding to \\(x=130\\).\n    <\/li>\n\n    <li>\n        <code>cum_prob<\/code>:\n        the cumulative probability \\(P(X \\leq 130)\\).\n    <\/li>\n\n<\/ul>\n\n<p>\nYou may use <code>NormalDist()<\/code> from Python's\n<code>statistics<\/code> module to represent the standard Normal\ndistribution.\n<\/p>\n", "setup_code": "", "imports": [], "exports": [], "starter_code": "from statistics import NormalDist\n\n# Write your code below\n\n\n", "max_points": 2.0, "tests": [{"name": "z-score is correct", "points": 0.75, "code": "\nimport numpy as np\n\nexpected_z = (130 - 100) / 15\n\npassed = (\n    \"z\" in globals()\n    and np.ndim(z) == 0\n    and abs(z - expected_z) < 1e-10\n)\n"}, {"name": "Cumulative probability is correct", "points": 1.25, "code": "\nimport numpy as np\n\nexpected_prob = NormalDist().cdf(\n    (130 - 100) / 15\n)\n\npassed = (\n    \"cum_prob\" in globals()\n    and np.ndim(cum_prob) == 0\n    and abs(cum_prob - expected_prob) < 1e-6\n)\n"}]}, {"id": "Q4", "title": "Descriptive Statistics and Association", "instructions": "\n<p>\nThe arrays below contain returns for two assets,\n<code>returns_A<\/code> and <code>returns_B<\/code>.\n<\/p>\n\n<p>\nCreate the following variables:\n<\/p>\n\n<ul>\n\n    <li>\n        <code>mean_A<\/code>:\n        mean return of Asset A.\n    <\/li>\n\n    <li>\n        <code>median_A<\/code>:\n        median return of Asset A.\n    <\/li>\n\n    <li>\n        <code>var_A<\/code>:\n        sample variance of Asset A.\n    <\/li>\n\n    <li>\n        <code>std_A<\/code>:\n        sample standard deviation of Asset A.\n    <\/li>\n\n    <li>\n        <code>cov_AB<\/code>:\n        the sample covariance\n        \\(\\operatorname{Cov}(A,B)\\).\n        Store this as a single numerical value.\n    <\/li>\n\n    <li>\n        <code>corr_AB<\/code>:\n        the correlation\n        \\(\\rho_{A,B}\\).\n        Store this as a single numerical value.\n    <\/li>\n\n<\/ul>\n", "setup_code": "", "imports": [], "exports": [], "starter_code": "import numpy as np\n\nreturns_A = np.array([\n    0.012, 0.018, -0.006, 0.021, 0.007,\n    -0.003, 0.015, 0.011, -0.009, 0.019\n])\n\nreturns_B = np.array([\n    0.008, 0.015, -0.004, 0.017, 0.005,\n    -0.001, 0.012, 0.009, -0.006, 0.016\n])\n\n# Write your code below\n\n\n", "max_points": 2.0, "tests": [{"name": "Mean is correct", "points": 0.25, "code": "\npassed = (\n    \"mean_A\" in globals()\n    and np.ndim(mean_A) == 0\n    and np.isclose(\n        mean_A,\n        np.mean(returns_A)\n    )\n)\n"}, {"name": "Median is correct", "points": 0.25, "code": "\npassed = (\n    \"median_A\" in globals()\n    and np.ndim(median_A) == 0\n    and np.isclose(\n        median_A,\n        np.median(returns_A)\n    )\n)\n"}, {"name": "Sample variance is correct", "points": 0.375, "code": "\npassed = (\n    \"var_A\" in globals()\n    and np.ndim(var_A) == 0\n    and np.isclose(\n        var_A,\n        np.var(\n            returns_A,\n            ddof=1\n        )\n    )\n)\n"}, {"name": "Sample standard deviation is correct", "points": 0.375, "code": "\npassed = (\n    \"std_A\" in globals()\n    and np.ndim(std_A) == 0\n    and np.isclose(\n        std_A,\n        np.std(\n            returns_A,\n            ddof=1\n        )\n    )\n)\n"}, {"name": "Sample covariance is correct and stored as a scalar", "points": 0.375, "code": "\nexpected_cov = np.cov(\n    returns_A,\n    returns_B,\n    ddof=1\n)[0, 1]\n\npassed = (\n    \"cov_AB\" in globals()\n    and np.ndim(cov_AB) == 0\n    and np.isclose(\n        cov_AB,\n        expected_cov\n    )\n)\n"}, {"name": "Correlation is correct and stored as a scalar", "points": 0.375, "code": "\nexpected_corr = np.corrcoef(\n    returns_A,\n    returns_B\n)[0, 1]\n\npassed = (\n    \"corr_AB\" in globals()\n    and np.ndim(corr_AB) == 0\n    and np.isclose(\n        corr_AB,\n        expected_corr\n    )\n)\n"}]}, {"id": "Q5", "title": "Future Value and Net Present Value", "instructions": "\n<p>\nAn investor deposits <strong>€5,000 today<\/strong> in an account\nearning an annual interest rate of <strong>4%<\/strong>.\n<\/p>\n\n<p>\nCreate a variable called <code>future_value<\/code> containing the\nvalue of this investment after <strong>5 years<\/strong>.\n<\/p>\n\n<p>\nRecall that:\n<\/p>\n\n\\[\nFV = PV(1+r)^T\n\\]\n\n<hr style=\"border:none; border-top:1px solid #E1E5EB; margin:22px 0;\">\n\n<p>\nA separate project requires an initial investment of\n<strong>€8,000 at time 0<\/strong>.\n<\/p>\n\n<p>\nThe project generates:\n<\/p>\n\n\\[\nCF_0=-8000,\\qquad\nCF_1=2500,\\qquad\nCF_2=3000,\\qquad\nCF_3=3500\n\\]\n\n<p>\nThe discount rate is <strong>6%<\/strong>.\n<\/p>\n\n<p>\nCreate a variable called <code>npv<\/code> containing the net present\nvalue of the project.\n<\/p>\n\n<p>\nRecall that:\n<\/p>\n\n\\[\nNPV =\n\\sum_{t=0}^{T}\n\\frac{CF_t}{(1+r)^t}\n\\]\n\n<p>\nYou may create any intermediate variables you consider useful.\nOnly <code>future_value<\/code> and <code>npv<\/code> are required\noutputs.\n<\/p>\n", "setup_code": "", "imports": [], "exports": [], "starter_code": "import numpy as np\n\n# Write your code below\n\n\n", "max_points": 2.0, "tests": [{"name": "Future value is correct", "points": 0.75, "code": "\nexpected_fv = (\n    5000\n    * (1 + 0.04) ** 5\n)\n\npassed = (\n    \"future_value\" in globals()\n    and np.ndim(future_value) == 0\n    and np.isclose(\n        future_value,\n        expected_fv\n    )\n)\n"}, {"name": "Net present value is correct", "points": 1.25, "code": "\nexpected_npv = (\n    -8000\n    + 2500 / (1 + 0.06) ** 1\n    + 3000 / (1 + 0.06) ** 2\n    + 3500 / (1 + 0.06) ** 3\n)\n\npassed = (\n    \"npv\" in globals()\n    and np.ndim(npv) == 0\n    and np.isclose(\n        npv,\n        expected_npv\n    )\n)\n"}]}], "subtitle": "Python warm-up and review of essential prerequisites", "instructions": "\n<p>\nThis practice reviews some of the mathematical, statistical,\nand financial concepts covered in the Review Session.\n<\/p>\n\n<p>\nYou may <strong>run<\/strong> and <strong>check<\/strong> your answers\nas many times as you wish before submitting a practice attempt.\n<\/p>\n\n<p>\nEach question is independent. Your practice score is calculated\nfrom the most recently checked version of each question.\n<\/p>\n"};
 
 
 // ============================================================
@@ -1117,7 +1117,10 @@ let pythonReady = false;
 // Stores the most recent checked result for each question.
 
 const questionState = {};
+// Stores exported Python objects between questions.
+// Objects are serialized with Python pickle.
 
+const savedExports = {};
 
 // ============================================================
 // HTML ELEMENTS
@@ -1531,9 +1534,8 @@ async function initializePython() {
         // Additional packages can be loaded later as needed.
 
         await pyodide.loadPackage(
-            "numpy"
+            ["numpy", "pandas", "scipy"]
         );
-
 
         pythonReady =
             true;
@@ -1626,8 +1628,164 @@ for _name in list(globals().keys()):
         globals().pop(_name, None)
 
 `);
+
 }
 
+
+// ============================================================
+// RESTORE IMPORTED VARIABLES
+// ============================================================
+
+async function restoreQuestionImports(question) {
+
+    const imports =
+        question.imports || [];
+
+
+    if (imports.length === 0) {
+        return;
+    }
+
+
+    const missing =
+        imports.filter(
+            name => !(name in savedExports)
+        );
+
+
+    if (missing.length > 0) {
+
+        throw new Error(
+            "Required output from a previous question is not available: "
+            + missing.join(", ")
+            + ". Check the previous question first."
+        );
+    }
+
+
+    const payload = {};
+
+
+    imports.forEach(
+        name => {
+            payload[name] =
+                savedExports[name];
+        }
+    );
+
+
+    pyodide.globals.set(
+        "_import_payload_json",
+        JSON.stringify(payload)
+    );
+
+
+    await pyodide.runPythonAsync(`
+
+import json as _json
+import pickle as _pickle
+import base64 as _base64
+
+_import_payload = _json.loads(
+    _import_payload_json
+)
+
+for _import_name, _encoded_value in _import_payload.items():
+
+    globals()[_import_name] = _pickle.loads(
+        _base64.b64decode(
+            _encoded_value.encode("ascii")
+        )
+    )
+
+del _import_payload
+del _import_name
+del _encoded_value
+
+`);
+
+}
+
+
+// ============================================================
+// SAVE EXPORTED VARIABLES
+// ============================================================
+
+async function saveQuestionExports(question) {
+
+    const exports =
+        question.exports || [];
+
+
+    if (exports.length === 0) {
+        return;
+    }
+
+
+    // Remove previous saved versions first.
+    // This prevents stale objects if the student rechecks
+    // a question after deleting/changing an output.
+
+    exports.forEach(
+        name => {
+            delete savedExports[name];
+        }
+    );
+
+
+    pyodide.globals.set(
+        "_export_names_json",
+        JSON.stringify(exports)
+    );
+
+
+    const result =
+        await pyodide.runPythonAsync(`
+
+import json as _json
+import pickle as _pickle
+import base64 as _base64
+
+_export_names = _json.loads(
+    _export_names_json
+)
+
+_export_payload = {}
+
+for _export_name in _export_names:
+
+    if _export_name in globals():
+
+        _export_payload[_export_name] = (
+            _base64.b64encode(
+                _pickle.dumps(
+                    globals()[_export_name]
+                )
+            )
+            .decode("ascii")
+        )
+
+_json.dumps(_export_payload)
+
+`);
+
+
+    const exported =
+        JSON.parse(result);
+
+
+    Object.entries(
+        exported
+    ).forEach(
+        ([name, value]) => {
+
+            savedExports[name] =
+                value;
+
+        }
+    );
+
+}
 
 // ============================================================
 // RUN QUESTION
@@ -1681,6 +1839,25 @@ async function runQuestion(question) {
 
         await resetPythonNamespace();
 
+
+        // ----------------------------------------------------
+        // Execute hidden setup code
+        // ----------------------------------------------------
+
+        if (
+            question.setup_code &&
+            question.setup_code.trim() !== ""
+        ) {
+
+            await pyodide.runPythonAsync(
+                question.setup_code
+            );
+
+        }
+
+        await restoreQuestionImports(
+            question
+        );
 
         let capturedOutput = "";
 
@@ -1822,11 +1999,34 @@ async function checkQuestion(question) {
 
 
         // ----------------------------------------------------
+        // Execute hidden setup code
+        // ----------------------------------------------------
+
+        if (
+            question.setup_code &&
+            question.setup_code.trim() !== ""
+        ) {
+
+            await pyodide.runPythonAsync(
+                question.setup_code
+            );
+
+        }
+
+        await restoreQuestionImports(
+            question
+        );
+
+        // ----------------------------------------------------
         // Execute student code
         // ----------------------------------------------------
 
         await pyodide.runPythonAsync(
             editor.value
+        );
+
+        await saveQuestionExports(
+            question
         );
 
 
