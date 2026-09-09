@@ -1,0 +1,2889 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Practice 1 — Minimum Variance Portfolio</title>
+
+<!-- =========================================================
+     PYODIDE
+     ========================================================= -->
+
+<script
+    src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js">
+</script>
+
+
+<!-- =========================================================
+     STYLE
+     ========================================================= -->
+
+<style>
+
+:root {
+
+    --comillas-blue: #004A98;
+    --comillas-dark-blue: #00356E;
+    --comillas-gold: #D6A900;
+
+    --background: #F4F6F9;
+    --card-background: #FFFFFF;
+
+    --soft-blue: #EEF4FB;
+    --soft-gold: #FFF8E1;
+    --soft-green: #EDF8F1;
+    --soft-red: #FCEEEE;
+
+    --text-main: #2F343B;
+    --text-muted: #68717D;
+
+    --border: #D9DEE7;
+
+    --success: #287A4B;
+    --error: #B53C3C;
+
+    --shadow:
+        0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================================================
+   GENERAL
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    background:
+        var(--background);
+
+    color:
+        var(--text-main);
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    line-height: 1.55;
+}
+
+
+.container {
+
+    max-width: 1050px;
+
+    margin:
+        32px auto 60px;
+
+    padding:
+        0 24px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.header {
+
+    background:
+        var(--comillas-blue);
+
+    color: white;
+
+    border-bottom:
+        5px solid var(--comillas-gold);
+}
+
+
+.header-inner {
+
+    max-width: 1050px;
+
+    margin: 0 auto;
+
+    padding:
+        27px 32px 29px;
+}
+
+
+.course-name {
+
+    margin: 0;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    letter-spacing:
+        0.04em;
+
+    text-transform:
+        uppercase;
+
+    opacity: 0.85;
+}
+
+
+.practice-title {
+
+    margin:
+        4px 0 0;
+
+    font-size:
+        29px;
+
+    line-height:
+        1.2;
+
+    font-weight:
+        700;
+}
+
+
+.practice-subtitle {
+
+    margin:
+        8px 0 0;
+
+    font-size:
+        15px;
+
+    opacity:
+        0.88;
+}
+
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.student-card,
+.practice-info-card,
+.question-card,
+.summary-card {
+
+    background:
+        var(--card-background);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        10px;
+
+    box-shadow:
+        var(--shadow);
+
+    padding:
+        24px;
+
+    margin-bottom:
+        24px;
+}
+
+
+.student-card {
+
+    background:
+        var(--soft-blue);
+
+    border-left:
+        4px solid var(--comillas-blue);
+}
+
+
+.summary-card {
+
+    border-top:
+        4px solid var(--comillas-gold);
+}
+
+
+/* =========================================================
+   TEXT
+   ========================================================= */
+
+.section-label {
+
+    color:
+        var(--comillas-blue);
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        0.07em;
+
+    margin-bottom:
+        4px;
+}
+
+
+.question-title {
+
+    color:
+        var(--comillas-blue);
+
+    font-size:
+        21px;
+
+    line-height:
+        1.3;
+
+    margin:
+        2px 0 14px;
+}
+
+
+.instructions {
+
+    margin-bottom:
+        20px;
+}
+
+
+.instructions code {
+
+    background:
+        #EEF1F5;
+
+    border-radius:
+        4px;
+
+    padding:
+        2px 5px;
+
+    font-size:
+        0.95em;
+}
+
+
+/* =========================================================
+   STUDENT ID
+   ========================================================= */
+
+.student-id-label {
+
+    display:
+        block;
+
+    font-weight:
+        600;
+
+    margin:
+        8px 0 6px;
+}
+
+
+.student-id {
+
+    width:
+        300px;
+
+    max-width:
+        100%;
+
+    padding:
+        10px 12px;
+
+    border:
+        1px solid #BCC5D1;
+
+    border-radius:
+        6px;
+
+    background:
+        white;
+
+    font-size:
+        15px;
+}
+
+
+.student-id:focus {
+
+    outline:
+        2px solid rgba(0, 74, 152, 0.18);
+
+    border-color:
+        var(--comillas-blue);
+}
+
+
+/* =========================================================
+   CODE EDITOR
+   ========================================================= */
+
+.editor-label {
+
+    display:
+        block;
+
+    margin:
+        18px 0 7px;
+
+    font-weight:
+        600;
+}
+
+
+.code-editor {
+
+    width:
+        100%;
+
+    min-height:
+        260px;
+
+    resize:
+        vertical;
+
+    padding:
+        15px;
+
+    background:
+        #F8FAFC;
+
+    border:
+        1px solid #C9D1DC;
+
+    border-radius:
+        7px;
+
+    color:
+        #20252B;
+
+    font-family:
+        "Consolas",
+        "Courier New",
+        monospace;
+
+    font-size:
+        14px;
+
+    line-height:
+        1.5;
+
+    tab-size:
+        4;
+}
+
+
+.code-editor:focus {
+
+    outline:
+        2px solid rgba(0, 74, 152, 0.15);
+
+    border-color:
+        var(--comillas-blue);
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.button-row {
+
+    display:
+        flex;
+
+    gap:
+        10px;
+
+    flex-wrap:
+        wrap;
+
+    margin-top:
+        14px;
+}
+
+
+button {
+
+    border:
+        none;
+
+    border-radius:
+        6px;
+
+    padding:
+        10px 18px;
+
+    font-size:
+        14px;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+    transition:
+        background 0.15s ease,
+        opacity 0.15s ease;
+}
+
+
+button:disabled {
+
+    opacity:
+        0.52;
+
+    cursor:
+        not-allowed;
+}
+
+
+.run-button {
+
+    background:
+        var(--comillas-blue);
+
+    color:
+        white;
+}
+
+
+.run-button:hover:not(:disabled) {
+
+    background:
+        var(--comillas-dark-blue);
+}
+
+
+.check-button {
+
+    background:
+        var(--soft-gold);
+
+    color:
+        #493900;
+
+    border:
+        1px solid #E1C55E;
+}
+
+
+.check-button:hover:not(:disabled) {
+
+    background:
+        #FFF0B7;
+}
+
+
+.submit-button {
+
+    background:
+        var(--comillas-blue);
+
+    color:
+        white;
+
+    padding:
+        12px 23px;
+
+    font-size:
+        15px;
+}
+
+
+.submit-button:hover:not(:disabled) {
+
+    background:
+        var(--comillas-dark-blue);
+}
+
+
+/* =========================================================
+   OUTPUT
+   ========================================================= */
+
+.output-container {
+
+    margin-top:
+        20px;
+}
+
+
+.output-title {
+
+    margin-bottom:
+        6px;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+
+    color:
+        var(--text-muted);
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        0.04em;
+}
+
+
+.output-box {
+
+    margin:
+        0;
+
+    min-height:
+        48px;
+
+    padding:
+        13px 15px;
+
+    background:
+        #F7F8FA;
+
+    border-left:
+        4px solid var(--comillas-blue);
+
+    border-radius:
+        4px;
+
+    white-space:
+        pre-wrap;
+
+    overflow-wrap:
+        anywhere;
+
+    font-family:
+        "Consolas",
+        "Courier New",
+        monospace;
+
+    font-size:
+        13px;
+}
+
+
+/* =========================================================
+   ASSESSMENT
+   ========================================================= */
+
+.assessment {
+
+    margin-top:
+        19px;
+}
+
+
+.assessment-title {
+
+    margin-bottom:
+        7px;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+
+    color:
+        var(--text-muted);
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        0.04em;
+}
+
+
+.not-checked {
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        14px;
+}
+
+
+.test-row {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+    padding:
+        9px 0;
+
+    border-bottom:
+        1px solid #ECEFF3;
+}
+
+
+.test-row:last-child {
+
+    border-bottom:
+        none;
+}
+
+
+.test-description {
+
+    flex:
+        1;
+}
+
+
+.test-points {
+
+    white-space:
+        nowrap;
+
+    font-weight:
+        600;
+}
+
+
+.test-pass {
+
+    color:
+        var(--success);
+}
+
+
+.test-fail {
+
+    color:
+        var(--error);
+}
+
+
+.question-score {
+
+    margin-top:
+        14px;
+
+    padding-top:
+        12px;
+
+    border-top:
+        1px solid var(--border);
+
+    color:
+        var(--comillas-blue);
+
+    font-size:
+        17px;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   OVERALL SCORE
+   ========================================================= */
+
+.overall-score {
+
+    margin:
+        5px 0 8px;
+
+    color:
+        var(--comillas-blue);
+
+    font-size:
+        30px;
+
+    font-weight:
+        700;
+}
+
+
+.score-note {
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        14px;
+
+    margin-bottom:
+        20px;
+}
+
+
+/* =========================================================
+   SUBMISSION STATUS
+   ========================================================= */
+
+.submit-status {
+
+    margin-top:
+        14px;
+
+    padding:
+        0;
+
+    font-size:
+        14px;
+
+    font-weight:
+        600;
+}
+
+
+.submit-success {
+
+    color:
+        var(--success);
+}
+
+
+.submit-error {
+
+    color:
+        var(--error);
+}
+
+
+/* =========================================================
+   PYTHON STATUS
+   ========================================================= */
+
+.python-status {
+
+    display:
+        inline-block;
+
+    margin-top:
+        8px;
+
+    padding:
+        5px 9px;
+
+    background:
+        rgba(255, 255, 255, 0.13);
+
+    border-radius:
+        4px;
+
+    font-size:
+        12px;
+}
+
+
+.python-ready {
+
+    background:
+        rgba(230, 255, 235, 0.18);
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.footer {
+
+    margin-top:
+        40px;
+
+    text-align:
+        center;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        12px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .header-inner {
+
+        padding:
+            22px 20px;
+    }
+
+
+    .practice-title {
+
+        font-size:
+            24px;
+    }
+
+
+    .container {
+
+        padding:
+            0 14px;
+
+        margin-top:
+            20px;
+    }
+
+
+    .question-card,
+    .student-card,
+    .practice-info-card,
+    .summary-card {
+
+        padding:
+            18px;
+    }
+
+
+    .code-editor {
+
+        min-height:
+            230px;
+    }
+
+
+    .test-row {
+
+        align-items:
+            flex-start;
+    }
+
+}
+
+</style>
+
+<!-- =========================================================
+     MATHJAX
+     Renders LaTeX mathematical notation in the practice
+     ========================================================= -->
+
+<script>
+    window.MathJax = {
+        tex: {
+            inlineMath: [
+                ['\\(', '\\)']
+            ],
+            displayMath: [
+                ['\\[', '\\]']
+            ]
+        }
+    };
+
+    // ============================================================
+    // TAB / SHIFT+TAB INDENTATION IN PYTHON CODE BOXES
+    // ============================================================
+
+    document.addEventListener("keydown", function (event) {
+
+        const textarea = event.target;
+
+        // Only act inside textareas
+        if (textarea.tagName !== "TEXTAREA") {
+            return;
+        }
+
+        // Capture Tab instead of moving focus
+        if (event.key === "Tab") {
+
+            event.preventDefault();
+
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const value = textarea.value;
+
+            // ----------------------------------------------------
+            // TAB: insert four spaces
+            // ----------------------------------------------------
+            if (!event.shiftKey) {
+
+                textarea.value =
+                    value.substring(0, start)
+                    + "    "
+                    + value.substring(end);
+
+                textarea.selectionStart =
+                    textarea.selectionEnd =
+                    start + 4;
+            }
+
+            // ----------------------------------------------------
+            // SHIFT + TAB: remove up to four preceding spaces
+            // ----------------------------------------------------
+            else {
+
+                const beforeCursor = value.substring(0, start);
+
+                let spacesToRemove = 0;
+
+                for (
+                    let i = 1;
+                    i <= 4 && start - i >= 0;
+                    i++
+                ) {
+                    if (beforeCursor[start - i] === " ") {
+                        spacesToRemove++;
+                    } else {
+                        break;
+                    }
+                }
+
+                if (spacesToRemove > 0) {
+
+                    textarea.value =
+                        value.substring(
+                            0,
+                            start - spacesToRemove
+                        )
+                        + value.substring(end);
+
+                    textarea.selectionStart =
+                        textarea.selectionEnd =
+                        start - spacesToRemove;
+                }
+            }
+        }
+    });
+</script>
+
+<script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
+<header class="header">
+
+    <div class="header-inner">
+
+        <p
+            class="course-name"
+            id="courseName">
+        </p>
+
+        <h1
+            class="practice-title"
+            id="practiceTitle">
+        </h1>
+
+        <p
+            class="practice-subtitle"
+            id="practiceSubtitle">
+        </p>
+
+        <div
+            class="python-status"
+            id="pythonStatus">
+            Loading Python environment...
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+     ========================================================= -->
+
+<main class="container">
+
+
+    <!-- =====================================================
+         STUDENT
+         ===================================================== -->
+
+    <section
+        class="student-card"
+        id="studentCard">
+
+        <div class="section-label">
+            Student
+        </div>
+
+        <label
+            class="student-id-label"
+            for="studentId">
+            Comillas Student ID
+        </label>
+
+        <input
+            class="student-id"
+            id="studentId"
+            type="text"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="Enter your Student ID"
+        >
+
+    </section>
+
+
+    <!-- =====================================================
+         PRACTICE INFORMATION
+         ===================================================== -->
+
+    <section
+        class="practice-info-card"
+        id="practiceInfoCard"
+        style="display:none;">
+
+        <div class="section-label">
+            Instructions
+        </div>
+
+        <div
+            id="practiceInstructions">
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         QUESTIONS ARE GENERATED HERE
+         ===================================================== -->
+
+    <div id="questionsContainer"></div>
+
+
+    <!-- =====================================================
+         FINAL SCORE + SUBMIT
+         ===================================================== -->
+
+    <section class="summary-card">
+
+        <div class="section-label">
+            Practice Summary
+        </div>
+
+        <div
+            class="overall-score"
+            id="overallScore">
+
+            Score: 0 / 0
+
+        </div>
+
+        <div
+            class="score-note"
+            id="scoreNote">
+
+            Check every question at least once before
+            submitting a practice attempt.
+
+        </div>
+
+
+        <button
+            class="submit-button"
+            id="submitButton"
+            disabled>
+
+            Submit Practice Attempt
+
+        </button>
+
+
+        <div
+            class="submit-status"
+            id="submitStatus">
+        </div>
+
+    </section>
+
+
+    <footer class="footer">
+
+        Financial Econometrics ·
+        Python Practice Grader
+
+    </footer>
+
+</main>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
+<script>
+
+
+// ============================================================
+// GOOGLE APPS SCRIPT ENDPOINT
+// ============================================================
+//
+// IMPORTANT:
+// Replace the text below ONCE with your deployed Apps Script
+// web-app URL ending in /exec.
+//
+// ============================================================
+
+const SUBMIT_URL =
+    "https://script.google.com/macros/s/AKfycbyVgCDZdg9wulWgk4ihH4Hm0bdl-gq6bYC4A8x9RZ-hc7O6NrlhYxIO4bmZeBUZo8SUDg/exec";
+
+
+// ============================================================
+// PRACTICE CONFIGURATION
+// ============================================================
+//
+// generate_practice.py replaces this placeholder automatically.
+//
+// ============================================================
+
+const PRACTICE =
+    {"practice_id": "P01", "course": "Financial Econometrics", "title": "Practice 1 — Minimum Variance Portfolio", "mode": "graded", "max_points": 10.0, "questions": [{"id": "Q1", "title": "Inspecting and Cleaning the Data", "instructions": "\n<p>\nThe dataset contains monthly nominal stock prices for three US\ncompanies and the US Consumer Price Index (CPI).\n<\/p>\n\n<p>\nBegin by inspecting the dataset and identifying any missing\nobservations.\n<\/p>\n\n<p>\nWhen dealing with the missing CPI observations:\n<\/p>\n\n<ol>\n\n    <li>\n        If the final observation has no CPI value because the CPI\n        has not yet been published, remove that observation.\n    <\/li>\n\n    <li>\n        For an isolated missing CPI observation inside the sample,\n        use <strong>linear interpolation<\/strong> between the\n        surrounding observations.\n    <\/li>\n\n<\/ol>\n\n<p>\nCreate a DataFrame called <code>clean_data<\/code> containing the\ncleaned dataset.\n<\/p>\n\n<p>\nThe final dataset should contain no missing observations.\n<\/p>\n", "setup_code": "\nimport numpy as np\nimport pandas as pd\nfrom io import StringIO\n\n_csv_data = 'Date;Microsoft;JPMorgan;Exxon;USCPI\\n30/01/2015;40,4;54,38;87,42;234,747\\n27/02/2015;43,85;61,28;88,54;235,342\\n31/03/2015;40,655;60,58;85;235,976\\n30/04/2015;48,64;63,26;87,37;236,222\\n29/05/2015;46,86;65,78;85,2;237,001\\n30/06/2015;44,15;67,76;83,2;237,657\\n31/07/2015;46,7;68,53;79,21;238,034\\n31/08/2015;43,52;64,1;75,24;238,033\\n30/09/2015;44,26;60,97;74,35;237,498\\n30/10/2015;52,64;64,25;82,74;237,733\\n30/11/2015;54,35;66,68;81,66;238,017\\n31/12/2015;55,48;66,03;77,95;237,761\\n29/01/2016;55,09;59,5;77,85;237,652\\n29/02/2016;50,88;56,3;80,15;237,336\\n31/03/2016;55,23;59,22;83,59;238,08\\n29/04/2016;49,87;63,2;88,4;238,992\\n31/05/2016;53;65,27;89,02;239,557\\n30/06/2016;51,17;62,14;93,74;240,222\\n29/07/2016;56,68;63,97;88,95;240,101\\n31/08/2016;57,46;67,5;87,14;240,545\\n30/09/2016;57,6;66,59;87,28;241,176\\n31/10/2016;59,92;69,26;83,32;241,741\\n30/11/2016;60,26;80,17;87,3;242,026\\n30/12/2016;62,14;86,29;90,26;242,637\\n31/01/2017;64,65;84,63;83,89;243,618\\n28/02/2017;63,98;90,62;81,32;244,006\\n31/03/2017;65,86;87,84;82,01;243,892\\n28/04/2017;68,46;87;81,65;244,193\\n31/05/2017;69,84;82,15;80,5;244,004\\n30/06/2017;68,93;91,4;80,73;244,163\\n31/07/2017;72,7;91,8;80,04;244,243\\n31/08/2017;74,77;90,89;76,33;245,183\\n29/09/2017;74,49;95,51;81,98;246,435\\n31/10/2017;83,18;100,61;83,35;246,626\\n30/11/2017;84,17;104,52;83,29;247,284\\n29/12/2017;85,54;106,94;83,64;247,805\\n31/01/2018;95,01;115,67;87,3;248,859\\n28/02/2018;93,77;115,5;75,74;249,529\\n29/03/2018;91,27;109,97;74,61;249,577\\n30/04/2018;93,52;108,78;77,75;250,227\\n31/05/2018;98,84;107,01;81,24;250,792\\n29/06/2018;98,61;104,2;82,73;251,018\\n31/07/2018;106,08;114,95;81,51;251,214\\n31/08/2018;112,33;114,58;80,17;251,663\\n28/09/2018;114,37;112,84;85,02;252,182\\n31/10/2018;106,81;109,02;79,68;252,772\\n30/11/2018;110,89;111,19;79,5;252,594\\n31/12/2018;101,57;97,62;68,19;252,767\\n31/01/2019;104,43;103,5;73,28;252,561\\n28/02/2019;112,03;104,36;79,03;253,319\\n29/03/2019;117,94;101,23;80,8;254,277\\n30/04/2019;130,6;116,05;80,28;255,233\\n31/05/2019;123,68;105,96;70,77;255,296\\n28/06/2019;133,96;111,8;76,63;255,213\\n31/07/2019;136,27;116;74,36;255,802\\n30/08/2019;137,86;109,86;68,48;256,036\\n30/09/2019;139,03;117,69;70,61;256,43\\n31/10/2019;143,37;124,92;67,57;257,155\\n29/11/2019;151,38;131,76;68,13;257,879\\n31/12/2019;157,7;139,4;69,78;258,63\\n31/01/2020;170,23;132,36;62,12;259,127\\n28/02/2020;162,01;116,11;51,44;259,25\\n31/03/2020;157,71;90,03;37,97;258,076\\n30/04/2020;179,21;95,76;46,47;256,032\\n29/05/2020;183,25;97,31;45,47;255,802\\n30/06/2020;203,51;94,06;44,72;257,042\\n31/07/2020;205,01;96,64;42,08;258,352\\n31/08/2020;225,53;100,19;39,94;259,316\\n30/09/2020;210,33;96,27;34,33;259,997\\n30/10/2020;202,47;98,04;32,62;260,319\\n30/11/2020;214,07;117,88;38,13;260,911\\n31/12/2020;222,42;127,07;41,22;262,045\\n29/01/2021;231,96;128,67;44,84;262,687\\n26/02/2021;232,38;147,17;54,37;263,579\\n31/03/2021;235,77;152,23;55,83;264,961\\n30/04/2021;252,18;153,81;57,24;266,614\\n28/05/2021;249,68;164,24;58,37;268,383\\n30/06/2021;270,9;155,54;63,08;270,654\\n30/07/2021;284,91;151,78;57,57;271,903\\n31/08/2021;301,88;159,95;54,52;272,676\\n30/09/2021;281,92;163,69;58,82;273,91\\n29/10/2021;331,62;169,89;64,47;276,55\\n30/11/2021;330,59;158,83;59,84;278,919\\n31/12/2021;336,32;158,35;61,19;280,845\\n31/01/2022;310,98;148,6;75,96;282,543\\n28/02/2022;298,79;141,8;78,42;284,5\\n31/03/2022;308,31;136,32;82,59;287,674\\n29/04/2022;277,52;119,36;85,25;288,561\\n31/05/2022;271,87;132,23;96;291,298\\n30/06/2022;256,83;112,61;85,64;294,957\\n29/07/2022;280,74;115,36;96,93;294,913\\n31/08/2022;261,47;113,73;95,59;295,097\\n30/09/2022;232,9;104,5;87,31;296,349\\n31/10/2022;232,13;125,88;110,81;298,007\\n30/11/2022;255,14;138,18;111,34;298,786\\n30/12/2022;239,82;134,1;110,3;298,832\\n31/01/2023;247,81;139,96;116,01;300,42\\n28/02/2023;249,42;143,35;109,91;301,45\\n31/03/2023;288,3;130,31;109,66;301,821\\n28/04/2023;307,26;138,24;118,34;302,845\\n31/05/2023;328,39;135,71;102,18;303,334\\n30/06/2023;340,54;145,44;107,25;304,014\\n31/07/2023;335,92;157,96;107,24;304,609\\n31/08/2023;327,76;146,33;111,19;306,082\\n29/09/2023;315,75;145,02;117,58;307,276\\n31/10/2023;338,11;139,06;105,85;307,696\\n30/11/2023;378,91;156,08;102,74;308,148\\n29/12/2023;376,04;170,1;99,98;308,741\\n31/01/2024;397,58;174,36;102,81;309,698\\n29/02/2024;413,64;186,06;104,52;310,967\\n28/03/2024;420,72;200,3;116,24;312,345\\n30/04/2024;389,33;191,74;118,27;313,023\\n31/05/2024;415,13;202,63;117,26;313,175\\n28/06/2024;446,95;202,26;115,12;313,044\\n31/07/2024;418,35;212,8;118,59;313,569\\n30/08/2024;417,14;224,8;117,94;314,062\\n30/09/2024;430,3;210,86;117,22;314,732\\n31/10/2024;406,35;221,92;116,78;315,631\\n29/11/2024;423,46;249,72;117,96;316,528\\n31/12/2024;421,5;239,71;107,57;317,604\\n31/01/2025;415,06;267,3;106,83;318,961\\n28/02/2025;396,99;264,65;111,33;319,679\\n31/03/2025;375,39;245,3;118,93;319,785\\n30/04/2025;395,26;244,62;105,63;320,302\\n30/05/2025;460,36;264;102,3;320,62\\n30/06/2025;497,41;289,91;107,8;321,435\\n31/07/2025;533,5;296,24;111,64;322,169\\n29/08/2025;506,69;301,42;114,29;323,291\\n30/09/2025;517,95;315,43;112,75;324,245\\n31/10/2025;517,81;311,12;114,36;#N/D\\n28/11/2025;492,01;313,08;115,92;325,063\\n31/12/2025;483,62;322,22;120,34;326,031\\n30/01/2026;430,29;305,89;141,4;326,588\\n27/02/2026;392,74;300,3;152,5;327,46\\n31/03/2026;370,17;294,16;169,66;330,293\\n30/04/2026;407,78;313,23;154,33;332,407\\n29/05/2026;450,24;299,31;145,26;333,979\\n30/06/2026;373,02;327,33;136,72;332,568\\n31/07/2026;464,72;351,79;155,44;332,813\\n31/08/2026;507,29;356,02;160,95;#N/D\\n'\n\ndata = pd.read_csv(\n    StringIO(_csv_data),\n    sep=\";\",\n    decimal=\",\",\n    na_values=[\"#N/D\"]\n)\n", "imports": [], "exports": ["clean_data"], "starter_code": "import numpy as np\nimport pandas as pd\n\n# The original dataset is available as the DataFrame 'data'.\n\n# Inspect the data and write your code below\n\n\n", "max_points": 2.0, "tests": [{"name": "clean_data is a pandas DataFrame", "points": 0.25, "code": "\npassed = (\n    \"clean_data\" in globals()\n    and isinstance(clean_data, pd.DataFrame)\n)\n"}, {"name": "The unavailable final CPI observation is removed", "points": 0.25, "code": "\n_expected = data.iloc[:-1].copy()\n\npassed = (\n    \"clean_data\" in globals()\n    and len(clean_data) == len(_expected)\n)\n"}, {"name": "The internal CPI missing value is correctly interpolated", "points": 0.5, "code": "\n_expected = data.iloc[:-1].copy()\n\n_expected[\"USCPI\"] = (\n    _expected[\"USCPI\"]\n    .interpolate(method=\"linear\")\n)\n\ntry:\n\n    passed = (\n        \"clean_data\" in globals()\n        and np.allclose(\n            clean_data[\"USCPI\"].to_numpy(dtype=float),\n            _expected[\"USCPI\"].to_numpy(dtype=float),\n            rtol=1e-8,\n            atol=1e-8\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n"}, {"name": "clean_data contains the correct cleaned dataset", "points": 1.0, "code": "\n_expected = data.iloc[:-1].copy()\n\n_expected[\"USCPI\"] = (\n    _expected[\"USCPI\"]\n    .interpolate(method=\"linear\")\n)\n\ntry:\n\n    same_columns = (\n        list(clean_data.columns)\n        == list(_expected.columns)\n    )\n\n    same_shape = (\n        clean_data.shape\n        == _expected.shape\n    )\n\n    same_dates = (\n        clean_data[\"Date\"]\n        .reset_index(drop=True)\n        .equals(\n            _expected[\"Date\"]\n            .reset_index(drop=True)\n        )\n    )\n\n    numeric_cols = [\n        \"Microsoft\",\n        \"JPMorgan\",\n        \"Exxon\",\n        \"USCPI\"\n    ]\n\n    same_values = np.allclose(\n        clean_data[numeric_cols]\n        .to_numpy(dtype=float),\n\n        _expected[numeric_cols]\n        .to_numpy(dtype=float),\n\n        rtol=1e-8,\n        atol=1e-8\n    )\n\n    passed = (\n        same_columns\n        and same_shape\n        and same_dates\n        and same_values\n        and clean_data.isna().sum().sum() == 0\n    )\n\nexcept Exception:\n\n    passed = False\n"}]}, {"id": "Q2", "title": "From Nominal Prices to Real Returns", "instructions": "\n<p>\nContinue working with the <code>clean_data<\/code> DataFrame created\nin Question 1.\n<\/p>\n\n<p>\nConvert the three nominal stock-price series into real prices using\nthe CPI as the deflator.\n<\/p>\n\n<p>\nUse the CPI of the <strong>last observation in your cleaned\nsample<\/strong> as the reference-period CPI:\n<\/p>\n\n\\[\nP^{real}_{i,t}\n=\nP^{nominal}_{i,t}\n\\frac{CPI_T}{CPI_t}.\n\\]\n\n<p>\nCreate a DataFrame called <code>RealPrices<\/code> containing only\nthe three real stock-price series, with columns:\n<code>Microsoft<\/code>, <code>JPMorgan<\/code>, and <code>Exxon<\/code>.\n<\/p>\n\n<p>\nThen calculate the <strong>simple returns<\/strong>:\n<\/p>\n\n\\[\nR_{i,t}\n=\n\\frac{P_{i,t}}{P_{i,t-1}}-1.\n\\]\n\n<p>\nStore the resulting return series in a DataFrame called\n<code>RReturns<\/code>, preserving the same three column names.\n<\/p>\n\n<p>\nDo not retain an initial row of missing returns.\n<\/p>\n", "setup_code": "\nimport numpy as np\nimport pandas as pd\nfrom io import StringIO\n\n_csv_data = 'Date;Microsoft;JPMorgan;Exxon;USCPI\\n30/01/2015;40,4;54,38;87,42;234,747\\n27/02/2015;43,85;61,28;88,54;235,342\\n31/03/2015;40,655;60,58;85;235,976\\n30/04/2015;48,64;63,26;87,37;236,222\\n29/05/2015;46,86;65,78;85,2;237,001\\n30/06/2015;44,15;67,76;83,2;237,657\\n31/07/2015;46,7;68,53;79,21;238,034\\n31/08/2015;43,52;64,1;75,24;238,033\\n30/09/2015;44,26;60,97;74,35;237,498\\n30/10/2015;52,64;64,25;82,74;237,733\\n30/11/2015;54,35;66,68;81,66;238,017\\n31/12/2015;55,48;66,03;77,95;237,761\\n29/01/2016;55,09;59,5;77,85;237,652\\n29/02/2016;50,88;56,3;80,15;237,336\\n31/03/2016;55,23;59,22;83,59;238,08\\n29/04/2016;49,87;63,2;88,4;238,992\\n31/05/2016;53;65,27;89,02;239,557\\n30/06/2016;51,17;62,14;93,74;240,222\\n29/07/2016;56,68;63,97;88,95;240,101\\n31/08/2016;57,46;67,5;87,14;240,545\\n30/09/2016;57,6;66,59;87,28;241,176\\n31/10/2016;59,92;69,26;83,32;241,741\\n30/11/2016;60,26;80,17;87,3;242,026\\n30/12/2016;62,14;86,29;90,26;242,637\\n31/01/2017;64,65;84,63;83,89;243,618\\n28/02/2017;63,98;90,62;81,32;244,006\\n31/03/2017;65,86;87,84;82,01;243,892\\n28/04/2017;68,46;87;81,65;244,193\\n31/05/2017;69,84;82,15;80,5;244,004\\n30/06/2017;68,93;91,4;80,73;244,163\\n31/07/2017;72,7;91,8;80,04;244,243\\n31/08/2017;74,77;90,89;76,33;245,183\\n29/09/2017;74,49;95,51;81,98;246,435\\n31/10/2017;83,18;100,61;83,35;246,626\\n30/11/2017;84,17;104,52;83,29;247,284\\n29/12/2017;85,54;106,94;83,64;247,805\\n31/01/2018;95,01;115,67;87,3;248,859\\n28/02/2018;93,77;115,5;75,74;249,529\\n29/03/2018;91,27;109,97;74,61;249,577\\n30/04/2018;93,52;108,78;77,75;250,227\\n31/05/2018;98,84;107,01;81,24;250,792\\n29/06/2018;98,61;104,2;82,73;251,018\\n31/07/2018;106,08;114,95;81,51;251,214\\n31/08/2018;112,33;114,58;80,17;251,663\\n28/09/2018;114,37;112,84;85,02;252,182\\n31/10/2018;106,81;109,02;79,68;252,772\\n30/11/2018;110,89;111,19;79,5;252,594\\n31/12/2018;101,57;97,62;68,19;252,767\\n31/01/2019;104,43;103,5;73,28;252,561\\n28/02/2019;112,03;104,36;79,03;253,319\\n29/03/2019;117,94;101,23;80,8;254,277\\n30/04/2019;130,6;116,05;80,28;255,233\\n31/05/2019;123,68;105,96;70,77;255,296\\n28/06/2019;133,96;111,8;76,63;255,213\\n31/07/2019;136,27;116;74,36;255,802\\n30/08/2019;137,86;109,86;68,48;256,036\\n30/09/2019;139,03;117,69;70,61;256,43\\n31/10/2019;143,37;124,92;67,57;257,155\\n29/11/2019;151,38;131,76;68,13;257,879\\n31/12/2019;157,7;139,4;69,78;258,63\\n31/01/2020;170,23;132,36;62,12;259,127\\n28/02/2020;162,01;116,11;51,44;259,25\\n31/03/2020;157,71;90,03;37,97;258,076\\n30/04/2020;179,21;95,76;46,47;256,032\\n29/05/2020;183,25;97,31;45,47;255,802\\n30/06/2020;203,51;94,06;44,72;257,042\\n31/07/2020;205,01;96,64;42,08;258,352\\n31/08/2020;225,53;100,19;39,94;259,316\\n30/09/2020;210,33;96,27;34,33;259,997\\n30/10/2020;202,47;98,04;32,62;260,319\\n30/11/2020;214,07;117,88;38,13;260,911\\n31/12/2020;222,42;127,07;41,22;262,045\\n29/01/2021;231,96;128,67;44,84;262,687\\n26/02/2021;232,38;147,17;54,37;263,579\\n31/03/2021;235,77;152,23;55,83;264,961\\n30/04/2021;252,18;153,81;57,24;266,614\\n28/05/2021;249,68;164,24;58,37;268,383\\n30/06/2021;270,9;155,54;63,08;270,654\\n30/07/2021;284,91;151,78;57,57;271,903\\n31/08/2021;301,88;159,95;54,52;272,676\\n30/09/2021;281,92;163,69;58,82;273,91\\n29/10/2021;331,62;169,89;64,47;276,55\\n30/11/2021;330,59;158,83;59,84;278,919\\n31/12/2021;336,32;158,35;61,19;280,845\\n31/01/2022;310,98;148,6;75,96;282,543\\n28/02/2022;298,79;141,8;78,42;284,5\\n31/03/2022;308,31;136,32;82,59;287,674\\n29/04/2022;277,52;119,36;85,25;288,561\\n31/05/2022;271,87;132,23;96;291,298\\n30/06/2022;256,83;112,61;85,64;294,957\\n29/07/2022;280,74;115,36;96,93;294,913\\n31/08/2022;261,47;113,73;95,59;295,097\\n30/09/2022;232,9;104,5;87,31;296,349\\n31/10/2022;232,13;125,88;110,81;298,007\\n30/11/2022;255,14;138,18;111,34;298,786\\n30/12/2022;239,82;134,1;110,3;298,832\\n31/01/2023;247,81;139,96;116,01;300,42\\n28/02/2023;249,42;143,35;109,91;301,45\\n31/03/2023;288,3;130,31;109,66;301,821\\n28/04/2023;307,26;138,24;118,34;302,845\\n31/05/2023;328,39;135,71;102,18;303,334\\n30/06/2023;340,54;145,44;107,25;304,014\\n31/07/2023;335,92;157,96;107,24;304,609\\n31/08/2023;327,76;146,33;111,19;306,082\\n29/09/2023;315,75;145,02;117,58;307,276\\n31/10/2023;338,11;139,06;105,85;307,696\\n30/11/2023;378,91;156,08;102,74;308,148\\n29/12/2023;376,04;170,1;99,98;308,741\\n31/01/2024;397,58;174,36;102,81;309,698\\n29/02/2024;413,64;186,06;104,52;310,967\\n28/03/2024;420,72;200,3;116,24;312,345\\n30/04/2024;389,33;191,74;118,27;313,023\\n31/05/2024;415,13;202,63;117,26;313,175\\n28/06/2024;446,95;202,26;115,12;313,044\\n31/07/2024;418,35;212,8;118,59;313,569\\n30/08/2024;417,14;224,8;117,94;314,062\\n30/09/2024;430,3;210,86;117,22;314,732\\n31/10/2024;406,35;221,92;116,78;315,631\\n29/11/2024;423,46;249,72;117,96;316,528\\n31/12/2024;421,5;239,71;107,57;317,604\\n31/01/2025;415,06;267,3;106,83;318,961\\n28/02/2025;396,99;264,65;111,33;319,679\\n31/03/2025;375,39;245,3;118,93;319,785\\n30/04/2025;395,26;244,62;105,63;320,302\\n30/05/2025;460,36;264;102,3;320,62\\n30/06/2025;497,41;289,91;107,8;321,435\\n31/07/2025;533,5;296,24;111,64;322,169\\n29/08/2025;506,69;301,42;114,29;323,291\\n30/09/2025;517,95;315,43;112,75;324,245\\n31/10/2025;517,81;311,12;114,36;#N/D\\n28/11/2025;492,01;313,08;115,92;325,063\\n31/12/2025;483,62;322,22;120,34;326,031\\n30/01/2026;430,29;305,89;141,4;326,588\\n27/02/2026;392,74;300,3;152,5;327,46\\n31/03/2026;370,17;294,16;169,66;330,293\\n30/04/2026;407,78;313,23;154,33;332,407\\n29/05/2026;450,24;299,31;145,26;333,979\\n30/06/2026;373,02;327,33;136,72;332,568\\n31/07/2026;464,72;351,79;155,44;332,813\\n31/08/2026;507,29;356,02;160,95;#N/D\\n'\n\ndata = pd.read_csv(\n    StringIO(_csv_data),\n    sep=\";\",\n    decimal=\",\",\n    na_values=[\"#N/D\"]\n)\n", "imports": ["clean_data"], "exports": ["RealPrices", "RReturns"], "starter_code": "import numpy as np\nimport pandas as pd\n\n# Your clean_data DataFrame from Question 1 is available.\n\n# Write your code below\n\n\n", "max_points": 2.5, "tests": [{"name": "RealPrices is correctly calculated from clean_data", "points": 1.25, "code": "\n_asset_cols = [\n    \"Microsoft\",\n    \"JPMorgan\",\n    \"Exxon\"\n]\n\n_reference_cpi = (\n    clean_data[\"USCPI\"].iloc[-1]\n)\n\n_expected_real = (\n    clean_data[_asset_cols]\n    .div(\n        clean_data[\"USCPI\"],\n        axis=0\n    )\n    * _reference_cpi\n)\n\ntry:\n\n    passed = (\n        \"RealPrices\" in globals()\n        and isinstance(RealPrices, pd.DataFrame)\n        and list(RealPrices.columns) == _asset_cols\n        and RealPrices.shape == _expected_real.shape\n        and np.allclose(\n            RealPrices.to_numpy(dtype=float),\n            _expected_real.to_numpy(dtype=float),\n            rtol=1e-7,\n            atol=1e-8\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n"}, {"name": "RReturns contains the correct simple real returns", "points": 1.25, "code": "\n_expected_returns = (\n    RealPrices\n    .pct_change(fill_method=None)\n    .dropna()\n)\n\ntry:\n\n    passed = (\n        \"RReturns\" in globals()\n        and isinstance(RReturns, pd.DataFrame)\n        and list(RReturns.columns) == [\n            \"Microsoft\",\n            \"JPMorgan\",\n            \"Exxon\"\n        ]\n        and RReturns.shape == _expected_returns.shape\n        and np.allclose(\n            RReturns.to_numpy(dtype=float),\n            _expected_returns.to_numpy(dtype=float),\n            rtol=1e-7,\n            atol=1e-8\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n"}]}, {"id": "Q3", "title": "Expected Returns, Covariance and Correlation", "instructions": "\n<p>\nContinue working with the <code>RReturns<\/code> DataFrame created\nin Question 2.\n<\/p>\n\n<p>\nCalculate:\n<\/p>\n\n<ul>\n\n    <li>\n        <code>ExpReturns<\/code>:\n        the vector of sample mean returns for the three assets.\n    <\/li>\n\n    <li>\n        <code>VarCov<\/code>:\n        the sample variance-covariance matrix.\n    <\/li>\n\n    <li>\n        <code>CorrMat<\/code>:\n        the correlation matrix.\n    <\/li>\n\n<\/ul>\n\n<p>\nStore <code>ExpReturns<\/code> as a NumPy array with three elements.\nStore <code>VarCov<\/code> and <code>CorrMat<\/code> as\n\\(3\\times3\\) NumPy arrays.\n<\/p>\n\n<p>\nRecall that:\n<\/p>\n\n\\[\nV =\n\\frac{R'R}{T-1},\n\\]\n\n<p>\nwhere the columns of \\(R\\) contain demeaned return observations.\n<\/p>\n\n<p>\nThe correlation matrix should be symmetric and have ones on its\nmain diagonal.\n<\/p>\n", "setup_code": "\nimport numpy as np\nimport pandas as pd\nfrom io import StringIO\n\n_csv_data = 'Date;Microsoft;JPMorgan;Exxon;USCPI\\n30/01/2015;40,4;54,38;87,42;234,747\\n27/02/2015;43,85;61,28;88,54;235,342\\n31/03/2015;40,655;60,58;85;235,976\\n30/04/2015;48,64;63,26;87,37;236,222\\n29/05/2015;46,86;65,78;85,2;237,001\\n30/06/2015;44,15;67,76;83,2;237,657\\n31/07/2015;46,7;68,53;79,21;238,034\\n31/08/2015;43,52;64,1;75,24;238,033\\n30/09/2015;44,26;60,97;74,35;237,498\\n30/10/2015;52,64;64,25;82,74;237,733\\n30/11/2015;54,35;66,68;81,66;238,017\\n31/12/2015;55,48;66,03;77,95;237,761\\n29/01/2016;55,09;59,5;77,85;237,652\\n29/02/2016;50,88;56,3;80,15;237,336\\n31/03/2016;55,23;59,22;83,59;238,08\\n29/04/2016;49,87;63,2;88,4;238,992\\n31/05/2016;53;65,27;89,02;239,557\\n30/06/2016;51,17;62,14;93,74;240,222\\n29/07/2016;56,68;63,97;88,95;240,101\\n31/08/2016;57,46;67,5;87,14;240,545\\n30/09/2016;57,6;66,59;87,28;241,176\\n31/10/2016;59,92;69,26;83,32;241,741\\n30/11/2016;60,26;80,17;87,3;242,026\\n30/12/2016;62,14;86,29;90,26;242,637\\n31/01/2017;64,65;84,63;83,89;243,618\\n28/02/2017;63,98;90,62;81,32;244,006\\n31/03/2017;65,86;87,84;82,01;243,892\\n28/04/2017;68,46;87;81,65;244,193\\n31/05/2017;69,84;82,15;80,5;244,004\\n30/06/2017;68,93;91,4;80,73;244,163\\n31/07/2017;72,7;91,8;80,04;244,243\\n31/08/2017;74,77;90,89;76,33;245,183\\n29/09/2017;74,49;95,51;81,98;246,435\\n31/10/2017;83,18;100,61;83,35;246,626\\n30/11/2017;84,17;104,52;83,29;247,284\\n29/12/2017;85,54;106,94;83,64;247,805\\n31/01/2018;95,01;115,67;87,3;248,859\\n28/02/2018;93,77;115,5;75,74;249,529\\n29/03/2018;91,27;109,97;74,61;249,577\\n30/04/2018;93,52;108,78;77,75;250,227\\n31/05/2018;98,84;107,01;81,24;250,792\\n29/06/2018;98,61;104,2;82,73;251,018\\n31/07/2018;106,08;114,95;81,51;251,214\\n31/08/2018;112,33;114,58;80,17;251,663\\n28/09/2018;114,37;112,84;85,02;252,182\\n31/10/2018;106,81;109,02;79,68;252,772\\n30/11/2018;110,89;111,19;79,5;252,594\\n31/12/2018;101,57;97,62;68,19;252,767\\n31/01/2019;104,43;103,5;73,28;252,561\\n28/02/2019;112,03;104,36;79,03;253,319\\n29/03/2019;117,94;101,23;80,8;254,277\\n30/04/2019;130,6;116,05;80,28;255,233\\n31/05/2019;123,68;105,96;70,77;255,296\\n28/06/2019;133,96;111,8;76,63;255,213\\n31/07/2019;136,27;116;74,36;255,802\\n30/08/2019;137,86;109,86;68,48;256,036\\n30/09/2019;139,03;117,69;70,61;256,43\\n31/10/2019;143,37;124,92;67,57;257,155\\n29/11/2019;151,38;131,76;68,13;257,879\\n31/12/2019;157,7;139,4;69,78;258,63\\n31/01/2020;170,23;132,36;62,12;259,127\\n28/02/2020;162,01;116,11;51,44;259,25\\n31/03/2020;157,71;90,03;37,97;258,076\\n30/04/2020;179,21;95,76;46,47;256,032\\n29/05/2020;183,25;97,31;45,47;255,802\\n30/06/2020;203,51;94,06;44,72;257,042\\n31/07/2020;205,01;96,64;42,08;258,352\\n31/08/2020;225,53;100,19;39,94;259,316\\n30/09/2020;210,33;96,27;34,33;259,997\\n30/10/2020;202,47;98,04;32,62;260,319\\n30/11/2020;214,07;117,88;38,13;260,911\\n31/12/2020;222,42;127,07;41,22;262,045\\n29/01/2021;231,96;128,67;44,84;262,687\\n26/02/2021;232,38;147,17;54,37;263,579\\n31/03/2021;235,77;152,23;55,83;264,961\\n30/04/2021;252,18;153,81;57,24;266,614\\n28/05/2021;249,68;164,24;58,37;268,383\\n30/06/2021;270,9;155,54;63,08;270,654\\n30/07/2021;284,91;151,78;57,57;271,903\\n31/08/2021;301,88;159,95;54,52;272,676\\n30/09/2021;281,92;163,69;58,82;273,91\\n29/10/2021;331,62;169,89;64,47;276,55\\n30/11/2021;330,59;158,83;59,84;278,919\\n31/12/2021;336,32;158,35;61,19;280,845\\n31/01/2022;310,98;148,6;75,96;282,543\\n28/02/2022;298,79;141,8;78,42;284,5\\n31/03/2022;308,31;136,32;82,59;287,674\\n29/04/2022;277,52;119,36;85,25;288,561\\n31/05/2022;271,87;132,23;96;291,298\\n30/06/2022;256,83;112,61;85,64;294,957\\n29/07/2022;280,74;115,36;96,93;294,913\\n31/08/2022;261,47;113,73;95,59;295,097\\n30/09/2022;232,9;104,5;87,31;296,349\\n31/10/2022;232,13;125,88;110,81;298,007\\n30/11/2022;255,14;138,18;111,34;298,786\\n30/12/2022;239,82;134,1;110,3;298,832\\n31/01/2023;247,81;139,96;116,01;300,42\\n28/02/2023;249,42;143,35;109,91;301,45\\n31/03/2023;288,3;130,31;109,66;301,821\\n28/04/2023;307,26;138,24;118,34;302,845\\n31/05/2023;328,39;135,71;102,18;303,334\\n30/06/2023;340,54;145,44;107,25;304,014\\n31/07/2023;335,92;157,96;107,24;304,609\\n31/08/2023;327,76;146,33;111,19;306,082\\n29/09/2023;315,75;145,02;117,58;307,276\\n31/10/2023;338,11;139,06;105,85;307,696\\n30/11/2023;378,91;156,08;102,74;308,148\\n29/12/2023;376,04;170,1;99,98;308,741\\n31/01/2024;397,58;174,36;102,81;309,698\\n29/02/2024;413,64;186,06;104,52;310,967\\n28/03/2024;420,72;200,3;116,24;312,345\\n30/04/2024;389,33;191,74;118,27;313,023\\n31/05/2024;415,13;202,63;117,26;313,175\\n28/06/2024;446,95;202,26;115,12;313,044\\n31/07/2024;418,35;212,8;118,59;313,569\\n30/08/2024;417,14;224,8;117,94;314,062\\n30/09/2024;430,3;210,86;117,22;314,732\\n31/10/2024;406,35;221,92;116,78;315,631\\n29/11/2024;423,46;249,72;117,96;316,528\\n31/12/2024;421,5;239,71;107,57;317,604\\n31/01/2025;415,06;267,3;106,83;318,961\\n28/02/2025;396,99;264,65;111,33;319,679\\n31/03/2025;375,39;245,3;118,93;319,785\\n30/04/2025;395,26;244,62;105,63;320,302\\n30/05/2025;460,36;264;102,3;320,62\\n30/06/2025;497,41;289,91;107,8;321,435\\n31/07/2025;533,5;296,24;111,64;322,169\\n29/08/2025;506,69;301,42;114,29;323,291\\n30/09/2025;517,95;315,43;112,75;324,245\\n31/10/2025;517,81;311,12;114,36;#N/D\\n28/11/2025;492,01;313,08;115,92;325,063\\n31/12/2025;483,62;322,22;120,34;326,031\\n30/01/2026;430,29;305,89;141,4;326,588\\n27/02/2026;392,74;300,3;152,5;327,46\\n31/03/2026;370,17;294,16;169,66;330,293\\n30/04/2026;407,78;313,23;154,33;332,407\\n29/05/2026;450,24;299,31;145,26;333,979\\n30/06/2026;373,02;327,33;136,72;332,568\\n31/07/2026;464,72;351,79;155,44;332,813\\n31/08/2026;507,29;356,02;160,95;#N/D\\n'\n\ndata = pd.read_csv(\n    StringIO(_csv_data),\n    sep=\";\",\n    decimal=\",\",\n    na_values=[\"#N/D\"]\n)\n", "imports": ["RReturns"], "exports": ["ExpReturns", "VarCov", "CorrMat"], "starter_code": "import numpy as np\nimport pandas as pd\n\n# Your RReturns DataFrame from Question 2 is available.\n\n# Write your code below\n\n\n", "max_points": 2.5, "tests": [{"name": "ExpReturns is correct", "points": 0.5, "code": "\n_expected_mean = (\n    RReturns\n    .mean()\n    .to_numpy()\n)\n\ntry:\n\n    passed = (\n        \"ExpReturns\" in globals()\n        and np.asarray(ExpReturns).shape == (3,)\n        and np.allclose(\n            np.asarray(\n                ExpReturns,\n                dtype=float\n            ),\n            _expected_mean,\n            rtol=1e-7,\n            atol=1e-8\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n"}, {"name": "VarCov is the correct sample variance-covariance matrix", "points": 1.0, "code": "\n_expected_cov = (\n    RReturns\n    .cov()\n    .to_numpy()\n)\n\ntry:\n\n    passed = (\n        \"VarCov\" in globals()\n        and np.asarray(VarCov).shape == (3, 3)\n        and np.allclose(\n            np.asarray(\n                VarCov,\n                dtype=float\n            ),\n            _expected_cov,\n            rtol=1e-7,\n            atol=1e-10\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n"}, {"name": "CorrMat is the correct correlation matrix", "points": 1.0, "code": "\n_expected_corr = (\n    RReturns\n    .corr()\n    .to_numpy()\n)\n\ntry:\n\n    passed = (\n        \"CorrMat\" in globals()\n        and np.asarray(CorrMat).shape == (3, 3)\n        and np.allclose(\n            np.asarray(\n                CorrMat,\n                dtype=float\n            ),\n            _expected_corr,\n            rtol=1e-7,\n            atol=1e-8\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n"}]}, {"id": "Q4", "title": "Minimum Variance Portfolio", "instructions": "\n        <p>\n        Continue using the moments estimated in Question 3.\n        <\/p>\n\n        <p>\n        Let \\(V\\) denote your variance-covariance matrix. The global\n        minimum-variance portfolio solves:\n        <\/p>\n\n        \\[\n        \\min_w \\quad w'Vw\n        \\]\n\n        <p>\n        subject to:\n        <\/p>\n\n        \\[\n        \\mathbf{1}'w = 1.\n        \\]\n\n        <p>\n        Solve this optimization problem <strong>numerically<\/strong> using\n        <code>scipy.optimize.minimize<\/code>. Do not use the analytical\n        closed-form solution for the global minimum-variance portfolio.\n        <\/p>\n\n        <p>\n        <strong>Numerical accuracy:<\/strong>\n        Solve the optimization problem using an objective-function tolerance\n        of \\(10^{-12}\\) or smaller.\n        <\/p>\n\n        <p>\n        First, define a Python function called\n        <code>portfolio_variance(w)<\/code> that returns the portfolio\n        variance for a given vector of portfolio weights:\n        <\/p>\n\n        \\[\n        \\sigma_P^2 = w'Vw.\n        \\]\n\n        <p>\n        Then:\n        <\/p>\n\n        <ol>\n            <li>\n                Define the equality constraint requiring the portfolio\n                weights to sum to one.\n            <\/li>\n\n            <li>\n                Choose an initial vector of portfolio weights.\n            <\/li>\n\n            <li>\n                Use <code>scipy.optimize.minimize<\/code> to solve the\n                constrained optimization problem.\n            <\/li>\n        <\/ol>\n\n        <p>\n        Create:\n        <\/p>\n\n        <ul>\n\n            <li>\n                <code>W<\/code>: the optimal portfolio weights as a NumPy\n                array with three elements.\n            <\/li>\n\n            <li>\n                <code>PV<\/code>: the variance of the resulting portfolio.\n            <\/li>\n\n            <li>\n                <code>ExpPortReturn<\/code>: the expected return of the\n                resulting portfolio.\n            <\/li>\n\n        <\/ul>\n\n        \\[\n        PV = w'Vw\n        \\]\n\n        \\[\n        E(r_P) = E(r)'w.\n        \\]\n\n        <p>\n        Short positions are allowed. Do not impose non-negativity\n        constraints on the portfolio weights.\n        <\/p>\n        ", "setup_code": "\nimport numpy as np\nimport pandas as pd\nfrom io import StringIO\n\n_csv_data = 'Date;Microsoft;JPMorgan;Exxon;USCPI\\n30/01/2015;40,4;54,38;87,42;234,747\\n27/02/2015;43,85;61,28;88,54;235,342\\n31/03/2015;40,655;60,58;85;235,976\\n30/04/2015;48,64;63,26;87,37;236,222\\n29/05/2015;46,86;65,78;85,2;237,001\\n30/06/2015;44,15;67,76;83,2;237,657\\n31/07/2015;46,7;68,53;79,21;238,034\\n31/08/2015;43,52;64,1;75,24;238,033\\n30/09/2015;44,26;60,97;74,35;237,498\\n30/10/2015;52,64;64,25;82,74;237,733\\n30/11/2015;54,35;66,68;81,66;238,017\\n31/12/2015;55,48;66,03;77,95;237,761\\n29/01/2016;55,09;59,5;77,85;237,652\\n29/02/2016;50,88;56,3;80,15;237,336\\n31/03/2016;55,23;59,22;83,59;238,08\\n29/04/2016;49,87;63,2;88,4;238,992\\n31/05/2016;53;65,27;89,02;239,557\\n30/06/2016;51,17;62,14;93,74;240,222\\n29/07/2016;56,68;63,97;88,95;240,101\\n31/08/2016;57,46;67,5;87,14;240,545\\n30/09/2016;57,6;66,59;87,28;241,176\\n31/10/2016;59,92;69,26;83,32;241,741\\n30/11/2016;60,26;80,17;87,3;242,026\\n30/12/2016;62,14;86,29;90,26;242,637\\n31/01/2017;64,65;84,63;83,89;243,618\\n28/02/2017;63,98;90,62;81,32;244,006\\n31/03/2017;65,86;87,84;82,01;243,892\\n28/04/2017;68,46;87;81,65;244,193\\n31/05/2017;69,84;82,15;80,5;244,004\\n30/06/2017;68,93;91,4;80,73;244,163\\n31/07/2017;72,7;91,8;80,04;244,243\\n31/08/2017;74,77;90,89;76,33;245,183\\n29/09/2017;74,49;95,51;81,98;246,435\\n31/10/2017;83,18;100,61;83,35;246,626\\n30/11/2017;84,17;104,52;83,29;247,284\\n29/12/2017;85,54;106,94;83,64;247,805\\n31/01/2018;95,01;115,67;87,3;248,859\\n28/02/2018;93,77;115,5;75,74;249,529\\n29/03/2018;91,27;109,97;74,61;249,577\\n30/04/2018;93,52;108,78;77,75;250,227\\n31/05/2018;98,84;107,01;81,24;250,792\\n29/06/2018;98,61;104,2;82,73;251,018\\n31/07/2018;106,08;114,95;81,51;251,214\\n31/08/2018;112,33;114,58;80,17;251,663\\n28/09/2018;114,37;112,84;85,02;252,182\\n31/10/2018;106,81;109,02;79,68;252,772\\n30/11/2018;110,89;111,19;79,5;252,594\\n31/12/2018;101,57;97,62;68,19;252,767\\n31/01/2019;104,43;103,5;73,28;252,561\\n28/02/2019;112,03;104,36;79,03;253,319\\n29/03/2019;117,94;101,23;80,8;254,277\\n30/04/2019;130,6;116,05;80,28;255,233\\n31/05/2019;123,68;105,96;70,77;255,296\\n28/06/2019;133,96;111,8;76,63;255,213\\n31/07/2019;136,27;116;74,36;255,802\\n30/08/2019;137,86;109,86;68,48;256,036\\n30/09/2019;139,03;117,69;70,61;256,43\\n31/10/2019;143,37;124,92;67,57;257,155\\n29/11/2019;151,38;131,76;68,13;257,879\\n31/12/2019;157,7;139,4;69,78;258,63\\n31/01/2020;170,23;132,36;62,12;259,127\\n28/02/2020;162,01;116,11;51,44;259,25\\n31/03/2020;157,71;90,03;37,97;258,076\\n30/04/2020;179,21;95,76;46,47;256,032\\n29/05/2020;183,25;97,31;45,47;255,802\\n30/06/2020;203,51;94,06;44,72;257,042\\n31/07/2020;205,01;96,64;42,08;258,352\\n31/08/2020;225,53;100,19;39,94;259,316\\n30/09/2020;210,33;96,27;34,33;259,997\\n30/10/2020;202,47;98,04;32,62;260,319\\n30/11/2020;214,07;117,88;38,13;260,911\\n31/12/2020;222,42;127,07;41,22;262,045\\n29/01/2021;231,96;128,67;44,84;262,687\\n26/02/2021;232,38;147,17;54,37;263,579\\n31/03/2021;235,77;152,23;55,83;264,961\\n30/04/2021;252,18;153,81;57,24;266,614\\n28/05/2021;249,68;164,24;58,37;268,383\\n30/06/2021;270,9;155,54;63,08;270,654\\n30/07/2021;284,91;151,78;57,57;271,903\\n31/08/2021;301,88;159,95;54,52;272,676\\n30/09/2021;281,92;163,69;58,82;273,91\\n29/10/2021;331,62;169,89;64,47;276,55\\n30/11/2021;330,59;158,83;59,84;278,919\\n31/12/2021;336,32;158,35;61,19;280,845\\n31/01/2022;310,98;148,6;75,96;282,543\\n28/02/2022;298,79;141,8;78,42;284,5\\n31/03/2022;308,31;136,32;82,59;287,674\\n29/04/2022;277,52;119,36;85,25;288,561\\n31/05/2022;271,87;132,23;96;291,298\\n30/06/2022;256,83;112,61;85,64;294,957\\n29/07/2022;280,74;115,36;96,93;294,913\\n31/08/2022;261,47;113,73;95,59;295,097\\n30/09/2022;232,9;104,5;87,31;296,349\\n31/10/2022;232,13;125,88;110,81;298,007\\n30/11/2022;255,14;138,18;111,34;298,786\\n30/12/2022;239,82;134,1;110,3;298,832\\n31/01/2023;247,81;139,96;116,01;300,42\\n28/02/2023;249,42;143,35;109,91;301,45\\n31/03/2023;288,3;130,31;109,66;301,821\\n28/04/2023;307,26;138,24;118,34;302,845\\n31/05/2023;328,39;135,71;102,18;303,334\\n30/06/2023;340,54;145,44;107,25;304,014\\n31/07/2023;335,92;157,96;107,24;304,609\\n31/08/2023;327,76;146,33;111,19;306,082\\n29/09/2023;315,75;145,02;117,58;307,276\\n31/10/2023;338,11;139,06;105,85;307,696\\n30/11/2023;378,91;156,08;102,74;308,148\\n29/12/2023;376,04;170,1;99,98;308,741\\n31/01/2024;397,58;174,36;102,81;309,698\\n29/02/2024;413,64;186,06;104,52;310,967\\n28/03/2024;420,72;200,3;116,24;312,345\\n30/04/2024;389,33;191,74;118,27;313,023\\n31/05/2024;415,13;202,63;117,26;313,175\\n28/06/2024;446,95;202,26;115,12;313,044\\n31/07/2024;418,35;212,8;118,59;313,569\\n30/08/2024;417,14;224,8;117,94;314,062\\n30/09/2024;430,3;210,86;117,22;314,732\\n31/10/2024;406,35;221,92;116,78;315,631\\n29/11/2024;423,46;249,72;117,96;316,528\\n31/12/2024;421,5;239,71;107,57;317,604\\n31/01/2025;415,06;267,3;106,83;318,961\\n28/02/2025;396,99;264,65;111,33;319,679\\n31/03/2025;375,39;245,3;118,93;319,785\\n30/04/2025;395,26;244,62;105,63;320,302\\n30/05/2025;460,36;264;102,3;320,62\\n30/06/2025;497,41;289,91;107,8;321,435\\n31/07/2025;533,5;296,24;111,64;322,169\\n29/08/2025;506,69;301,42;114,29;323,291\\n30/09/2025;517,95;315,43;112,75;324,245\\n31/10/2025;517,81;311,12;114,36;#N/D\\n28/11/2025;492,01;313,08;115,92;325,063\\n31/12/2025;483,62;322,22;120,34;326,031\\n30/01/2026;430,29;305,89;141,4;326,588\\n27/02/2026;392,74;300,3;152,5;327,46\\n31/03/2026;370,17;294,16;169,66;330,293\\n30/04/2026;407,78;313,23;154,33;332,407\\n29/05/2026;450,24;299,31;145,26;333,979\\n30/06/2026;373,02;327,33;136,72;332,568\\n31/07/2026;464,72;351,79;155,44;332,813\\n31/08/2026;507,29;356,02;160,95;#N/D\\n'\n\ndata = pd.read_csv(\n    StringIO(_csv_data),\n    sep=\";\",\n    decimal=\",\",\n    na_values=[\"#N/D\"]\n)\n", "imports": ["ExpReturns", "VarCov", "CorrMat"], "exports": ["W", "PV", "ExpPortReturn"], "starter_code": "import numpy as np\nfrom scipy.optimize import minimize\n\n# Your ExpReturns, VarCov and CorrMat objects\n# from Question 3 are available.\n\n# Write your code below\n\n\n", "max_points": 3.0, "tests": [{"name": "portfolio_variance correctly defines the objective function", "points": 0.5, "code": "\n        try:\n\n            _test_w = np.array([\n                0.2,\n                0.3,\n                0.5\n            ])\n\n            _expected_value = (\n                _test_w.T\n                @ VarCov\n                @ _test_w\n            )\n\n            passed = (\n                \"portfolio_variance\" in globals()\n                and callable(portfolio_variance)\n                and np.isclose(\n                    portfolio_variance(_test_w),\n                    _expected_value,\n                    rtol=1e-7,\n                    atol=1e-10\n                )\n            )\n\n        except Exception:\n\n            passed = False\n        "}, {"name": "W contains the minimum-variance portfolio weights", "points": 1.0, "code": "\n        try:\n\n            _ones = np.ones(3)\n\n            _inv_cov = np.linalg.inv(\n                VarCov\n            )\n\n            _expected_w = (\n                _inv_cov\n                @ _ones\n            )\n\n            _expected_w = (\n                _expected_w\n                / (\n                    _ones\n                    @ _inv_cov\n                    @ _ones\n                )\n            )\n\n            student_w = np.asarray(\n                W,\n                dtype=float\n            ).reshape(-1)\n\n            passed = (\n                \"W\" in globals()\n                and student_w.shape == (3,)\n                and np.allclose(\n                    student_w,\n                    _expected_w,\n                    rtol=1e-4,\n                    atol=1e-6\n                )\n            )\n\n        except Exception:\n\n            passed = False\n        "}, {"name": "Portfolio weights sum to one", "points": 0.25, "code": "\n        try:\n\n            student_w = np.asarray(\n                W,\n                dtype=float\n            ).reshape(-1)\n\n            passed = (\n                student_w.shape == (3,)\n                and np.isclose(\n                    np.sum(student_w),\n                    1.0,\n                    atol=1e-6\n                )\n            )\n\n        except Exception:\n\n            passed = False\n        "}, {"name": "PV is the correct portfolio variance", "points": 0.75, "code": "\n        try:\n\n            student_w = np.asarray(\n                W,\n                dtype=float\n            ).reshape(-1)\n\n            _expected_pv = (\n                student_w.T\n                @ VarCov\n                @ student_w\n            )\n\n            passed = (\n                \"PV\" in globals()\n                and np.ndim(PV) == 0\n                and np.isclose(\n                    PV,\n                    _expected_pv,\n                    rtol=1e-6,\n                    atol=1e-10\n                )\n            )\n\n        except Exception:\n\n            passed = False\n        "}, {"name": "ExpPortReturn is correct", "points": 0.5, "code": "\n        try:\n\n            student_w = np.asarray(\n                W,\n                dtype=float\n            ).reshape(-1)\n\n            _expected_port_return = (\n                np.asarray(\n                    ExpReturns,\n                    dtype=float\n                )\n                @ student_w\n            )\n\n            passed = (\n                \"ExpPortReturn\" in globals()\n                and np.ndim(ExpPortReturn) == 0\n                and np.isclose(\n                    ExpPortReturn,\n                    _expected_port_return,\n                    rtol=1e-6,\n                    atol=1e-10\n                )\n            )\n\n        except Exception:\n\n            passed = False\n        "}]}], "subtitle": "From nominal stock prices to portfolio allocation", "instructions": "\n<p>\nIn this practice you will work with monthly financial data for\nthree US stocks and the US Consumer Price Index (CPI).\n<\/p>\n\n<p>\nYou will move from raw nominal prices to a minimum-variance\nportfolio by following the empirical workflow developed in\nIntroduction to Financial Econometrics — Part I.\n<\/p>\n\n<p>\nThe original dataset is available as a pandas DataFrame called\n<code>data<\/code>.\n<\/p>\n\n<p>\nThis practice follows a cumulative workflow: objects created in\none question are used in subsequent questions. Therefore, decisions\nmade early in the data-processing stage affect the analysis that\nfollows.\n<\/p>\n\n<p>\nYou may run and check your answers as many times as you wish before\nsubmitting a practice attempt.\n<\/p>\n"};
+
+
+// ============================================================
+// GLOBAL STATE
+// ============================================================
+
+let pyodide = null;
+
+let pythonReady = false;
+
+
+// Stores the most recent checked result for each question.
+
+const questionState = {};
+// Stores exported Python objects between questions.
+// Objects are serialized with Python pickle.
+
+const savedExports = {};
+
+// ============================================================
+// HTML ELEMENTS
+// ============================================================
+
+const courseName =
+    document.getElementById("courseName");
+
+const practiceTitle =
+    document.getElementById("practiceTitle");
+
+const practiceSubtitle =
+    document.getElementById("practiceSubtitle");
+
+const pythonStatus =
+    document.getElementById("pythonStatus");
+
+const practiceInfoCard =
+    document.getElementById("practiceInfoCard");
+
+const practiceInstructions =
+    document.getElementById("practiceInstructions");
+
+const questionsContainer =
+    document.getElementById("questionsContainer");
+
+const overallScore =
+    document.getElementById("overallScore");
+
+const scoreNote =
+    document.getElementById("scoreNote");
+
+const submitButton =
+    document.getElementById("submitButton");
+
+const submitStatus =
+    document.getElementById("submitStatus");
+
+
+// ============================================================
+// ESCAPE HTML
+// ============================================================
+
+function escapeHtml(value) {
+
+    return String(value)
+
+        .replaceAll("&", "&amp;")
+
+        .replaceAll("<", "&lt;")
+
+        .replaceAll(">", "&gt;")
+
+        .replaceAll('"', "&quot;")
+
+        .replaceAll("'", "&#039;");
+}
+
+
+// ============================================================
+// BUILD PAGE HEADER
+// ============================================================
+
+function buildHeader() {
+
+    courseName.textContent =
+        PRACTICE.course;
+
+    practiceTitle.textContent =
+        PRACTICE.title;
+
+
+    if (PRACTICE.subtitle) {
+
+        practiceSubtitle.textContent =
+            PRACTICE.subtitle;
+
+    } else {
+
+        practiceSubtitle.style.display =
+            "none";
+    }
+
+
+    if (PRACTICE.instructions) {
+
+        practiceInfoCard.style.display =
+            "block";
+
+        practiceInstructions.innerHTML =
+            PRACTICE.instructions;
+    }
+
+}
+
+
+// ============================================================
+// BUILD QUESTIONS
+// ============================================================
+
+function buildQuestions() {
+
+    questionsContainer.innerHTML = "";
+
+
+    PRACTICE.questions.forEach(
+        (question, index) => {
+
+            // ------------------------------------------------
+            // Initialize question state
+            // ------------------------------------------------
+
+            questionState[question.id] = {
+
+                checked: false,
+
+                score: 0,
+
+                maxScore:
+                    question.max_points,
+
+                tests: null,
+
+                code: null
+            };
+
+
+            // ------------------------------------------------
+            // Question card
+            // ------------------------------------------------
+
+            const card =
+                document.createElement("section");
+
+            card.className =
+                "question-card";
+
+
+            // ------------------------------------------------
+            // Header
+            // ------------------------------------------------
+
+            const label =
+                document.createElement("div");
+
+            label.className =
+                "section-label";
+
+            label.textContent =
+                `Question ${index + 1}`;
+
+
+            const title =
+                document.createElement("h2");
+
+            title.className =
+                "question-title";
+
+            title.textContent =
+                question.title;
+
+
+            // ------------------------------------------------
+            // Instructions
+            // ------------------------------------------------
+
+            const instructions =
+                document.createElement("div");
+
+            instructions.className =
+                "instructions";
+
+            instructions.innerHTML =
+                question.instructions;
+
+
+            // ------------------------------------------------
+            // Editor
+            // ------------------------------------------------
+
+            const editorLabel =
+                document.createElement("label");
+
+            editorLabel.className =
+                "editor-label";
+
+            editorLabel.textContent =
+                "Your Python code";
+
+
+            const editor =
+                document.createElement("textarea");
+
+            editor.className =
+                "code-editor";
+
+            editor.id =
+                `editor-${question.id}`;
+
+            editor.value =
+                question.starter_code;
+
+            editor.spellcheck =
+                false;
+
+
+            // ------------------------------------------------
+            // Buttons
+            // ------------------------------------------------
+
+            const buttonRow =
+                document.createElement("div");
+
+            buttonRow.className =
+                "button-row";
+
+
+            const runButton =
+                document.createElement("button");
+
+            runButton.className =
+                "run-button";
+
+            runButton.id =
+                `run-${question.id}`;
+
+            runButton.textContent =
+                "Run Code";
+
+            runButton.disabled =
+                true;
+
+
+            const checkButton =
+                document.createElement("button");
+
+            checkButton.className =
+                "check-button";
+
+            checkButton.id =
+                `check-${question.id}`;
+
+            checkButton.textContent =
+                "Check Answer";
+
+            checkButton.disabled =
+                true;
+
+
+            buttonRow.appendChild(
+                runButton
+            );
+
+            buttonRow.appendChild(
+                checkButton
+            );
+
+
+            // ------------------------------------------------
+            // Output
+            // ------------------------------------------------
+
+            const outputContainer =
+                document.createElement("div");
+
+            outputContainer.className =
+                "output-container";
+
+
+            const outputTitle =
+                document.createElement("div");
+
+            outputTitle.className =
+                "output-title";
+
+            outputTitle.textContent =
+                "Output";
+
+
+            const output =
+                document.createElement("pre");
+
+            output.className =
+                "output-box";
+
+            output.id =
+                `output-${question.id}`;
+
+            output.textContent =
+                "Python is loading...";
+
+
+            outputContainer.appendChild(
+                outputTitle
+            );
+
+            outputContainer.appendChild(
+                output
+            );
+
+
+            // ------------------------------------------------
+            // Assessment
+            // ------------------------------------------------
+
+            const assessment =
+                document.createElement("div");
+
+            assessment.className =
+                "assessment";
+
+            assessment.id =
+                `assessment-${question.id}`;
+
+
+            assessment.innerHTML = `
+
+                <div class="assessment-title">
+                    Assessment
+                </div>
+
+                <div class="not-checked">
+                    Answer not checked yet.
+                </div>
+
+            `;
+
+
+            // ------------------------------------------------
+            // Assemble card
+            // ------------------------------------------------
+
+            card.appendChild(
+                label
+            );
+
+            card.appendChild(
+                title
+            );
+
+            card.appendChild(
+                instructions
+            );
+
+            card.appendChild(
+                editorLabel
+            );
+
+            card.appendChild(
+                editor
+            );
+
+            card.appendChild(
+                buttonRow
+            );
+
+            card.appendChild(
+                outputContainer
+            );
+
+            card.appendChild(
+                assessment
+            );
+
+
+            questionsContainer.appendChild(
+                card
+            );
+
+
+            // ------------------------------------------------
+            // Button events
+            // ------------------------------------------------
+
+            runButton.addEventListener(
+                "click",
+                () => runQuestion(question)
+            );
+
+
+            checkButton.addEventListener(
+                "click",
+                () => checkQuestion(question)
+            );
+
+        }
+    );
+
+
+    updateOverallScore();
+}
+
+
+// ============================================================
+// INITIALIZE PYTHON
+// ============================================================
+
+async function initializePython() {
+
+    pythonStatus.textContent =
+        "Loading Python environment...";
+
+
+    try {
+
+        pyodide =
+            await loadPyodide();
+
+
+        // NumPy is used by the current grader.
+        // Additional packages can be loaded later as needed.
+
+        await pyodide.loadPackage(
+            ["numpy", "pandas", "scipy"]
+        );
+
+        pythonReady =
+            true;
+
+
+        pythonStatus.textContent =
+            "✓ Python ready";
+
+        pythonStatus.classList.add(
+            "python-ready"
+        );
+
+
+        // Enable all question buttons.
+
+        PRACTICE.questions.forEach(
+            question => {
+
+                document.getElementById(
+                    `run-${question.id}`
+                ).disabled = false;
+
+
+                document.getElementById(
+                    `check-${question.id}`
+                ).disabled = false;
+
+
+                document.getElementById(
+                    `output-${question.id}`
+                ).textContent =
+                    "Python ready. You can run your code.";
+
+            }
+        );
+
+
+    } catch (error) {
+
+        pythonStatus.textContent =
+            "✗ Python failed to load";
+
+
+        PRACTICE.questions.forEach(
+            question => {
+
+                document.getElementById(
+                    `output-${question.id}`
+                ).textContent =
+                    "Could not initialize Python.\n\n"
+                    + error;
+
+            }
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// RESET PYTHON NAMESPACE
+// ============================================================
+//
+// Questions should not accidentally inherit variables created
+// in a different question.
+//
+// We keep built-ins but remove student-created globals.
+//
+// ============================================================
+
+async function resetPythonNamespace() {
+
+    await pyodide.runPythonAsync(`
+
+protected_names = {
+    "__name__",
+    "__doc__",
+    "__package__",
+    "__loader__",
+    "__spec__",
+    "__annotations__",
+    "__builtins__"
+}
+
+for _name in list(globals().keys()):
+
+    if _name not in protected_names:
+
+        globals().pop(_name, None)
+
+`);
+
+}
+
+
+// ============================================================
+// RESTORE IMPORTED VARIABLES
+// ============================================================
+
+async function restoreQuestionImports(question) {
+
+    const imports =
+        question.imports || [];
+
+
+    if (imports.length === 0) {
+        return;
+    }
+
+
+    const missing =
+        imports.filter(
+            name => !(name in savedExports)
+        );
+
+
+    if (missing.length > 0) {
+
+        throw new Error(
+            "Required output from a previous question is not available: "
+            + missing.join(", ")
+            + ". Check the previous question first."
+        );
+    }
+
+
+    const payload = {};
+
+
+    imports.forEach(
+        name => {
+            payload[name] =
+                savedExports[name];
+        }
+    );
+
+
+    pyodide.globals.set(
+        "_import_payload_json",
+        JSON.stringify(payload)
+    );
+
+
+    await pyodide.runPythonAsync(`
+
+import json as _json
+import pickle as _pickle
+import base64 as _base64
+
+_import_payload = _json.loads(
+    _import_payload_json
+)
+
+for _import_name, _encoded_value in _import_payload.items():
+
+    globals()[_import_name] = _pickle.loads(
+        _base64.b64decode(
+            _encoded_value.encode("ascii")
+        )
+    )
+
+del _import_payload
+del _import_name
+del _encoded_value
+
+`);
+
+}
+
+
+// ============================================================
+// SAVE EXPORTED VARIABLES
+// ============================================================
+
+async function saveQuestionExports(question) {
+
+    const exports =
+        question.exports || [];
+
+
+    if (exports.length === 0) {
+        return;
+    }
+
+
+    // Remove previous saved versions first.
+    // This prevents stale objects if the student rechecks
+    // a question after deleting/changing an output.
+
+    exports.forEach(
+        name => {
+            delete savedExports[name];
+        }
+    );
+
+
+    pyodide.globals.set(
+        "_export_names_json",
+        JSON.stringify(exports)
+    );
+
+
+    const result =
+        await pyodide.runPythonAsync(`
+
+import json as _json
+import pickle as _pickle
+import base64 as _base64
+
+_export_names = _json.loads(
+    _export_names_json
+)
+
+_export_payload = {}
+
+for _export_name in _export_names:
+
+    if _export_name in globals():
+
+        _export_payload[_export_name] = (
+            _base64.b64encode(
+                _pickle.dumps(
+                    globals()[_export_name]
+                )
+            )
+            .decode("ascii")
+        )
+
+_json.dumps(_export_payload)
+
+`);
+
+
+    const exported =
+        JSON.parse(result);
+
+
+    Object.entries(
+        exported
+    ).forEach(
+        ([name, value]) => {
+
+            savedExports[name] =
+                value;
+
+        }
+    );
+
+}
+
+// ============================================================
+// RUN QUESTION
+// ============================================================
+
+async function runQuestion(question) {
+
+    if (!pythonReady) {
+        return;
+    }
+
+
+    const runButton =
+        document.getElementById(
+            `run-${question.id}`
+        );
+
+
+    const checkButton =
+        document.getElementById(
+            `check-${question.id}`
+        );
+
+
+    const editor =
+        document.getElementById(
+            `editor-${question.id}`
+        );
+
+
+    const output =
+        document.getElementById(
+            `output-${question.id}`
+        );
+
+
+    runButton.disabled =
+        true;
+
+    checkButton.disabled =
+        true;
+
+    runButton.textContent =
+        "Running...";
+
+    output.textContent =
+        "Running your code...";
+
+
+    try {
+
+        await resetPythonNamespace();
+
+
+        // ----------------------------------------------------
+        // Execute hidden setup code
+        // ----------------------------------------------------
+
+        if (
+            question.setup_code &&
+            question.setup_code.trim() !== ""
+        ) {
+
+            await pyodide.runPythonAsync(
+                question.setup_code
+            );
+
+        }
+
+        await restoreQuestionImports(
+            question
+        );
+
+        let capturedOutput = "";
+
+
+        pyodide.setStdout({
+
+            batched: text => {
+
+                capturedOutput +=
+                    text + "\n";
+            }
+        });
+
+
+        pyodide.setStderr({
+
+            batched: text => {
+
+                capturedOutput +=
+                    text + "\n";
+            }
+        });
+
+
+        await pyodide.runPythonAsync(
+            editor.value
+        );
+
+
+        if (
+            capturedOutput.trim() === ""
+        ) {
+
+            output.textContent =
+                "✓ Code executed successfully.\n"
+                + "No output was printed.";
+
+        } else {
+
+            output.textContent =
+                "✓ Code executed successfully.\n\n"
+                + capturedOutput;
+        }
+
+
+    } catch (error) {
+
+        output.textContent =
+            "✗ Python error:\n\n"
+            + error;
+
+
+    } finally {
+
+        runButton.disabled =
+            false;
+
+        checkButton.disabled =
+            false;
+
+        runButton.textContent =
+            "Run Code";
+    }
+
+}
+
+
+// ============================================================
+// CHECK QUESTION
+// ============================================================
+
+async function checkQuestion(question) {
+
+    if (!pythonReady) {
+        return;
+    }
+
+
+    const runButton =
+        document.getElementById(
+            `run-${question.id}`
+        );
+
+
+    const checkButton =
+        document.getElementById(
+            `check-${question.id}`
+        );
+
+
+    const editor =
+        document.getElementById(
+            `editor-${question.id}`
+        );
+
+
+    const output =
+        document.getElementById(
+            `output-${question.id}`
+        );
+
+
+    const assessment =
+        document.getElementById(
+            `assessment-${question.id}`
+        );
+
+
+    runButton.disabled =
+        true;
+
+    checkButton.disabled =
+        true;
+
+    checkButton.textContent =
+        "Checking...";
+
+
+    assessment.innerHTML = `
+
+        <div class="assessment-title">
+            Assessment
+        </div>
+
+        <div class="not-checked">
+            Checking your answer...
+        </div>
+
+    `;
+
+
+    try {
+
+        // ----------------------------------------------------
+        // Clean namespace
+        // ----------------------------------------------------
+
+        await resetPythonNamespace();
+
+
+        // ----------------------------------------------------
+        // Execute hidden setup code
+        // ----------------------------------------------------
+
+        if (
+            question.setup_code &&
+            question.setup_code.trim() !== ""
+        ) {
+
+            await pyodide.runPythonAsync(
+                question.setup_code
+            );
+
+        }
+
+        await restoreQuestionImports(
+            question
+        );
+
+        // ----------------------------------------------------
+        // Execute student code
+        // ----------------------------------------------------
+
+        await pyodide.runPythonAsync(
+            editor.value
+        );
+
+        await saveQuestionExports(
+            question
+        );
+
+
+        // ----------------------------------------------------
+        // Run tests individually
+        // ----------------------------------------------------
+
+        const results = [];
+
+        let score = 0;
+
+
+        for (
+            const test of question.tests
+        ) {
+
+            let passed = false;
+
+
+            try {
+
+                // Each test must assign True/False
+                // to a Python variable named "passed".
+
+                await pyodide.runPythonAsync(
+                    test.code
+                );
+
+
+                passed =
+                    Boolean(
+                        pyodide.globals.get(
+                            "passed"
+                        )
+                    );
+
+
+            } catch (testError) {
+
+                passed =
+                    false;
+            }
+
+
+            const earnedPoints =
+                passed
+                ? test.points
+                : 0;
+
+
+            score +=
+                earnedPoints;
+
+
+            results.push({
+
+                name:
+                    test.name,
+
+                passed:
+                    passed,
+
+                points:
+                    earnedPoints,
+
+                max_points:
+                    test.points
+            });
+
+        }
+
+
+        // ----------------------------------------------------
+        // Save question state
+        // ----------------------------------------------------
+
+        questionState[
+            question.id
+        ] = {
+
+            checked:
+                true,
+
+            score:
+                score,
+
+            maxScore:
+                question.max_points,
+
+            tests:
+                results,
+
+            code:
+                editor.value
+        };
+
+
+        // ----------------------------------------------------
+        // Render assessment
+        // ----------------------------------------------------
+
+        renderAssessment(
+            question,
+            results,
+            score
+        );
+
+
+        // ----------------------------------------------------
+        // Output
+        // ----------------------------------------------------
+
+        output.textContent =
+            "✓ Code executed and answer checked.";
+
+
+    } catch (error) {
+
+        // Student code itself failed.
+
+        questionState[
+            question.id
+        ] = {
+
+            checked:
+                true,
+
+            score:
+                0,
+
+            maxScore:
+                question.max_points,
+
+            tests:
+                [],
+
+            code:
+                editor.value
+        };
+
+
+        assessment.innerHTML = `
+
+            <div class="assessment-title">
+                Assessment
+            </div>
+
+            <div class="test-fail">
+                ✗ Your code could not be executed.
+            </div>
+
+            <pre class="output-box"
+                 style="margin-top:10px;">${escapeHtml(error)}</pre>
+
+            <div class="question-score">
+                Score: 0 / ${question.max_points}
+            </div>
+
+        `;
+
+
+        output.textContent =
+            "✗ Python error. Review the assessment below.";
+
+
+    } finally {
+
+        runButton.disabled =
+            false;
+
+        checkButton.disabled =
+            false;
+
+        checkButton.textContent =
+            "Check Answer";
+
+
+        updateOverallScore();
+    }
+
+}
+
+
+// ============================================================
+// RENDER ASSESSMENT
+// ============================================================
+
+function renderAssessment(
+    question,
+    results,
+    score
+) {
+
+    const assessment =
+        document.getElementById(
+            `assessment-${question.id}`
+        );
+
+
+    let html = `
+
+        <div class="assessment-title">
+            Assessment
+        </div>
+
+    `;
+
+
+    results.forEach(
+        test => {
+
+            const symbol =
+                test.passed
+                ? "✓"
+                : "✗";
+
+
+            const statusClass =
+                test.passed
+                ? "test-pass"
+                : "test-fail";
+
+
+            html += `
+
+                <div class="test-row">
+
+                    <div
+                        class="test-description ${statusClass}">
+
+                        ${symbol}
+                        ${escapeHtml(test.name)}
+
+                    </div>
+
+                    <div class="test-points">
+
+                        ${test.points}
+                        /
+                        ${test.max_points}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+        <div class="question-score">
+
+            Question score:
+            ${score}
+            /
+            ${question.max_points}
+
+        </div>
+
+    `;
+
+
+    assessment.innerHTML =
+        html;
+}
+
+
+// ============================================================
+// UPDATE OVERALL SCORE
+// ============================================================
+
+function updateOverallScore() {
+
+    let score = 0;
+
+    let checkedQuestions = 0;
+
+
+    PRACTICE.questions.forEach(
+        question => {
+
+            const state =
+                questionState[
+                    question.id
+                ];
+
+
+            if (
+                state &&
+                state.checked
+            ) {
+
+                checkedQuestions += 1;
+
+                score +=
+                    state.score;
+            }
+
+        }
+    );
+
+
+    overallScore.textContent =
+        `Score: ${score} / ${PRACTICE.max_points}`;
+
+
+    const allChecked =
+        checkedQuestions ===
+        PRACTICE.questions.length;
+
+
+    if (allChecked) {
+
+        submitButton.disabled =
+            false;
+
+
+        scoreNote.textContent =
+            "All questions have been checked. "
+            + "You may submit this practice attempt.";
+
+    } else {
+
+        submitButton.disabled =
+            true;
+
+
+        const remaining =
+            PRACTICE.questions.length
+            - checkedQuestions;
+
+
+        scoreNote.textContent =
+            `${remaining} question`
+            + (remaining === 1 ? "" : "s")
+            + " still need"
+            + (remaining === 1 ? "s" : "")
+            + " to be checked before submission.";
+    }
+
+}
+
+
+// ============================================================
+// STUDENT ID VALIDATION
+// ============================================================
+
+function validStudentId(
+    studentId
+) {
+
+    // Digits only.
+    // Allows 6–12 digits so the template is not tied too
+    // tightly to a single cohort format.
+
+    return /^\d{6,12}$/.test(
+        studentId
+    );
+}
+
+
+// ============================================================
+// BUILD SUBMISSION
+// ============================================================
+
+function buildSubmission() {
+
+    const studentId =
+        document
+            .getElementById(
+                "studentId"
+            )
+            .value
+            .trim();
+
+
+    const questions = {};
+
+
+    PRACTICE.questions.forEach(
+        question => {
+
+            const state =
+                questionState[
+                    question.id
+                ];
+
+
+            questions[
+                question.id
+            ] = {
+
+                title:
+                    question.title,
+
+                score:
+                    state.score,
+
+                max_score:
+                    state.maxScore,
+
+                code:
+                    state.code,
+
+                tests:
+                    state.tests
+            };
+
+        }
+    );
+
+
+    let totalScore = 0;
+
+
+    Object.values(
+        questions
+    ).forEach(
+        question => {
+
+            totalScore +=
+                question.score;
+        }
+    );
+
+
+    return {
+
+        student_id:
+            studentId,
+
+        practice_id:
+            PRACTICE.practice_id,
+
+        practice:
+            PRACTICE.title,
+
+        score:
+            totalScore,
+
+        max_score:
+            PRACTICE.max_points,
+
+        questions:
+            questions
+    };
+
+}
+
+
+// ============================================================
+// SUBMIT PRACTICE ATTEMPT
+// ============================================================
+
+submitButton.addEventListener(
+    "click",
+    async () => {
+
+        submitStatus.textContent =
+            "";
+
+        submitStatus.className =
+            "submit-status";
+
+
+        // ----------------------------------------------------
+        // Validate Student ID
+        // ----------------------------------------------------
+
+        const studentId =
+            document
+                .getElementById(
+                    "studentId"
+                )
+                .value
+                .trim();
+
+
+        if (!studentId) {
+
+            submitStatus.textContent =
+                "✗ Please enter your Student ID.";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+
+        if (
+            !validStudentId(
+                studentId
+            )
+        ) {
+
+            submitStatus.textContent =
+                "✗ Please enter a valid Student ID "
+                + "(digits only).";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // Ensure all questions have been checked
+        // ----------------------------------------------------
+
+        const allChecked =
+            PRACTICE.questions.every(
+                question =>
+
+                    questionState[
+                        question.id
+                    ].checked
+            );
+
+
+        if (!allChecked) {
+
+            submitStatus.textContent =
+                "✗ Check every question before submitting.";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // Check endpoint configuration
+        // ----------------------------------------------------
+
+        if (
+            SUBMIT_URL.includes(
+                "PASTE_YOUR"
+            )
+        ) {
+
+            submitStatus.textContent =
+                "✗ Submission endpoint has not been configured.";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // Build payload
+        // ----------------------------------------------------
+
+        const payload =
+            buildSubmission();
+
+
+        // ----------------------------------------------------
+        // Submit
+        // ----------------------------------------------------
+
+        submitButton.disabled =
+            true;
+
+        submitButton.textContent =
+            "Submitting...";
+
+
+        submitStatus.textContent =
+            "Submitting your practice attempt...";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    SUBMIT_URL,
+                    {
+
+                        method:
+                            "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "text/plain;charset=utf-8"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                payload
+                            )
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (
+                result.success
+            ) {
+
+                submitStatus.textContent =
+                    `✓ Attempt ${result.attempt} `
+                    + `submitted successfully. `
+                    + `Score: ${payload.score}`
+                    + `/${payload.max_score}.`;
+
+
+                submitStatus.classList.add(
+                    "submit-success"
+                );
+
+
+            } else {
+
+                submitStatus.textContent =
+                    "✗ Submission failed: "
+                    + result.error;
+
+
+                submitStatus.classList.add(
+                    "submit-error"
+                );
+            }
+
+
+        } catch (error) {
+
+            submitStatus.textContent =
+                "✗ Could not submit attempt: "
+                + error;
+
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+
+        } finally {
+
+            submitButton.disabled =
+                false;
+
+            submitButton.textContent =
+                "Submit Practice Attempt";
+        }
+
+    }
+);
+
+
+// ============================================================
+// APPLY PRACTICE MODE
+// ============================================================
+
+function applyPracticeMode() {
+
+    const studentCard =
+        document.getElementById(
+            "studentCard"
+        );
+
+
+    // ========================================================
+    // GRADED VERSION
+    // ========================================================
+
+    if (
+        PRACTICE.mode === "graded"
+    ) {
+
+        studentCard.style.display =
+            "block";
+
+
+        submitButton.style.display =
+            "inline-block";
+
+
+        return;
+    }
+
+
+    // ========================================================
+    // REVIEW VERSION
+    // ========================================================
+
+    studentCard.style.display =
+        "none";
+
+
+    submitButton.style.display =
+        "none";
+
+
+    scoreNote.innerHTML = `
+
+        <strong>Review version.</strong>
+
+        You may run and check your answers as many times
+        as you wish.
+
+        Results from this version are not submitted
+        or recorded.
+
+    `;
+
+
+    // --------------------------------------------------------
+    // Add visible review notice to header
+    // --------------------------------------------------------
+
+    const reviewNotice =
+        document.createElement(
+            "div"
+        );
+
+
+    reviewNotice.style.marginTop =
+        "12px";
+
+    reviewNotice.style.padding =
+        "7px 10px";
+
+    reviewNotice.style.background =
+        "rgba(255,255,255,0.15)";
+
+    reviewNotice.style.borderRadius =
+        "5px";
+
+    reviewNotice.style.fontSize =
+        "13px";
+
+    reviewNotice.style.display =
+        "inline-block";
+
+
+    reviewNotice.innerHTML =
+        "<strong>Review version</strong> · "
+        + "Submissions are disabled";
+
+
+    document
+        .querySelector(
+            ".header-inner"
+        )
+        .appendChild(
+            reviewNotice
+        );
+
+}
+
+// ============================================================
+// INITIALIZE PAGE
+// ============================================================
+
+buildHeader();
+
+buildQuestions();
+
+applyPracticeMode();
+
+initializePython();
+
+
+</script>
+
+
+</body>
+
+</html>
