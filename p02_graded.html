@@ -1,0 +1,2264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Practice 2: Can Investment Funds Beat the Market?</title>
+
+<script
+    src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js">
+</script>
+
+<style>
+
+:root {
+    --comillas-blue: #004A98;
+    --comillas-dark-blue: #00356E;
+    --comillas-gold: #D6A900;
+    --background: #F4F6F9;
+    --card-background: #FFFFFF;
+    --soft-blue: #EEF4FB;
+    --soft-gold: #FFF8E1;
+    --soft-green: #EDF8F1;
+    --soft-red: #FCEEEE;
+    --text-main: #2F343B;
+    --text-muted: #68717D;
+    --border: #D9DEE7;
+    --success: #287A4B;
+    --error: #B53C3C;
+    --shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text-main);
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+    line-height: 1.55;
+}
+
+.container {
+    max-width: 1050px;
+    margin: 32px auto 60px;
+    padding: 0 24px;
+}
+
+.header {
+    background: var(--comillas-blue);
+    color: white;
+    border-bottom: 5px solid var(--comillas-gold);
+}
+
+.header-inner {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 27px 32px 29px;
+}
+
+.course-name {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+.practice-title {
+    margin: 4px 0 0;
+    font-size: 29px;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.practice-subtitle {
+    margin: 8px 0 0;
+    font-size: 15px;
+    opacity: 0.88;
+}
+
+.student-card,
+.practice-info-card,
+.question-card,
+.summary-card,
+.upload-card {
+    background: var(--card-background);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.student-card {
+    background: var(--soft-blue);
+    border-left: 4px solid var(--comillas-blue);
+}
+
+.upload-card {
+    background: var(--soft-blue);
+    border-left: 4px solid var(--comillas-gold);
+}
+
+.summary-card {
+    border-top: 4px solid var(--comillas-gold);
+}
+
+.section-label {
+    color: var(--comillas-blue);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 4px;
+}
+
+.question-title {
+    color: var(--comillas-blue);
+    font-size: 21px;
+    line-height: 1.3;
+    margin: 2px 0 14px;
+}
+
+.instructions {
+    margin-bottom: 20px;
+}
+
+.instructions code {
+    background: #EEF1F5;
+    border-radius: 4px;
+    padding: 2px 5px;
+    font-size: 0.95em;
+}
+
+.student-id-label,
+.editor-label,
+.upload-label {
+    display: block;
+    font-weight: 600;
+    margin: 8px 0 6px;
+}
+
+.student-id {
+    width: 300px;
+    max-width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #BCC5D1;
+    border-radius: 6px;
+    background: white;
+    font-size: 15px;
+}
+
+.student-id:focus {
+    outline: 2px solid rgba(0,74,152,0.18);
+    border-color: var(--comillas-blue);
+}
+
+.file-input {
+    display: block;
+    margin-top: 10px;
+    max-width: 100%;
+}
+
+.upload-help {
+    margin-top: 8px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.upload-status {
+    margin-top: 13px;
+    padding: 11px 13px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 13px;
+    white-space: pre-wrap;
+}
+
+.code-editor {
+    width: 100%;
+    min-height: 520px;
+    resize: vertical;
+    padding: 15px;
+    background: #F8FAFC;
+    border: 1px solid #C9D1DC;
+    border-radius: 7px;
+    color: #20252B;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    tab-size: 4;
+}
+
+.code-editor:focus {
+    outline: 2px solid rgba(0,74,152,0.15);
+    border-color: var(--comillas-blue);
+}
+
+.button-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+button {
+    border: none;
+    border-radius: 6px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.52;
+    cursor: not-allowed;
+}
+
+.run-button {
+    background: var(--comillas-blue);
+    color: white;
+}
+
+.run-button:hover:not(:disabled) {
+    background: var(--comillas-dark-blue);
+}
+
+.check-button {
+    background: var(--soft-gold);
+    color: #493900;
+    border: 1px solid #E1C55E;
+}
+
+.check-button:hover:not(:disabled) {
+    background: #FFF0B7;
+}
+
+.submit-button {
+    background: var(--comillas-blue);
+    color: white;
+    padding: 12px 23px;
+    font-size: 15px;
+}
+
+.output-container {
+    margin-top: 20px;
+}
+
+.output-title,
+.assessment-title {
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.output-box {
+    margin: 0;
+    min-height: 48px;
+    padding: 13px 15px;
+    background: #F7F8FA;
+    border-left: 4px solid var(--comillas-blue);
+    border-radius: 4px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 13px;
+}
+
+.assessment {
+    margin-top: 19px;
+}
+
+.not-checked {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.test-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 9px 0;
+    border-bottom: 1px solid #ECEFF3;
+}
+
+.test-row:last-child {
+    border-bottom: none;
+}
+
+.test-description {
+    flex: 1;
+}
+
+.test-points {
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.test-pass {
+    color: var(--success);
+}
+
+.test-fail {
+    color: var(--error);
+}
+
+.question-score {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    color: var(--comillas-blue);
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.overall-score {
+    margin: 5px 0 8px;
+    color: var(--comillas-blue);
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.score-note {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.submit-status {
+    margin-top: 14px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.submit-success {
+    color: var(--success);
+}
+
+.submit-error {
+    color: var(--error);
+}
+
+.python-status {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 5px 9px;
+    background: rgba(255,255,255,0.13);
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.python-ready {
+    background: rgba(230,255,235,0.18);
+}
+
+.footer {
+    margin-top: 40px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+@media (max-width:700px) {
+    .header-inner {
+        padding: 22px 20px;
+    }
+
+    .practice-title {
+        font-size: 24px;
+    }
+
+    .container {
+        padding: 0 14px;
+        margin-top: 20px;
+    }
+
+    .question-card,
+    .student-card,
+    .practice-info-card,
+    .summary-card,
+    .upload-card {
+        padding: 18px;
+    }
+
+    .code-editor {
+        min-height: 400px;
+    }
+
+    .test-row {
+        align-items: flex-start;
+    }
+}
+
+</style>
+
+<script>
+
+window.MathJax = {
+    tex: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['\\[','\\]']]
+    }
+};
+
+document.addEventListener("keydown", function(event) {
+
+    const textarea = event.target;
+
+    if (textarea.tagName !== "TEXTAREA") {
+        return;
+    }
+
+    if (event.key === "Tab") {
+
+        event.preventDefault();
+
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const value = textarea.value;
+
+        if (!event.shiftKey) {
+
+            textarea.value =
+                value.substring(0,start)
+                + "    "
+                + value.substring(end);
+
+            textarea.selectionStart =
+                textarea.selectionEnd =
+                start + 4;
+
+        } else {
+
+            const beforeCursor =
+                value.substring(0,start);
+
+            let spacesToRemove = 0;
+
+            for (
+                let i = 1;
+                i <= 4 && start-i >= 0;
+                i++
+            ) {
+                if (
+                    beforeCursor[start-i] === " "
+                ) {
+                    spacesToRemove++;
+                } else {
+                    break;
+                }
+            }
+
+            if (spacesToRemove > 0) {
+
+                textarea.value =
+                    value.substring(
+                        0,
+                        start-spacesToRemove
+                    )
+                    + value.substring(end);
+
+                textarea.selectionStart =
+                    textarea.selectionEnd =
+                    start-spacesToRemove;
+            }
+        }
+    }
+});
+
+</script>
+
+<script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="header-inner">
+
+        <p
+            class="course-name"
+            id="courseName">
+        </p>
+
+        <h1
+            class="practice-title"
+            id="practiceTitle">
+        </h1>
+
+        <p
+            class="practice-subtitle"
+            id="practiceSubtitle">
+        </p>
+
+        <div
+            class="python-status"
+            id="pythonStatus">
+            Loading Python environment...
+        </div>
+
+    </div>
+
+</header>
+
+<main class="container">
+
+    <section
+        class="student-card"
+        id="studentCard">
+
+        <div class="section-label">
+            Student
+        </div>
+
+        <label
+            class="student-id-label"
+            for="studentId">
+            Comillas Student ID
+        </label>
+
+        <input
+            class="student-id"
+            id="studentId"
+            type="text"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="Enter your Student ID"
+        >
+
+    </section>
+
+    <section
+        class="practice-info-card"
+        id="practiceInfoCard"
+        style="display:none;">
+
+        <div class="section-label">
+            Instructions
+        </div>
+
+        <div id="practiceInstructions"></div>
+
+    </section>
+
+    <section
+        class="upload-card"
+        id="uploadCard"
+        style="display:none;">
+
+        <div class="section-label">
+            Data files
+        </div>
+
+        <label
+            class="upload-label"
+            for="dataFiles">
+            Upload CSV files
+        </label>
+
+        <input
+            class="file-input"
+            id="dataFiles"
+            type="file"
+            accept=".csv,text/csv"
+            multiple
+        >
+
+        <div class="upload-help">
+            You may upload as many CSV files as you need.
+            Filenames are not prescribed.
+        </div>
+
+        <div
+            class="upload-status"
+            id="uploadStatus">
+            No files uploaded yet.
+        </div>
+
+    </section>
+
+    <div id="questionsContainer"></div>
+
+    <section class="summary-card">
+
+        <div class="section-label">
+            Practice Summary
+        </div>
+
+        <div
+            class="overall-score"
+            id="overallScore">
+            Score: 0 / 0
+        </div>
+
+        <div
+            class="score-note"
+            id="scoreNote">
+            Check every question at least once before
+            submitting a practice attempt.
+        </div>
+
+        <button
+            class="submit-button"
+            id="submitButton"
+            disabled>
+            Submit Practice Attempt
+        </button>
+
+        <div
+            class="submit-status"
+            id="submitStatus">
+        </div>
+
+    </section>
+
+    <footer class="footer">
+        Financial Econometrics · Python Practice Grader
+    </footer>
+
+</main>
+
+<script>
+
+// ============================================================
+// GOOGLE APPS SCRIPT ENDPOINT
+// ============================================================
+
+const SUBMIT_URL =
+    "https://script.google.com/macros/s/AKfycbyVgCDZdg9wulWgk4ihH4Hm0bdl-gq6bYC4A8x9RZ-hc7O6NrlhYxIO4bmZeBUZo8SUDg/exec";
+
+
+// ============================================================
+// PRACTICE CONFIGURATION
+// ============================================================
+
+const PRACTICE =
+    {"practice_id": "p02", "course": "Financial Econometrics", "title": "Practice 2: Can Investment Funds Beat the Market?", "mode": "graded", "max_points": 10.0, "allow_file_upload": true, "questions": [{"id": "q1", "title": "Jensen's Alpha: Complete Empirical Analysis", "instructions": "\n\n<h3>Econometric model<\/h3>\n\n<p>\nFor each ETF \\(j\\), estimate Jensen's regression:\n<\/p>\n\n\\[\nr_{j,t}-r_{f,t}\n=\n\\alpha_j\n+\n\\beta_j\n\\left(\nr_{m,t}-r_{f,t}\n\\right)\n+\nu_{j,t}.\n\\]\n\n<p>\nHere, \\(r_{j,t}\\) is the ETF return,\n\\(r_{m,t}\\) is the SPY market return and\n\\(r_{f,t}\\) is the risk-free return.\n<\/p>\n\n\n<h3>Data preparation<\/h3>\n\n<p>\nStart with daily closing-price data from\n<strong>January 2015 through December 2025<\/strong>.\n<\/p>\n\n<p>\nFor SPY and each ETF, convert the daily observations into\nmonthly prices using the\n<strong>last available closing price in each calendar\nmonth<\/strong>.\n<\/p>\n\n<p>\nThen construct continuously compounded monthly returns:\n<\/p>\n\n\\[\nr_t\n=\n\\ln\\left(\n\\frac{P_t}{P_{t-1}}\n\\right).\n\\]\n\n<p>\nBecause the January 2015 price is required to calculate the\nfirst monthly return, the return series begins in\n<strong>February 2015<\/strong>.\n<\/p>\n\n<p>\nThe FRED variable <code>TB4WK<\/code> is reported as an\nannualized percentage rate. First approximate the\ncorresponding monthly simple return:\n<\/p>\n\n\\[\nR_{f,t}^{simple}\n=\n\\frac{TB4WK_t/100}{12}.\n\\]\n\n<p>\nThen express the risk-free return as a continuously\ncompounded monthly return so that it is measured consistently\nwith the ETF and market returns:\n<\/p>\n\n\\[\nr_{f,t}\n=\n\\ln\\left(\n1+R_{f,t}^{simple}\n\\right).\n\\]\n\n<p>\nAfter constructing and aligning all monthly series, create\nyour final estimation DataFrame called\n<code>data<\/code>.\n<\/p>\n\n<p>\nIt must contain exactly the following columns, in this order:\n<\/p>\n\n<pre>\nMonth\nSPY\nQQQ\nIWM\nEFA\nEEM\nVNQ\nRf\n<\/pre>\n\n<p>\nThe variables <code>SPY<\/code>, <code>QQQ<\/code>,\n<code>IWM<\/code>, <code>EFA<\/code>, <code>EEM<\/code> and\n<code>VNQ<\/code> in <code>data<\/code> must contain the\nmonthly continuously compounded returns, not prices.\n<code>Rf<\/code> must contain the monthly continuously\ncompounded risk-free return.\n<\/p>\n\n<p>\nYour final <code>data<\/code> DataFrame must contain\n<strong>131 monthly observations<\/strong>, from\n<strong>February 2015 through December 2025<\/strong>.\n<\/p>\n\n<div style=\"\n    margin:18px 0;\n    padding:14px 16px;\n    background:#eef4fb;\n    border-left:4px solid #004a98;\n    border-radius:4px;\n\">\n\n<strong>Formatting requirements:<\/strong>\n\n<ul style=\"margin-bottom:0;\">\n<li><code>Month<\/code> must identify each observation in <strong>YYYY-MM<\/strong> form (for example, <code>2015-02<\/code>, <code>2015-03<\/code>, ..., <code>2025-12<\/code>). A pandas monthly <code>Period<\/code> representation is acceptable.<\/li>\n<li>All returns must be stored in <strong>decimal form<\/strong>, not percentage points. For example, a monthly return of 1.5% must be stored as <code>0.015<\/code>, not <code>1.5<\/code>.<\/li>\n<\/ul>\n\n<\/div>\n\n<p>\nYou are responsible for handling dates, frequencies,\nmissing values and alignment across sources.\n<\/p>\n\n\n<h3>OLS estimation<\/h3>\n\n<p>\nFor each ETF, define:\n<\/p>\n\n\\[\ny_t=r_{j,t}-r_{f,t},\n\\qquad\nx_t=r_{m,t}-r_{f,t}.\n\\]\n\n<p>\nEstimate Jensen's alpha and market beta using the OLS\nformulas studied in class:\n<\/p>\n\n\\[\n\\hat{\\beta}\n=\n\\frac{\n\\sum_{t=1}^{T}\n(x_t-\\bar{x})(y_t-\\bar{y})\n}{\n\\sum_{t=1}^{T}\n(x_t-\\bar{x})^2\n},\n\\]\n\n\\[\n\\hat{\\alpha}\n=\n\\bar{y}\n-\n\\hat{\\beta}\\bar{x}.\n\\]\n\n<p>\nEstimate the model separately for each of the five ETFs.\n<\/p>\n\n\n<h3>Residual variance and standard errors<\/h3>\n\n<p>\nFor each regression, calculate the fitted residuals:\n<\/p>\n\n\\[\n\\hat{u}_t\n=\ny_t\n-\n\\hat{\\alpha}\n-\n\\hat{\\beta}x_t.\n\\]\n\n<p>\nEstimate the residual variance and residual standard\ndeviation using:\n<\/p>\n\n\\[\ns^2\n=\n\\frac{\n\\sum_{t=1}^{T}\\hat{u}_t^2\n}{\nT-2\n},\n\\qquad\ns=\\sqrt{s^2}.\n\\]\n\n<p>\nThen calculate:\n<\/p>\n\n\\[\nSE(\\hat{\\beta})\n=\ns\n\\sqrt{\n\\frac{\n1\n}{\n\\sum_{t=1}^{T}(x_t-\\bar{x})^2\n}\n},\n\\]\n\n<p>\nand\n<\/p>\n\n\\[\nSE(\\hat{\\alpha})\n=\ns\n\\sqrt{\n\\frac{1}{T}\n+\n\\frac{\n\\bar{x}^2\n}{\n\\sum_{t=1}^{T}(x_t-\\bar{x})^2\n}\n}.\n\\]\n\n\n<h3>Hypothesis testing<\/h3>\n\n<p>\nFor alpha, first conduct the two-sided test:\n<\/p>\n\n\\[\nH_0:\\alpha=0\n\\qquad\n\\text{vs}\n\\qquad\nH_1:\\alpha\\neq0.\n\\]\n\n<p>\nCalculate the corresponding t-statistic and\n<strong>two-sided p-value<\/strong>.\n<\/p>\n\n<p>\nFor beta, conduct:\n<\/p>\n\n\\[\nH_0:\\beta=0\n\\qquad\n\\text{vs}\n\\qquad\nH_1:\\beta\\neq0,\n\\]\n\n<p>\nand calculate its t-statistic and two-sided p-value.\n<\/p>\n\n<p>\nUse \\(T-2\\) degrees of freedom for inference.\n<\/p>\n\n<p>\nFinally, consider the economically different question of\nwhether an ETF <strong>beats the market<\/strong>. Conduct the\none-sided test:\n<\/p>\n\n\\[\nH_0:\\alpha\\leq0\n\\qquad\n\\text{vs}\n\\qquad\nH_1:\\alpha>0.\n\\]\n\n<p>\nCalculate the corresponding\n<strong>right-tail p-value<\/strong>.\n<\/p>\n\n\n<h3>Confidence intervals<\/h3>\n\n<p>\nConstruct the <strong>95% confidence interval<\/strong> for\neach estimated alpha using the appropriate Student-t critical\nvalue and \\(T-2\\) degrees of freedom.\n<\/p>\n\n\n<h3>Economic interpretation<\/h3>\n\n<p>\nFor the two-sided alpha test, identify the\n<strong>most restrictive conventional significance\nlevel<\/strong> at which\n\\(H_0:\\alpha=0\\) can be rejected:\n<\/p>\n\n<pre>\n0.01   Reject at 1%\n0.05   Reject at 5%, but not at 1%\n0.10   Reject at 10%, but not at 5%\nNone   Do not reject at 10%\n<\/pre>\n\n<p>\nSeparately, determine whether each ETF can be said to\n<strong>beat the market at the 5% significance level<\/strong>\nusing the one-sided test.\n<\/p>\n\n<p>\nThese interpretation outputs may be entered after <strong>inspecting your estimated results<\/strong>. You are not required to generate the conclusions algorithmically: the objective here is to demonstrate that you can correctly read and interpret the statistical results.\n<\/p>\n\n\n<h3>Required outputs<\/h3>\n\n<p>\nYour code must create all of the objects below.\n<\/p>\n\n<p>\nFor every five-element output, values must appear in the\nfollowing order:\n<strong>QQQ, IWM, EFA, EEM, VNQ<\/strong>.\n<\/p>\n\n<p>\nFor numerical five-element outputs, you may use a\n<strong>Python list, tuple, NumPy array or pandas\nSeries<\/strong>. The grader evaluates the numerical values,\nnot which of these structures you choose.\n<\/p>\n\n<table style=\"\n    width:100%;\n    border-collapse:collapse;\n    margin:18px 0;\n\">\n\n<thead>\n\n<tr style=\"background:#eef4fb;\">\n\n<th style=\"\n    text-align:left;\n    padding:9px;\n    border:1px solid #d9dee7;\n\">\nOutput\n<\/th>\n\n<th style=\"\n    text-align:left;\n    padding:9px;\n    border:1px solid #d9dee7;\n\">\nRequired structure\n<\/th>\n\n<\/tr>\n\n<\/thead>\n\n<tbody>\n\n<tr>\n<td style=\"padding:9px;border:1px solid #d9dee7;\">\n<code>data<\/code>\n<\/td>\n<td style=\"padding:9px;border:1px solid #d9dee7;\">\npandas DataFrame, 131 rows and the 8 specified columns\n<\/td>\n<\/tr>\n\n<tr>\n<td style=\"padding:9px;border:1px solid #d9dee7;\">\n<code>alpha<\/code>, <code>beta<\/code>,\n<code>sample_std<\/code>\n<\/td>\n<td style=\"padding:9px;border:1px solid #d9dee7;\">\n5 numerical values\n<\/td>\n<\/tr>\n\n<tr>\n<td style=\"padding:9px;border:1px solid #d9dee7;\">\n<code>s_alpha<\/code>, <code>s_beta<\/code>\n<\/td>\n<td style=\"padding:9px;border:1px solid #d9dee7;\">\n5 numerical values\n<\/td>\n<\/tr>\n\n<tr>\n<td style=\"padding:9px;border:1px solid #d9dee7;\">\n<code>t_alpha<\/code>, <code>t_beta<\/code>\n<\/td>\n<td style=\"padding:9px;border:1px solid #d9dee7;\">\n5 numerical values\n<\/td>\n<\/tr>\n\n<tr>\n<td style=\"padding:9px;border:1px solid #d9dee7;\">\n<code>p_alpha_two_sided<\/code>,\n<code>p_beta_two_sided<\/code>,\n<code>p_alpha_positive<\/code>\n<\/td>\n<td style=\"padding:9px;border:1px solid #d9dee7;\">\n5 numerical values between 0 and 1\n<\/td>\n<\/tr>\n\n<tr>\n<td style=\"padding:9px;border:1px solid #d9dee7;\">\n<code>ci_alpha_lower<\/code>,\n<code>ci_alpha_upper<\/code>\n<\/td>\n<td style=\"padding:9px;border:1px solid #d9dee7;\">\n5 numerical values each\n<\/td>\n<\/tr>\n\n<tr>\n<td style=\"padding:9px;border:1px solid #d9dee7;\">\n<code>significance_two_sided<\/code>\n<\/td>\n<td style=\"padding:9px;border:1px solid #d9dee7;\">\n5 values, each equal to\n<code>0.01<\/code>, <code>0.05<\/code>,\n<code>0.10<\/code> or the Python object\n<code>None<\/code> (not the string <code>\"None\"<\/code>)\n<\/td>\n<\/tr>\n\n<tr>\n<td style=\"padding:9px;border:1px solid #d9dee7;\">\n<code>beats_market<\/code>\n<\/td>\n<td style=\"padding:9px;border:1px solid #d9dee7;\">\n5 Boolean values\n(<code>True<\/code> or <code>False<\/code>)\n<\/td>\n<\/tr>\n\n<\/tbody>\n\n<\/table>\n\n<p>\nYou may structure the rest of your code however you wish.\nLoops, functions and intermediate variables are all\nacceptable.\n<\/p>\n\n<p>\n<strong>Important:<\/strong>\n<em>Check Answer<\/em> will not provide diagnostic feedback\nuntil <strong>all required outputs<\/strong> have been\ncreated. <em>Run Code<\/em> can still be used at any time to\ninspect printed output and Python errors.\n<\/p>\n\n", "setup_code": "\n\nimport numpy as np\nimport pandas as pd\nfrom scipy import stats\n\n\n_ref_assets = [\n    \"QQQ\",\n    \"IWM\",\n    \"EFA\",\n    \"EEM\",\n    \"VNQ\"\n]\n\n\n# ------------------------------------------------------------\n# Reconstruct reference DataFrame\n# ------------------------------------------------------------\n\n_ref_months = ['2015-02', '2015-03', '2015-04', '2015-05', '2015-06', '2015-07', '2015-08', '2015-09', '2015-10', '2015-11', '2015-12', '2016-01', '2016-02', '2016-03', '2016-04', '2016-05', '2016-06', '2016-07', '2016-08', '2016-09', '2016-10', '2016-11', '2016-12', '2017-01', '2017-02', '2017-03', '2017-04', '2017-05', '2017-06', '2017-07', '2017-08', '2017-09', '2017-10', '2017-11', '2017-12', '2018-01', '2018-02', '2018-03', '2018-04', '2018-05', '2018-06', '2018-07', '2018-08', '2018-09', '2018-10', '2018-11', '2018-12', '2019-01', '2019-02', '2019-03', '2019-04', '2019-05', '2019-06', '2019-07', '2019-08', '2019-09', '2019-10', '2019-11', '2019-12', '2020-01', '2020-02', '2020-03', '2020-04', '2020-05', '2020-06', '2020-07', '2020-08', '2020-09', '2020-10', '2020-11', '2020-12', '2021-01', '2021-02', '2021-03', '2021-04', '2021-05', '2021-06', '2021-07', '2021-08', '2021-09', '2021-10', '2021-11', '2021-12', '2022-01', '2022-02', '2022-03', '2022-04', '2022-05', '2022-06', '2022-07', '2022-08', '2022-09', '2022-10', '2022-11', '2022-12', '2023-01', '2023-02', '2023-03', '2023-04', '2023-05', '2023-06', '2023-07', '2023-08', '2023-09', '2023-10', '2023-11', '2023-12', '2024-01', '2024-02', '2024-03', '2024-04', '2024-05', '2024-06', '2024-07', '2024-08', '2024-09', '2024-10', '2024-11', '2024-12', '2025-01', '2025-02', '2025-03', '2025-04', '2025-05', '2025-06', '2025-07', '2025-08', '2025-09', '2025-10', '2025-11', '2025-12']\n\n_ref_numeric_data = {'SPY': [0.054681881056980214, -0.020284087525897665, 0.00978580442867806, 0.012774244250372489, -0.02537367234563504, 0.022337904906522432, -0.06288667952859797, -0.031032544113434337, 0.08163505511759922, 0.0036484126687360103, -0.023367361457691596, -0.05106871827401922, -0.0008262756099105612, 0.05995581087651032, 0.0039334759955103734, 0.016868506761479635, -0.001717066147331361, 0.03582192667527216, 0.0011967780484817782, -0.004980641176027762, -0.017489078154213942, 0.036176074254831755, 0.01419230417411497, 0.017736464595289686, 0.038539252162532206, -0.0030918471931441743, 0.00987724884630356, 0.014014243374811766, 0.001489943161153578, 0.02034579054630022, 0.002913448425083376, 0.014998677062753416, 0.023290718006095924, 0.030107988902374417, 0.006956615190975171, 0.05482822180579208, -0.03703792512253478, -0.03179026119774409, 0.005154845967257462, 0.02401833638554497, 0.0012541036647928134, 0.036376859699039935, 0.0314209600445379, 0.001411287086900241, -0.07160803031120411, 0.018379370699035457, -0.09799107838437138, 0.07702179947430275, 0.03190150403629418, 0.013543581458212934, 0.04004004061568918, -0.0658953580556538, 0.062420174836901, 0.015006294164966173, -0.016885191292998765, 0.014663716128332564, 0.021863893754050207, 0.03555843826156595, 0.023736908357365662, -0.00040398390828949506, -0.08247523732815322, -0.13924732425683675, 0.11954460420901107, 0.046545052250944983, 0.013188152234035983, 0.057223270992093615, 0.06746857750578145, -0.04215766039418616, -0.02524966699673207, 0.10325749124977932, 0.032124946366584785, -0.010242713380941133, 0.027425995737802, 0.041129024887128794, 0.051558190039134505, 0.006544557240285718, 0.018913427834624498, 0.024119243896893915, 0.029325637824035283, -0.05092504837641122, 0.0678115180783001, -0.008067292689084694, 0.04170315855626958, -0.05418302720072151, -0.029961408225892733, 0.03379924777651556, -0.09186205296279504, 0.0022547377207708667, -0.09036998942233897, 0.08809097956234198, -0.04165771990462882, -0.10110150091231769, 0.07814140658535755, 0.05410128996503251, -0.06393692296084047, 0.06098909730257309, -0.025464165819363706, 0.032597685473504355, 0.015848729932021424, 0.00460553957580648, 0.059079108111648994, 0.0322089391209721, -0.016385505450314357, -0.05211755457305592, -0.021947716662162792, 0.08740983099338734, 0.04059760475429173, 0.015800952837271804, 0.05087073991523541, 0.029076382826237018, -0.041155020060336764, 0.04934211121928948, 0.03145118738834194, 0.012036345231753289, 0.02309679249292302, 0.01772447582384063, -0.008963645450481604, 0.0579231045071144, -0.02771435044289653, 0.02650209824565177, -0.012776093514889782, -0.06033539944922131, -0.008707963062961148, 0.06094916250406427, 0.04715760579705139, 0.022770258864278376, 0.020311864756667714, 0.032232071123083794, 0.02355772621911349, 0.0019480763420302784, -0.002153357945120723], 'QQQ': [0.06971796297912011, -0.026169717733384834, 0.019041048004045824, 0.022235388696263805, -0.027451981802292084, 0.04456951687458525, -0.07068510835688416, -0.024750135096067646, 0.10768681715304491, 0.006069954858578657, -0.01912578220999387, -0.07160797085163738, -0.015777319963341717, 0.06331826473234185, -0.03238697357471621, 0.04277241810819623, -0.025703636462752682, 0.06906725964439107, 0.010445987851499314, 0.01939166054164792, -0.0146793183595602, 0.0043498725247035, 0.008305836375329627, 0.05012363693845788, 0.04282047787832156, 0.017988289914454014, 0.02690477893009098, 0.03823316215684864, -0.026172934848436826, 0.03981014886249423, 0.02052381752390438, -0.005143162374467479, 0.045034491401769614, 0.01952551455140923, 0.003923970169554888, 0.0839464211540099, -0.013012274743376353, -0.04326452214019238, 0.005045639383601453, 0.05517849228633528, 0.009247402899379071, 0.027580030217578003, 0.056197655239313936, -0.004618201742513642, -0.08987795104686191, -0.0026533816681873984, -0.09344618039717682, 0.08627641662278791, 0.029473350612310822, 0.03667691806010875, 0.053533908240988165, -0.08583218244409778, 0.07094937345782881, 0.023079576190447527, -0.019178018637127325, 0.0071223858013409, 0.04286851926532149, 0.039887927402572514, 0.035961836411939556, 0.02993181195713374, -0.06248649004745878, -0.07777770104268426, 0.1395335640883735, 0.06392163911382763, 0.059232215250974954, 0.07089198248858328, 0.10386197062248885, -0.059523085485694606, -0.030922386265149725, 0.10639198291856708, 0.04604961233885833, 0.0026102195307075087, -0.0013360905439155097, 0.01575979686577717, 0.05741776596587047, -0.012084919073289681, 0.059579475087929865, 0.02820771164521792, 0.04132108820940183, -0.05961841680113644, 0.07570105464603345, 0.01977164915633326, 0.010181097706519818, -0.0915344839972881, -0.04579232091986894, 0.04438656812838626, -0.14613321925859538, -0.015993132866385294, -0.09521935740745939, 0.11824278755699479, -0.05268571510347676, -0.11312420860293627, 0.03921927404656354, 0.05395928236359217, -0.0968521370305679, 0.1011380036542895, -0.0036043427099302816, 0.08914098313692785, 0.005066134629159098, 0.07588457828646519, 0.05976046442175949, 0.03787466368797566, -0.014941131595957086, -0.05358084815667965, -0.020871107595062607, 0.10272644561194337, 0.05184351204593434, 0.018028534615448684, 0.051485136310394926, 0.011347671625947717, -0.04472308728726183, 0.059700119744611514, 0.06110609898199383, -0.016923513209359472, 0.010978217378708967, 0.02447391787937657, -0.008683896862237084, 0.052125850475649216, 0.002918794984810284, 0.021403402386927704, -0.027406951907938456, -0.08038385906277265, 0.013871610308816371, 0.08781201824615006, 0.06077985284754294, 0.02394777049872088, 0.009494438995228392, 0.05120826272197017, 0.04669640644470778, -0.015733469897295047, -0.008009381640890541], 'IWM': [0.05776324385795474, 0.014497115608063944, -0.025983950148806674, 0.022117031610804378, 0.0077990345059506284, -0.015334010403257672, -0.0651893509685495, -0.053488684950986236, 0.05470322487646192, 0.03207918817398769, -0.055944156534781866, -0.08967875653860137, -0.002236376059698814, 0.07408711281864708, 0.01658412801553526, 0.022156700300895234, -0.00017392816810519782, 0.051610690524503906, 0.017683637230383027, 0.00792115360607061, -0.04706072098091647, 0.10493004327104652, 0.02432004573950647, 0.0028139828995293395, 0.01911655973440591, -0.002615140238041125, 0.011427042689238758, -0.01990043158986622, 0.033187290392031235, 0.004178032491243074, -0.012658396871923465, 0.05871576189615434, 0.007262000714730326, 0.028987536873252406, -0.007775022016365958, 0.025258774364626393, -0.03919513149021606, 0.00979556445955844, 0.00976576661825799, 0.0598109208910526, 0.006124843058369001, 0.012741344556175413, 0.042202845734277024, -0.0261747530721585, -0.1163971675811478, 0.017115897762565207, -0.1308579191643603, 0.10725565675642088, 0.050494639307028244, -0.023817565016586273, 0.03340280995365718, -0.08178153614155984, 0.06399847406320167, 0.006793591468531916, -0.050567419609399054, 0.016657057787953795, 0.02679517523838712, 0.03985143683683994, 0.023822284608843232, -0.03151701695912299, -0.0926164958869878, -0.24563892812337912, 0.1296908101758584, 0.06383802260348348, 0.030348330207740977, 0.02877599253895788, 0.05331689698780995, -0.03696115631417915, 0.021791670563362318, 0.16758153865503497, 0.07981321243455526, 0.04731722729044884, 0.060178108903075934, 0.011975100417024227, 0.01772022232626492, 0.002708765172339156, 0.017016261263391185, -0.036947499933871995, 0.021792034032624866, -0.03225142906715336, 0.041635377919985644, -0.04429032775377669, 0.019427781848117925, -0.10020413162893285, 0.010282866955583836, 0.009545093150385781, -0.10424066745062453, 0.0019445800974545978, -0.09000347154930764, 0.10041799557071897, -0.020229954902703916, -0.10675415965592576, 0.10582729973623474, 0.021797464035487154, -0.07196314424022919, 0.09366123715411628, -0.017384412945688578, -0.05337073143271055, -0.01810004164361799, -0.008195592768127946, 0.07481884003825391, 0.059295049645307935, -0.052165084354645425, -0.06500166497322105, -0.07164758272763502, 0.0880340324388371, 0.11079490437034124, -0.039792846298486145, 0.05472735392089407, 0.0317394949148444, -0.07093075775815907, 0.04915471522884465, -0.014095079924381573, 0.0983568962061634, -0.01702973984480241, 0.0036737234324159596, -0.014271301145579228, 0.10500685283259975, -0.09041870207477366, 0.024674951142662167, -0.05364784613307453, -0.07324468491025017, -0.02348275776312425, 0.051070032270483116, 0.050954328279696134, 0.0165452554035949, 0.06945768891777103, 0.028463766369973137, 0.017493635240990395, 0.010182317558998332, -0.010466645024915767], 'EFA': [0.06145061569725701, -0.014388737452099443, 0.03581650053390589, 0.001952685562257297, -0.048422584676228654, 0.02011450056082459, -0.0771524765627649, -0.045194834220447296, 0.06402591594685296, -0.007555883516764977, -0.03233925108379898, -0.05675778885962937, -0.03391398245179694, 0.06374574006683277, 0.02197510350467917, -0.0008560911403769067, -0.044841137317792615, 0.039000199907811006, 0.005326930716578023, 0.013279051100173578, -0.02240367324453858, -0.01797448269885886, 0.016416715183500963, 0.03238183406217248, 0.011836430595900454, 0.031805665535139034, 0.023952291084690006, 0.03481022961189944, -0.013103951030036372, 0.02618782817994358, -0.00044832997836804936, 0.023342764699303933, 0.01665377712096866, 0.006869928264421047, 0.002848598992193783, 0.04898655398352681, -0.049555624990490516, -0.008431632659858784, 0.015097851233087049, -0.01912431626457563, -0.035642109590800115, 0.028121102197516498, -0.022611446386546802, 0.009606221805439713, -0.08483428368343564, 0.00495090047450777, -0.06567559133866913, 0.06424075649704869, 0.02505054189537472, 0.009138141495977175, 0.028872997914462583, -0.05164023735045419, 0.03609158083230468, -0.019665712890288494, -0.019427212900989053, 0.03115031492090347, 0.03332887840080388, 0.011209556903842375, 0.018311803642337473, -0.028631812674327038, -0.08083337780763145, -0.15206416915936324, 0.056545098644291296, 0.05284768054147327, 0.02041395260929545, 0.01920006914478315, 0.04613901859033812, -0.020680205237538746, -0.03615236956401055, 0.133388851109065, 0.03927553921760576, -0.007843177461025782, 0.022132050904325053, 0.024821130140608473, 0.029096740272222393, 0.03423009412354705, -0.0244204734513731, 0.007703517290641199, 0.014363576738037226, -0.03315778072283663, 0.0312959295054205, -0.046407615205286475, 0.023663655620502395, -0.03702688343266969, -0.034893502396098536, 0.005176418042740234, -0.06976957055512366, 0.01976263380939934, -0.113631545048116, 0.05039674922807705, -0.06311936225772509, -0.09675368468960127, 0.0572476796288943, 0.12370413630831562, -0.022296795937060628, 0.08621123978056981, -0.031230359241619376, 0.03081098410441818, 0.028939597085616477, -0.04089557324811213, 0.025565407157866125, 0.0266755065839417, -0.04014512632427828, -0.0371705304605636, -0.0294485355411056, 0.07898462821887184, 0.03966142073500913, -0.0045224870909593845, 0.0294254777963098, 0.0332281858572204, -0.032969319689582846, 0.049363129465259295, -0.03573824003160466, 0.025585868567586583, 0.03208307495798821, 0.007802692488712539, -0.05417351519966378, -0.003160758684280985, -0.04347948393931105, 0.0468926722601717, 0.029102912059062264, 0.001836997638625924, 0.036284614732521196, 0.0467935100098532, 0.006509562829348553, -0.02114148042609019, 0.044253030480909304, 0.020449725341254176, 0.011923914298699887, 0.007380885468679388, 0.008785748386667432], 'EEM': [0.04313607560369449, -0.015086226519834349, 0.06628133248372114, -0.04191089561563695, -0.03716057987650478, -0.065178133352405, -0.09251237317997717, -0.03182496142233898, 0.061808287371876026, -0.02556049697953499, -0.054410518397308, -0.051636709407973595, -0.008211575128572216, 0.12187900393406337, 0.004079259735940617, -0.03762849492711601, 0.03675576759899584, 0.05244222666149532, 0.008798517029641227, 0.024872869156037473, -0.00831215403866885, -0.04516185944318967, -0.013898961514795853, 0.06443140314700237, 0.017257829085957598, 0.036189009783280254, 0.016866353254857677, 0.028059926117808515, 0.004601049405160207, 0.056594511621759436, 0.02324374078494765, -0.0004462293692964233, 0.03227857352742415, -0.003896952322872983, 0.021884589340728438, 0.07971615573254894, -0.060796104282772837, 0.005399805436223552, -0.028573372444056, -0.02656456821009467, -0.05303421982336208, 0.03470129334024419, -0.038400719524676115, -0.00580789180488843, -0.09168210010018821, 0.04786556739804786, -0.05042245961182456, 0.09842407166116914, -0.015431683363919776, 0.011246604016715367, 0.02325954022519046, -0.07612369547280069, 0.05263113648854569, -0.026926520494349248, -0.03856017004797437, 0.01677808911507617, 0.04098836188914743, -0.0009398496932422736, 0.05332461021580087, -0.06348417781405553, -0.03848956279335365, -0.17161891646186697, 0.07096377688731376, 0.029314994170289446, 0.05817388888250802, 0.07929223859516223, 0.028466000375332295, -0.01015466245937526, 0.01396419087604303, 0.08609766660952554, 0.05858248544367848, 0.031246588535576405, 0.00784757390606026, -0.0072849859868617485, 0.011927088835990323, 0.016353143481025456, 0.005089994628627389, -0.06653507321199434, 0.015575740326557778, -0.039503141889610696, 0.01066150276474167, -0.04170612444670184, 0.0002047292462878041, -0.00020472924628779464, -0.04416329253016923, -0.034396076849340304, -0.06331372702284131, 0.006116227017436054, -0.061416445545065555, -0.0034973805321706925, -0.013352005890817023, -0.12261334884875678, -0.019980395389569087, 0.14487366922845724, -0.04185576079128653, 0.08736311811179313, -0.07869368249185234, 0.03166695288614792, -0.008398064372148186, -0.024315734984896416, 0.035244805517086655, 0.058659926158703836, -0.06856728523547531, -0.031641643836100956, -0.03349274878111434, 0.0750417516939867, 0.016297214154671356, -0.04631871189647629, 0.04083241384602059, 0.026891962201630353, -0.002193250544111206, 0.019328941943577767, 0.01896240747529828, 0.008417164495142317, 0.00973130941701039, 0.055825319582483476, -0.03122831546984477, -0.027136541435001032, -0.03385372652442518, 0.02129250065145185, 0.011404755291902414, 0.011276152157702798, 0.0013720560121811393, 0.03943163170434978, 0.05803676260085453, 0.006611594332312789, 0.026418931344168936, 0.06859166787073738, 0.03496216256213994, -0.01788042527784841, 0.007154024825293842], 'VNQ': [-0.03743374919969617, 0.011211949512062233, -0.060254034579665036, -0.00302801139764099, -0.057872221588303005, 0.05610163809804626, -0.06497743601201449, 0.020191900829303826, 0.05598837120963975, -0.006278272756928564, 0.004273510777382085, -0.03497038322444602, -0.003643465318753245, 0.08840092951683248, -0.023789082948746956, 0.022236565768217028, 0.05804112308440845, 0.041746344441218136, -0.03836872357645795, -0.025384095849455838, -0.05912701195182571, -0.016898336115524923, 0.026272073264723455, -0.0019405706514354288, 0.03448411838390693, -0.0318168035144386, 0.0024186733280888726, -0.007273640990306006, 0.012574219597595202, 0.012299396792866651, -0.0026143805740708207, -0.011368518299909721, -0.010769055614755746, 0.026293609107740968, -0.01684929626515328, -0.04347172192199689, -0.07988538839373437, 0.028492721707786394, 0.008181623891654353, 0.03613762691856683, 0.031934857941056015, 0.005997937070670888, 0.025424587735899506, -0.040921146768613526, -0.02968771486375629, 0.0456723168539368, -0.09473703352048814, 0.11202992469781711, 0.006929537884015244, 0.03417535631183309, -0.0016121606439704137, 0.0013820110457163613, 0.005852331810375288, 0.016904367592093673, 0.03677737652497598, 0.011107031745365422, 0.011197131115486763, -0.013129291441792736, -0.0030130228325310204, 0.012210948641336143, -0.07285577758078252, -0.22334396072267085, 0.08582957657632936, 0.017194640119332007, 0.014106414988150906, 0.03577169795216678, 0.004413394438412758, -0.034724414652136756, -0.030474875203723814, 0.09235027892181144, 0.011010588948604358, 0.00035316970171055036, 0.033677892014123245, 0.04440722938989544, 0.0756619257235114, 0.00804186079041357, 0.01894240205267601, 0.043259340081241764, 0.02131602093181461, -0.06467360731661843, 0.0689011662275906, -0.021318816482478554, 0.08328042338151675, -0.08797570855919175, -0.03544771937256904, 0.055298331579349234, -0.04173748835460812, -0.047987138595356936, -0.08375910325917174, 0.08264816035846541, -0.062008713829856704, -0.14855763419951543, 0.03445023484986161, 0.05964587750970263, -0.06568965270571997, 0.09896279019793142, -0.06043245930125978, -0.03176375118779763, 0.003126129755218444, -0.04042191449891541, 0.04353830201448341, 0.020140474648699364, -0.03436272232912973, -0.08509306980305152, -0.03688666939442088, 0.11405818171757608, 0.07799824702387793, -0.05191296169371314, 0.019594583479999213, 0.010812172992750472, -0.08277346023046603, 0.04458828842494673, 0.006227565036847785, 0.07639931418699361, 0.050889496469090655, 0.023787151160031033, -0.034142273275235155, 0.04170954529949441, -0.09706395801348913, 0.016367341940255402, 0.03632820188479499, -0.03643864420640464, -0.024711941250771755, 0.011145626214916323, -0.002915127078400688, 0.0008978676248535044, 0.03418570844239378, -0.008929603057205257, -0.024807473704267613, 0.023932008557522345, -0.03169925647759415], 'Rf': [1.6666527779430154e-05, 1.6666527779430154e-05, 1.6666527779430154e-05, 8.333298611358605e-06, 0.0, 2.4999687505149974e-05, 2.4999687505149974e-05, 0.0, 8.333298611358605e-06, 5.8331632010544744e-05, 0.00014165663289210744, 0.00018331652983159856, 0.00020831163495808793, 0.00020831163495808793, 0.00015832079993399064, 0.00018331652983159856, 0.00018331652983159856, 0.00021664319783441284, 0.00021664319783441284, 0.00014998875112496793, 0.0001999800026662447, 0.0002416374699816223, 0.0003416083119026691, 0.00040824998796547767, 0.0003915899852993828, 0.0005415200182317632, 0.000608148373618738, 0.0005914917009553969, 0.0006830999674162353, 0.000791353463901749, 0.0007996801705642441, 0.0008163333758904332, 0.0008163333758904332, 0.0008912693680988986, 0.0009828501778204534, 0.001057773693433397, 0.0011326915959337003, 0.0013407674361662154, 0.0013574116331674243, 0.0013906991961047932, 0.0014739132560002434, 0.0015487999898503926, 0.0015904013077861952, 0.0016652793190612488, 0.0017817450824178763, 0.001823336710860951, 0.0019314668497472248, 0.0019647353095869416, 0.0019896859281555964, 0.0020063193280230214, 0.0019813691244694866, 0.0019647353095869416, 0.0018150185235602252, 0.0017567892749922867, 0.0016902374102676708, 0.0016236811160975672, 0.0014156641411623484, 0.0012908331829227133, 0.0012658651212337166, 0.0012492194004318981, 0.0012908331829227133, 0.00029995500899794244, 9.166246553444607e-05, 8.332986130410212e-05, 0.00010832746570159093, 9.166246553444607e-05, 6.666444454319759e-05, 7.499718764066433e-05, 7.499718764066433e-05, 7.499718764066433e-05, 6.666444454319759e-05, 6.666444454319759e-05, 3.333277779011948e-05, 1.6666527779430154e-05, 1.6666527779430154e-05, 8.333298611358605e-06, 2.4999687505149974e-05, 4.166579863527393e-05, 3.333277779011948e-05, 4.166579863527393e-05, 4.166579863527393e-05, 5.8331632010544744e-05, 3.333277779011948e-05, 4.166579863527393e-05, 3.333277779011948e-05, 0.00014165663289210744, 0.0002499687552074404, 0.00046655781164241727, 0.0008579651759306351, 0.0014988761237359487, 0.001823336710860951, 0.00209779808214612, 0.0026464949409055775, 0.0030952049073025216, 0.0030952049073025216, 0.0036018389166028258, 0.0037512884444543012, 0.0036018389166028258, 0.0033444012503896525, 0.0044152384734096215, 0.004191204618468052, 0.004323971480054458, 0.004390348301292854, 0.00439864509416767, 0.004406941818206286, 0.00439864509416767, 0.004382051439580694, 0.004390348301292854, 0.004390348301292854, 0.004390348301292854, 0.004390348301292854, 0.004382051439580694, 0.004365457509639998, 0.004390348301292854, 0.004365457509639998, 0.004041820826331798, 0.003917317284045044, 0.0037678925689193085, 0.003585232034710479, 0.0035354097342386024, 0.0035354097342386024, 0.0035188017491188666, 0.003527105776156881, 0.0035188017491188666, 0.003435757685891117, 0.003527105776156881, 0.003552017443537528, 0.003394233068015617, 0.003319484410342076, 0.003236423792655468, 0.003012125657958731]}\n\n\n_reference_data = pd.DataFrame(\n    _ref_numeric_data\n)\n\n\n_reference_data.insert(\n    0,\n    \"Month\",\n    pd.PeriodIndex(\n        _ref_months,\n        freq=\"M\"\n    )\n)\n\n\n# ------------------------------------------------------------\n# Reference econometric results\n# ------------------------------------------------------------\n\n_ref_alpha = np.array(\n    [0.0035395614112137454, -0.004973508151499105, -0.004677755288003353, -0.004961324875479131, -0.008495679116088629],\n    dtype=float\n)\n\n_ref_beta = np.array(\n    [1.1093220681368394, 1.173922502195756, 0.836666056116304, 0.7629717288141279, 0.9074757724241236],\n    dtype=float\n)\n\n_ref_sample_std = np.array(\n    [0.020734648147269233, 0.029774095033705855, 0.023408544753039953, 0.035031888987929326, 0.03283790329547132],\n    dtype=float\n)\n\n_ref_s_alpha = np.array(\n    [0.001840390010944492, 0.0026427237489516273, 0.0020777228351432434, 0.0031094011386150542, 0.002914664805310714],\n    dtype=float\n)\n\n_ref_s_beta = np.array(\n    [0.041704480541309576, 0.0598859048945001, 0.047082602618559545, 0.07046112971127648, 0.06604827288490796],\n    dtype=float\n)\n\n_ref_t_alpha = np.array(\n    [1.9232670195798527, -1.8819629382269347, -2.2513856077828867, -1.5955885568656265, -2.9148048518680207],\n    dtype=float\n)\n\n_ref_t_beta = np.array(\n    [26.599589630136304, 19.60265114577184, 17.770174323084206, 10.828264206669726, 13.739583683065268],\n    dtype=float\n)\n\n_ref_p_alpha_two = np.array(\n    [0.05665000594958546, 0.06209411418905175, 0.026052687180457224, 0.11302769077317441, 0.004197464955864584],\n    dtype=float\n)\n\n_ref_p_beta_two = np.array(\n    [3.267938184443732e-54, 1.6734442653826174e-40, 1.76426809480579e-36, 7.806911840794551e-20, 5.04504635634123e-27],\n    dtype=float\n)\n\n_ref_p_alpha_positive = np.array(\n    [0.02832500297479273, 0.9689529429054742, 0.9869736564097714, 0.9434861546134128, 0.9979012675220678],\n    dtype=float\n)\n\n_ref_ci_lower = np.array(\n    [-0.0001016952993137107, -0.010202201813013779, -0.00878858080383998, -0.011113351182062504, -0.014262414817848498],\n    dtype=float\n)\n\n_ref_ci_upper = np.array(\n    [0.007180818121741202, 0.00025518551001557036, -0.0005669297721667271, 0.001190701431104244, -0.00272894341432876],\n    dtype=float\n)\n\n_ref_significance = (\n    [0.1, 0.1, 0.05, None, 0.01]\n)\n\n_ref_beats_market = (\n    [True, False, False, False, False]\n)\n\n", "imports": [], "exports": [], "required_outputs": ["data", "alpha", "beta", "sample_std", "s_alpha", "s_beta", "t_alpha", "t_beta", "p_alpha_two_sided", "p_beta_two_sided", "p_alpha_positive", "ci_alpha_lower", "ci_alpha_upper", "significance_two_sided", "beats_market"], "blocked_packages": ["statsmodels", "sklearn", "linearmodels", "pingouin"], "starter_code": "import numpy as np\nimport pandas as pd\nfrom scipy import stats\n\n# Write your code below.\n", "max_points": 10.0, "tests": [{"name": "DataFrame structure", "group": "Data preparation", "points": 0.5, "code": "\n\ntry:\n\n    _expected_columns = [\n        \"Month\",\n        \"SPY\",\n        \"QQQ\",\n        \"IWM\",\n        \"EFA\",\n        \"EEM\",\n        \"VNQ\",\n        \"Rf\"\n    ]\n\n    passed = (\n        isinstance(\n            data,\n            pd.DataFrame\n        )\n        and list(\n            data.columns\n        ) == _expected_columns\n        and len(data) == len(\n            _reference_data\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Monthly sample", "group": "Data preparation", "points": 0.5, "code": "\n\ntry:\n\n    _student_months = (\n        pd.PeriodIndex(\n            data[\"Month\"],\n            freq=\"M\"\n        )\n    )\n\n    _reference_months = (\n        pd.PeriodIndex(\n            _reference_data[\"Month\"],\n            freq=\"M\"\n        )\n    )\n\n    passed = (\n        len(_student_months)\n        == len(_reference_months)\n\n        and np.array_equal(\n            _student_months,\n            _reference_months\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "ETF and market returns", "group": "Data preparation", "points": 0.5, "code": "\n\ntry:\n\n    _return_columns = [\n        \"SPY\",\n        \"QQQ\",\n        \"IWM\",\n        \"EFA\",\n        \"EEM\",\n        \"VNQ\"\n    ]\n\n    _student_values = (\n        data[\n            _return_columns\n        ]\n        .to_numpy(\n            dtype=float\n        )\n    )\n\n    _reference_values = (\n        _reference_data[\n            _return_columns\n        ]\n        .to_numpy(\n            dtype=float\n        )\n    )\n\n    passed = (\n        _student_values.shape\n        == _reference_values.shape\n\n        and np.isfinite(\n            _student_values\n        ).all()\n\n        and np.allclose(\n            _student_values,\n            _reference_values,\n            rtol=1e-7,\n            atol=1e-9\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Risk-free return", "group": "Data preparation", "points": 0.5, "code": "\n\ntry:\n\n    _student_rf = (\n        data[\"Rf\"]\n        .to_numpy(\n            dtype=float\n        )\n    )\n\n    _reference_rf = (\n        _reference_data[\"Rf\"]\n        .to_numpy(\n            dtype=float\n        )\n    )\n\n    passed = (\n        _student_rf.shape\n        == _reference_rf.shape\n\n        and np.isfinite(\n            _student_rf\n        ).all()\n\n        and np.allclose(\n            _student_rf,\n            _reference_rf,\n            rtol=1e-7,\n            atol=1e-10\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Alpha estimates", "group": "OLS estimation", "points": 1.0, "code": "\n\ntry:\n\n    _student = np.asarray(\n        alpha,\n        dtype=float\n    ).reshape(-1)\n\n    passed = (\n        _student.size == 5\n\n        and np.allclose(\n            _student,\n            _ref_alpha,\n            rtol=1e-6,\n            atol=1e-8\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Beta estimates", "group": "OLS estimation", "points": 1.0, "code": "\n\ntry:\n\n    _student = np.asarray(\n        beta,\n        dtype=float\n    ).reshape(-1)\n\n    passed = (\n        _student.size == 5\n\n        and np.allclose(\n            _student,\n            _ref_beta,\n            rtol=1e-6,\n            atol=1e-8\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Residual standard error", "group": "Standard errors", "points": 0.5, "code": "\n\ntry:\n\n    _student = np.asarray(\n        sample_std,\n        dtype=float\n    ).reshape(-1)\n\n    passed = (\n        _student.size == 5\n\n        and np.allclose(\n            _student,\n            _ref_sample_std,\n            rtol=1e-6,\n            atol=1e-8\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Alpha standard errors", "group": "Standard errors", "points": 0.5, "code": "\n\ntry:\n\n    _student = np.asarray(\n        s_alpha,\n        dtype=float\n    ).reshape(-1)\n\n    passed = (\n        _student.size == 5\n\n        and np.allclose(\n            _student,\n            _ref_s_alpha,\n            rtol=1e-6,\n            atol=1e-8\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Beta standard errors", "group": "Standard errors", "points": 0.5, "code": "\n\ntry:\n\n    _student = np.asarray(\n        s_beta,\n        dtype=float\n    ).reshape(-1)\n\n    passed = (\n        _student.size == 5\n\n        and np.allclose(\n            _student,\n            _ref_s_beta,\n            rtol=1e-6,\n            atol=1e-8\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Alpha t-statistics and p-values", "group": "Two-sided hypothesis testing", "points": 0.75, "code": "\n\ntry:\n\n    _student_t = np.asarray(\n        t_alpha,\n        dtype=float\n    ).reshape(-1)\n\n    _student_p = np.asarray(\n        p_alpha_two_sided,\n        dtype=float\n    ).reshape(-1)\n\n    passed = (\n        _student_t.size == 5\n        and _student_p.size == 5\n\n        and np.allclose(\n            _student_t,\n            _ref_t_alpha,\n            rtol=1e-6,\n            atol=1e-8\n        )\n\n        and np.allclose(\n            _student_p,\n            _ref_p_alpha_two,\n            rtol=1e-5,\n            atol=1e-10\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Beta t-statistics and p-values", "group": "Two-sided hypothesis testing", "points": 0.75, "code": "\n\ntry:\n\n    _student_t = np.asarray(\n        t_beta,\n        dtype=float\n    ).reshape(-1)\n\n    _student_p = np.asarray(\n        p_beta_two_sided,\n        dtype=float\n    ).reshape(-1)\n\n    passed = (\n        _student_t.size == 5\n        and _student_p.size == 5\n\n        and np.allclose(\n            _student_t,\n            _ref_t_beta,\n            rtol=1e-6,\n            atol=1e-8\n        )\n\n        and np.allclose(\n            _student_p,\n            _ref_p_beta_two,\n            rtol=1e-4,\n            atol=1e-20\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Positive-alpha p-values", "group": "One-sided hypothesis testing", "points": 1.0, "code": "\n\ntry:\n\n    _student = np.asarray(\n        p_alpha_positive,\n        dtype=float\n    ).reshape(-1)\n\n    passed = (\n        _student.size == 5\n\n        and np.allclose(\n            _student,\n            _ref_p_alpha_positive,\n            rtol=1e-5,\n            atol=1e-10\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Alpha confidence intervals", "group": "Confidence intervals", "points": 1.0, "code": "\n\ntry:\n\n    _student_lower = np.asarray(\n        ci_alpha_lower,\n        dtype=float\n    ).reshape(-1)\n\n    _student_upper = np.asarray(\n        ci_alpha_upper,\n        dtype=float\n    ).reshape(-1)\n\n    passed = (\n        _student_lower.size == 5\n        and _student_upper.size == 5\n\n        and np.allclose(\n            _student_lower,\n            _ref_ci_lower,\n            rtol=1e-6,\n            atol=1e-8\n        )\n\n        and np.allclose(\n            _student_upper,\n            _ref_ci_upper,\n            rtol=1e-6,\n            atol=1e-8\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Two-sided significance", "group": "Economic interpretation", "points": 0.5, "code": "\n\ntry:\n\n    _student = list(\n        significance_two_sided\n    )\n\n    passed = (\n        len(_student) == 5\n\n        and all(\n            (\n                student_value is None\n                and reference_value is None\n            )\n            or\n            (\n                student_value is not None\n                and reference_value is not None\n                and np.isclose(\n                    float(student_value),\n                    float(reference_value),\n                    atol=1e-12\n                )\n            )\n\n            for (\n                student_value,\n                reference_value\n            )\n\n            in zip(\n                _student,\n                _ref_significance\n            )\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Market outperformance", "group": "Economic interpretation", "points": 0.5, "code": "\n\ntry:\n\n    _student = [\n        bool(value)\n        for value\n        in beats_market\n    ]\n\n    passed = (\n        len(_student) == 5\n        and _student\n        == _ref_beats_market\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}]}], "subtitle": "Jensen's Alpha · OLS · Statistical Inference", "instructions": "\n\n<p>\nIn this practice you will conduct a complete empirical\nanalysis using real financial data.\n<\/p>\n\n<p>\nUnlike previous practices, the data are\n<strong>not provided as a ready-to-use DataFrame<\/strong>.\nYou are responsible for obtaining, organizing, uploading,\ncleaning, transforming and merging the data required for the\nanalysis.\n<\/p>\n\n<p>\nUse the following sources:\n<\/p>\n\n<ul>\n\n<li>\n<strong>Google Finance<\/strong>, through the\n<code>GOOGLEFINANCE<\/code> function in Google Sheets,\nfor market and ETF closing prices.\n<\/li>\n\n<li>\n<strong>FRED<\/strong>\n(<code>fred.stlouisfed.org<\/code>) for the\n4-Week Treasury Bill rate\n(<code>TB4WK<\/code>).\n<\/li>\n\n<\/ul>\n\n<p>\nObtain data covering\n<strong>January 2015 through December 2025<\/strong>.\n<\/p>\n\n<p>\nYou will analyse the following ETFs:\n<\/p>\n\n<ul>\n\n<li>\n<strong>Invesco QQQ Trust (QQQ)<\/strong>\n<\/li>\n\n<li>\n<strong>iShares Russell 2000 ETF (IWM)<\/strong>\n<\/li>\n\n<li>\n<strong>iShares MSCI EAFE ETF (EFA)<\/strong>\n<\/li>\n\n<li>\n<strong>iShares MSCI Emerging Markets ETF (EEM)<\/strong>\n<\/li>\n\n<li>\n<strong>Vanguard Real Estate ETF (VNQ)<\/strong>\n<\/li>\n\n<\/ul>\n\n<p>\nUse the\n<strong>SPDR S&amp;P 500 ETF Trust (SPY)<\/strong>\nas the market benchmark.\n<\/p>\n\n<div style=\"\n    margin:18px 0;\n    padding:14px 16px;\n    background:#fff8e1;\n    border-left:4px solid #d6a900;\n    border-radius:4px;\n\">\n\n<strong>File format:<\/strong>\nOnly <code>.csv<\/code> files can be uploaded to the grader.\nExcel files (<code>.xlsx<\/code>) and other file formats are\n<strong>not supported<\/strong>.\n\n<\/div>\n\n<p>\nYou may organize the raw data in any way you consider\nappropriate. You may upload\n<strong>as many CSV files as you need<\/strong>, and filenames\nare not prescribed. The grader evaluates the final objects\ncreated by your Python code, not the organization of your\nraw files.\n<\/p>\n\n<p>\nYou may use <code>numpy<\/code>, <code>pandas<\/code> and\n<code>scipy<\/code>. Packages that directly estimate regression\nmodels for you, such as <code>statsmodels<\/code> and\n<code>sklearn<\/code>, are not allowed. You are expected to\nimplement the OLS and inference calculations using the\nformulas studied in class.\n<\/p>\n\n"};
+
+
+// ============================================================
+// GLOBAL STATE
+// ============================================================
+
+let pyodide = null;
+let pythonReady = false;
+
+const questionState = {};
+const savedExports = {};
+const uploadedFiles = new Set();
+
+
+// ============================================================
+// ELEMENTS
+// ============================================================
+
+const courseName =
+    document.getElementById("courseName");
+
+const practiceTitle =
+    document.getElementById("practiceTitle");
+
+const practiceSubtitle =
+    document.getElementById("practiceSubtitle");
+
+const pythonStatus =
+    document.getElementById("pythonStatus");
+
+const practiceInfoCard =
+    document.getElementById("practiceInfoCard");
+
+const practiceInstructions =
+    document.getElementById("practiceInstructions");
+
+const uploadCard =
+    document.getElementById("uploadCard");
+
+const dataFiles =
+    document.getElementById("dataFiles");
+
+const uploadStatus =
+    document.getElementById("uploadStatus");
+
+const questionsContainer =
+    document.getElementById("questionsContainer");
+
+const overallScore =
+    document.getElementById("overallScore");
+
+const scoreNote =
+    document.getElementById("scoreNote");
+
+const submitButton =
+    document.getElementById("submitButton");
+
+const submitStatus =
+    document.getElementById("submitStatus");
+
+
+// ============================================================
+// HELPERS
+// ============================================================
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+
+// ============================================================
+// HEADER
+// ============================================================
+
+function buildHeader() {
+
+    courseName.textContent =
+        PRACTICE.course;
+
+    practiceTitle.textContent =
+        PRACTICE.title;
+
+    if (PRACTICE.subtitle) {
+
+        practiceSubtitle.textContent =
+            PRACTICE.subtitle;
+
+    } else {
+
+        practiceSubtitle.style.display =
+            "none";
+    }
+
+    if (PRACTICE.instructions) {
+
+        practiceInfoCard.style.display =
+            "block";
+
+        practiceInstructions.innerHTML =
+            PRACTICE.instructions;
+    }
+
+    if (PRACTICE.allow_file_upload) {
+
+        uploadCard.style.display =
+            "block";
+    }
+}
+
+
+// ============================================================
+// QUESTIONS
+// ============================================================
+
+function buildQuestions() {
+
+    questionsContainer.innerHTML = "";
+
+    PRACTICE.questions.forEach(
+        (question,index) => {
+
+            questionState[question.id] = {
+                checked: false,
+                score: 0,
+                maxScore: question.max_points,
+                tests: null,
+                code: null
+            };
+
+            const card =
+                document.createElement("section");
+
+            card.className =
+                "question-card";
+
+            const label =
+                document.createElement("div");
+
+            label.className =
+                "section-label";
+
+            label.textContent =
+                `Question ${index+1}`;
+
+            const title =
+                document.createElement("h2");
+
+            title.className =
+                "question-title";
+
+            title.textContent =
+                question.title;
+
+            const instructions =
+                document.createElement("div");
+
+            instructions.className =
+                "instructions";
+
+            instructions.innerHTML =
+                question.instructions;
+
+            const editorLabel =
+                document.createElement("label");
+
+            editorLabel.className =
+                "editor-label";
+
+            editorLabel.textContent =
+                "Your Python code";
+
+            const editor =
+                document.createElement("textarea");
+
+            editor.className =
+                "code-editor";
+
+            editor.id =
+                `editor-${question.id}`;
+
+            editor.value =
+                question.starter_code;
+
+            editor.spellcheck =
+                false;
+
+            const buttonRow =
+                document.createElement("div");
+
+            buttonRow.className =
+                "button-row";
+
+            const runButton =
+                document.createElement("button");
+
+            runButton.className =
+                "run-button";
+
+            runButton.id =
+                `run-${question.id}`;
+
+            runButton.textContent =
+                "Run Code";
+
+            runButton.disabled =
+                true;
+
+            const checkButton =
+                document.createElement("button");
+
+            checkButton.className =
+                "check-button";
+
+            checkButton.id =
+                `check-${question.id}`;
+
+            checkButton.textContent =
+                "Check Answer";
+
+            checkButton.disabled =
+                true;
+
+            buttonRow.appendChild(runButton);
+            buttonRow.appendChild(checkButton);
+
+            const outputContainer =
+                document.createElement("div");
+
+            outputContainer.className =
+                "output-container";
+
+            const outputTitle =
+                document.createElement("div");
+
+            outputTitle.className =
+                "output-title";
+
+            outputTitle.textContent =
+                "Output";
+
+            const output =
+                document.createElement("pre");
+
+            output.className =
+                "output-box";
+
+            output.id =
+                `output-${question.id}`;
+
+            output.textContent =
+                "Python is loading...";
+
+            outputContainer.appendChild(
+                outputTitle
+            );
+
+            outputContainer.appendChild(
+                output
+            );
+
+            const assessment =
+                document.createElement("div");
+
+            assessment.className =
+                "assessment";
+
+            assessment.id =
+                `assessment-${question.id}`;
+
+            assessment.innerHTML = `
+                <div class="assessment-title">
+                    Assessment
+                </div>
+                <div class="not-checked">
+                    Answer not checked yet.
+                </div>
+            `;
+
+            card.appendChild(label);
+            card.appendChild(title);
+            card.appendChild(instructions);
+            card.appendChild(editorLabel);
+            card.appendChild(editor);
+            card.appendChild(buttonRow);
+            card.appendChild(outputContainer);
+            card.appendChild(assessment);
+
+            questionsContainer.appendChild(
+                card
+            );
+
+            runButton.addEventListener(
+                "click",
+                () => runQuestion(question)
+            );
+
+            checkButton.addEventListener(
+                "click",
+                () => checkQuestion(question)
+            );
+        }
+    );
+
+    updateOverallScore();
+}
+
+
+// ============================================================
+// PYTHON
+// ============================================================
+
+async function initializePython() {
+
+    pythonStatus.textContent =
+        "Loading Python environment...";
+
+    try {
+
+        pyodide =
+            await loadPyodide();
+
+        await pyodide.loadPackage(
+            ["numpy","pandas","scipy"]
+        );
+
+        pythonReady = true;
+
+        pythonStatus.textContent =
+            "✓ Python ready";
+
+        pythonStatus.classList.add(
+            "python-ready"
+        );
+
+        PRACTICE.questions.forEach(
+            question => {
+
+                document.getElementById(
+                    `run-${question.id}`
+                ).disabled = false;
+
+                document.getElementById(
+                    `check-${question.id}`
+                ).disabled = false;
+
+                document.getElementById(
+                    `output-${question.id}`
+                ).textContent =
+                    "Python ready. You can run your code.";
+            }
+        );
+
+    } catch (error) {
+
+        pythonStatus.textContent =
+            "✗ Python failed to load";
+
+        PRACTICE.questions.forEach(
+            question => {
+
+                document.getElementById(
+                    `output-${question.id}`
+                ).textContent =
+                    "Could not initialize Python.\n\n"
+                    + error;
+            }
+        );
+    }
+}
+
+
+// ============================================================
+// FILE UPLOAD
+// ============================================================
+
+dataFiles.addEventListener(
+    "change",
+    async event => {
+
+        if (!pythonReady) {
+
+            uploadStatus.textContent =
+                "Python is still loading. "
+                + "Please try again in a moment.";
+
+            return;
+        }
+
+        const files =
+            Array.from(
+                event.target.files
+            );
+
+        if (files.length === 0) {
+            return;
+        }
+
+        try {
+
+            for (const file of files) {
+
+                if (
+                    !file.name
+                        .toLowerCase()
+                        .endsWith(".csv")
+                ) {
+                    throw new Error(
+                        `${file.name} is not a CSV file.`
+                    );
+                }
+
+                const buffer =
+                    await file.arrayBuffer();
+
+                const bytes =
+                    new Uint8Array(buffer);
+
+                try {
+                    pyodide.FS.unlink(
+                        file.name
+                    );
+                } catch (_) {
+                }
+
+                pyodide.FS.writeFile(
+                    file.name,
+                    bytes
+                );
+
+                uploadedFiles.add(
+                    file.name
+                );
+            }
+
+            const names =
+                Array.from(uploadedFiles)
+                    .sort();
+
+            uploadStatus.textContent =
+                `${names.length} CSV file`
+                + (names.length === 1 ? "" : "s")
+                + " available to Python:\n"
+                + names.join("\n");
+
+        } catch (error) {
+
+            uploadStatus.textContent =
+                "File upload failed:\n"
+                + error;
+        }
+
+        // Allows another selection without
+        // losing previously uploaded files.
+        event.target.value = "";
+    }
+);
+
+
+// ============================================================
+// RESET PYTHON NAMESPACE
+// ============================================================
+
+async function resetPythonNamespace() {
+
+    await pyodide.runPythonAsync(`
+
+protected_names = {
+    "__name__",
+    "__doc__",
+    "__package__",
+    "__loader__",
+    "__spec__",
+    "__annotations__",
+    "__builtins__"
+}
+
+for _name in list(globals().keys()):
+
+    if _name not in protected_names:
+
+        globals().pop(_name, None)
+
+`);
+}
+
+
+// ============================================================
+// PACKAGE RESTRICTIONS
+// ============================================================
+
+async function applyPackageRestrictions(
+    question
+) {
+
+    const blocked =
+        question.blocked_packages || [];
+
+    pyodide.globals.set(
+        "_blocked_packages_json",
+        JSON.stringify(blocked)
+    );
+
+    await pyodide.runPythonAsync(`
+
+import json as _json
+import builtins as _builtins
+
+_blocked_packages = set(
+    _json.loads(
+        _blocked_packages_json
+    )
+)
+
+_original_import = _builtins.__import__
+
+def _restricted_import(
+    name,
+    globals=None,
+    locals=None,
+    fromlist=(),
+    level=0
+):
+
+    root_name = name.split(".")[0]
+
+    if root_name in _blocked_packages:
+
+        raise ImportError(
+            f"The package '{root_name}' is not allowed "
+            "in this practice. Use the econometric formulas "
+            "covered in class."
+        )
+
+    return _original_import(
+        name,
+        globals,
+        locals,
+        fromlist,
+        level
+    )
+
+_builtins.__import__ = _restricted_import
+
+`);
+}
+
+
+// ============================================================
+// RESTORE NORMAL IMPORT BEHAVIOUR
+// ============================================================
+
+async function restoreNormalImports() {
+
+    await pyodide.runPythonAsync(`
+
+import builtins as _builtins
+
+if "_original_import" in globals():
+    _builtins.__import__ = _original_import
+
+`);
+}
+
+
+// ============================================================
+// RESTORE IMPORTED VARIABLES
+// ============================================================
+
+async function restoreQuestionImports(
+    question
+) {
+
+    const imports =
+        question.imports || [];
+
+    if (imports.length === 0) {
+        return;
+    }
+
+    const missing =
+        imports.filter(
+            name => !(name in savedExports)
+        );
+
+    if (missing.length > 0) {
+
+        throw new Error(
+            "Required output from a previous question "
+            + "is not available."
+        );
+    }
+
+    const payload = {};
+
+    imports.forEach(
+        name => {
+            payload[name] =
+                savedExports[name];
+        }
+    );
+
+    pyodide.globals.set(
+        "_import_payload_json",
+        JSON.stringify(payload)
+    );
+
+    await pyodide.runPythonAsync(`
+
+import json as _json
+import pickle as _pickle
+import base64 as _base64
+
+_import_payload = _json.loads(
+    _import_payload_json
+)
+
+for _import_name, _encoded_value in _import_payload.items():
+
+    globals()[_import_name] = _pickle.loads(
+        _base64.b64decode(
+            _encoded_value.encode("ascii")
+        )
+    )
+
+`);
+}
+
+
+// ============================================================
+// SAVE EXPORTS
+// ============================================================
+
+async function saveQuestionExports(
+    question
+) {
+
+    const exports =
+        question.exports || [];
+
+    if (exports.length === 0) {
+        return;
+    }
+
+    exports.forEach(
+        name => {
+            delete savedExports[name];
+        }
+    );
+
+    pyodide.globals.set(
+        "_export_names_json",
+        JSON.stringify(exports)
+    );
+
+    const result =
+        await pyodide.runPythonAsync(`
+
+import json as _json
+import pickle as _pickle
+import base64 as _base64
+
+_export_names = _json.loads(
+    _export_names_json
+)
+
+_export_payload = {}
+
+for _export_name in _export_names:
+
+    if _export_name in globals():
+
+        _export_payload[_export_name] = (
+            _base64.b64encode(
+                _pickle.dumps(
+                    globals()[_export_name]
+                )
+            ).decode("ascii")
+        )
+
+_json.dumps(_export_payload)
+
+`);
+
+    const exported =
+        JSON.parse(result);
+
+    Object.entries(exported).forEach(
+        ([name,value]) => {
+            savedExports[name] = value;
+        }
+    );
+}
+
+
+// ============================================================
+// COMPLETENESS GATE
+// ============================================================
+
+async function requiredOutputsExist(
+    question
+) {
+
+    const required =
+        question.required_outputs || [];
+
+    if (required.length === 0) {
+        return true;
+    }
+
+    pyodide.globals.set(
+        "_required_outputs_json",
+        JSON.stringify(required)
+    );
+
+    const complete =
+        await pyodide.runPythonAsync(`
+
+import json as _json
+
+_required_outputs = _json.loads(
+    _required_outputs_json
+)
+
+all(
+    _required_name in globals()
+    for _required_name in _required_outputs
+)
+
+`);
+
+    return Boolean(complete);
+}
+
+
+// ============================================================
+// RUN QUESTION
+// ============================================================
+
+async function runQuestion(question) {
+
+    if (!pythonReady) {
+        return;
+    }
+
+    const runButton =
+        document.getElementById(
+            `run-${question.id}`
+        );
+
+    const checkButton =
+        document.getElementById(
+            `check-${question.id}`
+        );
+
+    const editor =
+        document.getElementById(
+            `editor-${question.id}`
+        );
+
+    const output =
+        document.getElementById(
+            `output-${question.id}`
+        );
+
+    runButton.disabled = true;
+    checkButton.disabled = true;
+
+    runButton.textContent =
+        "Running...";
+
+    output.textContent =
+        "Running your code...";
+
+    try {
+
+        await resetPythonNamespace();
+
+        if (
+            question.setup_code &&
+            question.setup_code.trim() !== ""
+        ) {
+            await pyodide.runPythonAsync(
+                question.setup_code
+            );
+        }
+
+        await restoreQuestionImports(
+            question
+        );
+
+        await applyPackageRestrictions(
+            question
+        );
+
+        let capturedOutput = "";
+
+        pyodide.setStdout({
+            batched: text => {
+                capturedOutput +=
+                    text + "\n";
+            }
+        });
+
+        pyodide.setStderr({
+            batched: text => {
+                capturedOutput +=
+                    text + "\n";
+            }
+        });
+
+        await pyodide.runPythonAsync(
+            editor.value
+        );
+
+        if (
+            capturedOutput.trim() === ""
+        ) {
+
+            output.textContent =
+                "✓ Code executed successfully.\n"
+                + "No output was printed.";
+
+        } else {
+
+            output.textContent =
+                "✓ Code executed successfully.\n\n"
+                + capturedOutput;
+        }
+
+    } catch (error) {
+
+        output.textContent =
+            "✗ Python error:\n\n"
+            + error;
+
+    } finally {
+
+        try {
+            await restoreNormalImports();
+        } catch (_) {
+        }
+
+        runButton.disabled = false;
+        checkButton.disabled = false;
+
+        runButton.textContent =
+            "Run Code";
+    }
+}
+
+
+// ============================================================
+// CHECK QUESTION
+// ============================================================
+
+async function checkQuestion(question) {
+
+    if (!pythonReady) {
+        return;
+    }
+
+    const runButton =
+        document.getElementById(
+            `run-${question.id}`
+        );
+
+    const checkButton =
+        document.getElementById(
+            `check-${question.id}`
+        );
+
+    const editor =
+        document.getElementById(
+            `editor-${question.id}`
+        );
+
+    const output =
+        document.getElementById(
+            `output-${question.id}`
+        );
+
+    const assessment =
+        document.getElementById(
+            `assessment-${question.id}`
+        );
+
+    runButton.disabled = true;
+    checkButton.disabled = true;
+
+    checkButton.textContent =
+        "Checking...";
+
+    assessment.innerHTML = `
+        <div class="assessment-title">
+            Assessment
+        </div>
+        <div class="not-checked">
+            Checking your answer...
+        </div>
+    `;
+
+    try {
+
+        await resetPythonNamespace();
+
+        if (
+            question.setup_code &&
+            question.setup_code.trim() !== ""
+        ) {
+            await pyodide.runPythonAsync(
+                question.setup_code
+            );
+        }
+
+        await restoreQuestionImports(
+            question
+        );
+
+        await applyPackageRestrictions(
+            question
+        );
+
+        await pyodide.runPythonAsync(
+            editor.value
+        );
+
+        const complete =
+            await requiredOutputsExist(
+                question
+            );
+
+        if (!complete) {
+
+            questionState[
+                question.id
+            ] = {
+                checked: false,
+                score: 0,
+                maxScore:
+                    question.max_points,
+                tests: null,
+                code:
+                    editor.value
+            };
+
+            assessment.innerHTML = `
+                <div class="assessment-title">
+                    Assessment
+                </div>
+
+                <div class="test-fail">
+                    Analysis incomplete.
+                    Complete all required outputs before
+                    checking your results.
+                </div>
+            `;
+
+            output.textContent =
+                "✓ Code executed successfully, "
+                + "but the analysis is incomplete.";
+
+            return;
+        }
+
+        await saveQuestionExports(
+            question
+        );
+
+        const rawResults = [];
+
+        for (
+            const test of question.tests
+        ) {
+
+            let passed = false;
+
+            try {
+
+                await pyodide.runPythonAsync(
+                    test.code
+                );
+
+                passed =
+                    Boolean(
+                        pyodide.globals.get(
+                            "passed"
+                        )
+                    );
+
+            } catch (_) {
+
+                passed = false;
+            }
+
+            rawResults.push({
+                name: test.name,
+                group:
+                    test.group || test.name,
+                passed: passed,
+                points: test.points
+            });
+        }
+
+        // ----------------------------------------------------
+        // GROUP TESTS
+        //
+        // A visible block passes only when every hidden test
+        // in that block passes.
+        // ----------------------------------------------------
+
+        const grouped = new Map();
+
+        for (const result of rawResults) {
+
+            if (!grouped.has(result.group)) {
+
+                grouped.set(
+                    result.group,
+                    {
+                        name:
+                            result.group,
+                        passed:
+                            true,
+                        points:
+                            0,
+                        max_points:
+                            0
+                    }
+                );
+            }
+
+            const group =
+                grouped.get(
+                    result.group
+                );
+
+            group.passed =
+                group.passed
+                && result.passed;
+
+            group.max_points +=
+                result.points;
+
+            // Award points for each hidden test independently,
+            // while keeping only the aggregate group visible.
+            if (result.passed) {
+
+                group.points +=
+                    result.points;
+            }
+        }
+
+        const results =
+            Array.from(
+                grouped.values()
+            );
+
+        let score = 0;
+
+        results.forEach(
+            group => {
+
+                score +=
+                    group.points;
+            }
+        );
+
+        questionState[
+            question.id
+        ] = {
+            checked: true,
+            score: score,
+            maxScore:
+                question.max_points,
+            tests: results,
+            code:
+                editor.value
+        };
+
+        renderAssessment(
+            question,
+            results,
+            score
+        );
+
+        output.textContent =
+            "✓ Code executed and answer checked.";
+
+    } catch (error) {
+
+        questionState[
+            question.id
+        ] = {
+            checked: false,
+            score: 0,
+            maxScore:
+                question.max_points,
+            tests: null,
+            code:
+                editor.value
+        };
+
+        assessment.innerHTML = `
+            <div class="assessment-title">
+                Assessment
+            </div>
+
+            <div class="test-fail">
+                ✗ Your code could not be executed.
+            </div>
+
+            <pre
+                class="output-box"
+                style="margin-top:10px;"
+            >${escapeHtml(error)}</pre>
+        `;
+
+        output.textContent =
+            "✗ Python error. Review the assessment below.";
+
+    } finally {
+
+        try {
+            await restoreNormalImports();
+        } catch (_) {
+        }
+
+        runButton.disabled = false;
+        checkButton.disabled = false;
+
+        checkButton.textContent =
+            "Check Answer";
+
+        updateOverallScore();
+    }
+}
+
+
+// ============================================================
+// RENDER ASSESSMENT
+// ============================================================
+
+function renderAssessment(
+    question,
+    results,
+    score
+) {
+
+    const assessment =
+        document.getElementById(
+            `assessment-${question.id}`
+        );
+
+    let html = `
+        <div class="assessment-title">
+            Assessment
+        </div>
+    `;
+
+    results.forEach(
+        test => {
+
+            const symbol =
+                test.passed
+                ? "✓"
+                : "✗";
+
+            const statusClass =
+                test.passed
+                ? "test-pass"
+                : "test-fail";
+
+            html += `
+                <div class="test-row">
+
+                    <div
+                        class="test-description ${statusClass}">
+                        ${symbol}
+                        ${escapeHtml(test.name)}
+                    </div>
+
+                    <div class="test-points">
+                        ${test.points}
+                        /
+                        ${test.max_points}
+                    </div>
+
+                </div>
+            `;
+        }
+    );
+
+    html += `
+        <div class="question-score">
+            Question score:
+            ${score}
+            /
+            ${question.max_points}
+        </div>
+    `;
+
+    assessment.innerHTML =
+        html;
+}
+
+
+// ============================================================
+// SCORE
+// ============================================================
+
+function updateOverallScore() {
+
+    let score = 0;
+    let checkedQuestions = 0;
+
+    PRACTICE.questions.forEach(
+        question => {
+
+            const state =
+                questionState[
+                    question.id
+                ];
+
+            if (
+                state &&
+                state.checked
+            ) {
+                checkedQuestions += 1;
+                score += state.score;
+            }
+        }
+    );
+
+    overallScore.textContent =
+        `Score: ${score} / ${PRACTICE.max_points}`;
+
+    const allChecked =
+        checkedQuestions ===
+        PRACTICE.questions.length;
+
+    if (allChecked) {
+
+        submitButton.disabled =
+            false;
+
+        scoreNote.textContent =
+            "All questions have been checked. "
+            + "You may submit this practice attempt.";
+
+    } else {
+
+        submitButton.disabled =
+            true;
+
+        const remaining =
+            PRACTICE.questions.length
+            - checkedQuestions;
+
+        scoreNote.textContent =
+            `${remaining} question`
+            + (remaining === 1 ? "" : "s")
+            + " still need"
+            + (remaining === 1 ? "s" : "")
+            + " to be checked before submission.";
+    }
+}
+
+
+// ============================================================
+// STUDENT ID
+// ============================================================
+
+function validStudentId(studentId) {
+
+    return /^\d{6,12}$/.test(
+        studentId
+    );
+}
+
+
+// ============================================================
+// SUBMISSION
+// ============================================================
+
+function buildSubmission() {
+
+    const studentId =
+        document
+            .getElementById(
+                "studentId"
+            )
+            .value
+            .trim();
+
+    const questions = {};
+
+    PRACTICE.questions.forEach(
+        question => {
+
+            const state =
+                questionState[
+                    question.id
+                ];
+
+            questions[
+                question.id
+            ] = {
+                title:
+                    question.title,
+                score:
+                    state.score,
+                max_score:
+                    state.maxScore,
+                code:
+                    state.code,
+                tests:
+                    state.tests
+            };
+        }
+    );
+
+    let totalScore = 0;
+
+    Object.values(
+        questions
+    ).forEach(
+        question => {
+            totalScore +=
+                question.score;
+        }
+    );
+
+    return {
+        student_id:
+            studentId,
+        practice_id:
+            PRACTICE.practice_id,
+        practice:
+            PRACTICE.title,
+        score:
+            totalScore,
+        max_score:
+            PRACTICE.max_points,
+        questions:
+            questions
+    };
+}
+
+
+submitButton.addEventListener(
+    "click",
+    async () => {
+
+        submitStatus.textContent = "";
+        submitStatus.className =
+            "submit-status";
+
+        const studentId =
+            document
+                .getElementById(
+                    "studentId"
+                )
+                .value
+                .trim();
+
+        if (!studentId) {
+
+            submitStatus.textContent =
+                "✗ Please enter your Student ID.";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+        if (
+            !validStudentId(studentId)
+        ) {
+
+            submitStatus.textContent =
+                "✗ Please enter a valid Student ID "
+                + "(digits only).";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+        const allChecked =
+            PRACTICE.questions.every(
+                question =>
+                    questionState[
+                        question.id
+                    ].checked
+            );
+
+        if (!allChecked) {
+
+            submitStatus.textContent =
+                "✗ Check every question before submitting.";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+        if (
+            SUBMIT_URL.includes(
+                "PASTE_YOUR"
+            )
+        ) {
+
+            submitStatus.textContent =
+                "✗ Submission endpoint has not been configured.";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+        const payload =
+            buildSubmission();
+
+        submitButton.disabled =
+            true;
+
+        submitButton.textContent =
+            "Submitting...";
+
+        submitStatus.textContent =
+            "Submitting your practice attempt...";
+
+        try {
+
+            const response =
+                await fetch(
+                    SUBMIT_URL,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type":
+                                "text/plain;charset=utf-8"
+                        },
+                        body:
+                            JSON.stringify(
+                                payload
+                            )
+                    }
+                );
+
+            const result =
+                await response.json();
+
+            if (result.success) {
+
+                submitStatus.textContent =
+                    `✓ Attempt ${result.attempt} `
+                    + `submitted successfully. `
+                    + `Score: ${payload.score}`
+                    + `/${payload.max_score}.`;
+
+                submitStatus.classList.add(
+                    "submit-success"
+                );
+
+            } else {
+
+                submitStatus.textContent =
+                    "✗ Submission failed: "
+                    + result.error;
+
+                submitStatus.classList.add(
+                    "submit-error"
+                );
+            }
+
+        } catch (error) {
+
+            submitStatus.textContent =
+                "✗ Could not submit attempt: "
+                + error;
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+        } finally {
+
+            submitButton.disabled =
+                false;
+
+            submitButton.textContent =
+                "Submit Practice Attempt";
+        }
+    }
+);
+
+
+// ============================================================
+// MODE
+// ============================================================
+
+function applyPracticeMode() {
+
+    const studentCard =
+        document.getElementById(
+            "studentCard"
+        );
+
+    if (
+        PRACTICE.mode === "graded"
+    ) {
+
+        studentCard.style.display =
+            "block";
+
+        submitButton.style.display =
+            "inline-block";
+
+        return;
+    }
+
+    studentCard.style.display =
+        "none";
+
+    submitButton.style.display =
+        "none";
+
+    scoreNote.innerHTML = `
+        <strong>Review version.</strong>
+        You may run and check your answers as many times
+        as you wish.
+        Results from this version are not submitted
+        or recorded.
+    `;
+
+    const reviewNotice =
+        document.createElement("div");
+
+    reviewNotice.style.marginTop =
+        "12px";
+
+    reviewNotice.style.padding =
+        "7px 10px";
+
+    reviewNotice.style.background =
+        "rgba(255,255,255,0.15)";
+
+    reviewNotice.style.borderRadius =
+        "5px";
+
+    reviewNotice.style.fontSize =
+        "13px";
+
+    reviewNotice.style.display =
+        "inline-block";
+
+    reviewNotice.innerHTML =
+        "<strong>Review version</strong> · "
+        + "Submissions are disabled";
+
+    document
+        .querySelector(
+            ".header-inner"
+        )
+        .appendChild(
+            reviewNotice
+        );
+}
+
+
+// ============================================================
+// START
+// ============================================================
+
+buildHeader();
+buildQuestions();
+applyPracticeMode();
+initializePython();
+
+</script>
+
+</body>
+
+</html>
