@@ -1,0 +1,2475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Practice 3: Explaining Firm Profitability</title>
+
+<script
+    src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js">
+</script>
+
+<style>
+
+:root {
+    --comillas-blue: #004A98;
+    --comillas-dark-blue: #00356E;
+    --comillas-gold: #D6A900;
+    --background: #F4F6F9;
+    --card-background: #FFFFFF;
+    --soft-blue: #EEF4FB;
+    --soft-gold: #FFF8E1;
+    --soft-green: #EDF8F1;
+    --soft-red: #FCEEEE;
+    --text-main: #2F343B;
+    --text-muted: #68717D;
+    --border: #D9DEE7;
+    --success: #287A4B;
+    --error: #B53C3C;
+    --shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text-main);
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+    line-height: 1.55;
+}
+
+.container {
+    max-width: 1050px;
+    margin: 32px auto 60px;
+    padding: 0 24px;
+}
+
+.header {
+    background: var(--comillas-blue);
+    color: white;
+    border-bottom: 5px solid var(--comillas-gold);
+}
+
+.header-inner {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 27px 32px 29px;
+}
+
+.course-name {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+.practice-title {
+    margin: 4px 0 0;
+    font-size: 29px;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.practice-subtitle {
+    margin: 8px 0 0;
+    font-size: 15px;
+    opacity: 0.88;
+}
+
+.student-card,
+.practice-info-card,
+.question-card,
+.summary-card,
+.upload-card,
+.presentation-card {
+    background: var(--card-background);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.student-card {
+    background: var(--soft-blue);
+    border-left: 4px solid var(--comillas-blue);
+}
+
+.upload-card {
+    background: var(--soft-blue);
+    border-left: 4px solid var(--comillas-gold);
+}
+
+.summary-card {
+    border-top: 4px solid var(--comillas-gold);
+}
+
+.presentation-card {
+    display: none;
+    border-top: 4px solid var(--comillas-blue);
+    background: var(--soft-blue);
+}
+
+.presentation-topic {
+    margin: 4px 0 14px;
+    color: var(--comillas-blue);
+    font-size: 22px;
+    line-height: 1.3;
+}
+
+.presentation-members {
+    margin: 10px 0 18px;
+    padding-left: 22px;
+}
+
+.presentation-members li {
+    margin: 5px 0;
+}
+
+.presentation-task {
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: white;
+    border-left: 4px solid var(--comillas-gold);
+    border-radius: 4px;
+}
+
+.presentation-time {
+    margin-top: 16px;
+    font-weight: 700;
+}
+
+.section-label {
+    color: var(--comillas-blue);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 4px;
+}
+
+.question-title {
+    color: var(--comillas-blue);
+    font-size: 21px;
+    line-height: 1.3;
+    margin: 2px 0 14px;
+}
+
+.instructions {
+    margin-bottom: 20px;
+}
+
+.instructions code {
+    background: #EEF1F5;
+    border-radius: 4px;
+    padding: 2px 5px;
+    font-size: 0.95em;
+}
+
+.student-id-label,
+.editor-label,
+.upload-label {
+    display: block;
+    font-weight: 600;
+    margin: 8px 0 6px;
+}
+
+.student-id {
+    width: 300px;
+    max-width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #BCC5D1;
+    border-radius: 6px;
+    background: white;
+    font-size: 15px;
+}
+
+.student-id:focus {
+    outline: 2px solid rgba(0,74,152,0.18);
+    border-color: var(--comillas-blue);
+}
+
+.file-input {
+    display: block;
+    margin-top: 10px;
+    max-width: 100%;
+}
+
+.upload-help {
+    margin-top: 8px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.upload-status {
+    margin-top: 13px;
+    padding: 11px 13px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 13px;
+    white-space: pre-wrap;
+}
+
+.code-editor {
+    width: 100%;
+    min-height: 520px;
+    resize: vertical;
+    padding: 15px;
+    background: #F8FAFC;
+    border: 1px solid #C9D1DC;
+    border-radius: 7px;
+    color: #20252B;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    tab-size: 4;
+}
+
+.code-editor:focus {
+    outline: 2px solid rgba(0,74,152,0.15);
+    border-color: var(--comillas-blue);
+}
+
+.button-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+button {
+    border: none;
+    border-radius: 6px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.52;
+    cursor: not-allowed;
+}
+
+.run-button {
+    background: var(--comillas-blue);
+    color: white;
+}
+
+.run-button:hover:not(:disabled) {
+    background: var(--comillas-dark-blue);
+}
+
+.check-button {
+    background: var(--soft-gold);
+    color: #493900;
+    border: 1px solid #E1C55E;
+}
+
+.check-button:hover:not(:disabled) {
+    background: #FFF0B7;
+}
+
+.submit-button {
+    background: var(--comillas-blue);
+    color: white;
+    padding: 12px 23px;
+    font-size: 15px;
+}
+
+.output-container {
+    margin-top: 20px;
+}
+
+.output-title,
+.assessment-title {
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.output-box {
+    margin: 0;
+    min-height: 48px;
+    padding: 13px 15px;
+    background: #F7F8FA;
+    border-left: 4px solid var(--comillas-blue);
+    border-radius: 4px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 13px;
+}
+
+.assessment {
+    margin-top: 19px;
+}
+
+.not-checked {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.test-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 9px 0;
+    border-bottom: 1px solid #ECEFF3;
+}
+
+.test-row:last-child {
+    border-bottom: none;
+}
+
+.test-description {
+    flex: 1;
+}
+
+.test-points {
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.test-pass {
+    color: var(--success);
+}
+
+.test-fail {
+    color: var(--error);
+}
+
+.question-score {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    color: var(--comillas-blue);
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.overall-score {
+    margin: 5px 0 8px;
+    color: var(--comillas-blue);
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.score-note {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.submit-status {
+    margin-top: 14px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.submit-success {
+    color: var(--success);
+}
+
+.submit-error {
+    color: var(--error);
+}
+
+.python-status {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 5px 9px;
+    background: rgba(255,255,255,0.13);
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.python-ready {
+    background: rgba(230,255,235,0.18);
+}
+
+.footer {
+    margin-top: 40px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+@media (max-width:700px) {
+    .header-inner {
+        padding: 22px 20px;
+    }
+
+    .practice-title {
+        font-size: 24px;
+    }
+
+    .container {
+        padding: 0 14px;
+        margin-top: 20px;
+    }
+
+    .question-card,
+    .student-card,
+    .practice-info-card,
+    .summary-card,
+    .upload-card,
+    .presentation-card {
+        padding: 18px;
+    }
+
+    .code-editor {
+        min-height: 400px;
+    }
+
+    .test-row {
+        align-items: flex-start;
+    }
+}
+
+</style>
+
+<script>
+
+window.MathJax = {
+    tex: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['\\[','\\]']]
+    }
+};
+
+document.addEventListener("keydown", function(event) {
+
+    const textarea = event.target;
+
+    if (textarea.tagName !== "TEXTAREA") {
+        return;
+    }
+
+    if (event.key === "Tab") {
+
+        event.preventDefault();
+
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const value = textarea.value;
+
+        if (!event.shiftKey) {
+
+            textarea.value =
+                value.substring(0,start)
+                + "    "
+                + value.substring(end);
+
+            textarea.selectionStart =
+                textarea.selectionEnd =
+                start + 4;
+
+        } else {
+
+            const beforeCursor =
+                value.substring(0,start);
+
+            let spacesToRemove = 0;
+
+            for (
+                let i = 1;
+                i <= 4 && start-i >= 0;
+                i++
+            ) {
+                if (
+                    beforeCursor[start-i] === " "
+                ) {
+                    spacesToRemove++;
+                } else {
+                    break;
+                }
+            }
+
+            if (spacesToRemove > 0) {
+
+                textarea.value =
+                    value.substring(
+                        0,
+                        start-spacesToRemove
+                    )
+                    + value.substring(end);
+
+                textarea.selectionStart =
+                    textarea.selectionEnd =
+                    start-spacesToRemove;
+            }
+        }
+    }
+});
+
+</script>
+
+<script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="header-inner">
+
+        <p
+            class="course-name"
+            id="courseName">
+        </p>
+
+        <h1
+            class="practice-title"
+            id="practiceTitle">
+        </h1>
+
+        <p
+            class="practice-subtitle"
+            id="practiceSubtitle">
+        </p>
+
+        <div
+            class="python-status"
+            id="pythonStatus">
+            Loading Python environment...
+        </div>
+
+    </div>
+
+</header>
+
+<main class="container">
+
+    <section
+        class="student-card"
+        id="studentCard">
+
+        <div class="section-label">
+            Student
+        </div>
+
+        <label
+            class="student-id-label"
+            for="studentId">
+            Comillas Student ID
+        </label>
+
+        <input
+            class="student-id"
+            id="studentId"
+            type="text"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="Enter your Student ID"
+        >
+
+    </section>
+
+    <section
+        class="practice-info-card"
+        id="practiceInfoCard"
+        style="display:none;">
+
+        <div class="section-label">
+            Instructions
+        </div>
+
+        <div id="practiceInstructions"></div>
+
+    </section>
+
+    <section
+        class="upload-card"
+        id="uploadCard"
+        style="display:none;">
+
+        <div class="section-label">
+            Data files
+        </div>
+
+        <label
+            class="upload-label"
+            for="dataFiles">
+            Upload CSV files
+        </label>
+
+        <input
+            class="file-input"
+            id="dataFiles"
+            type="file"
+            accept=".csv,text/csv"
+            multiple
+        >
+
+        <div class="upload-help">
+            You may upload as many CSV files as you need.
+            Filenames are not prescribed.
+        </div>
+
+        <div
+            class="upload-status"
+            id="uploadStatus">
+            No files uploaded yet.
+        </div>
+
+    </section>
+
+    <div id="questionsContainer"></div>
+
+    <section class="summary-card">
+
+        <div class="section-label">
+            Practice Summary
+        </div>
+
+        <div
+            class="overall-score"
+            id="overallScore">
+            Score: 0 / 0
+        </div>
+
+        <div
+            class="score-note"
+            id="scoreNote">
+            Check every question at least once before
+            submitting a practice attempt.
+        </div>
+
+        <button
+            class="submit-button"
+            id="submitButton"
+            disabled>
+            Submit Practice Attempt
+        </button>
+
+        <div
+            class="submit-status"
+            id="submitStatus">
+        </div>
+
+    </section>
+
+    <section
+        class="presentation-card"
+        id="presentationCard">
+
+        <div class="section-label">
+            Group Presentation
+        </div>
+
+        <div id="presentationContent"></div>
+
+    </section>
+
+    <footer class="footer">
+        Financial Econometrics · Python Practice Grader
+    </footer>
+
+</main>
+
+<script>
+
+// ============================================================
+// GOOGLE APPS SCRIPT ENDPOINT
+// ============================================================
+
+const SUBMIT_URL =
+    "https://script.google.com/macros/s/AKfycbyVgCDZdg9wulWgk4ihH4Hm0bdl-gq6bYC4A8x9RZ-hc7O6NrlhYxIO4bmZeBUZo8SUDg/exec";
+
+
+// ============================================================
+// PRACTICE CONFIGURATION
+// ============================================================
+
+const PRACTICE =
+    {"practice_id": "p03", "course": "Financial Econometrics", "title": "Practice 3: Explaining Firm Profitability", "mode": "graded", "max_points": 10.0, "allow_file_upload": true, "questions": [{"id": "q1", "title": "Multiple Regression, Model Fit and Diagnostics", "instructions": "\n<h3>1. Data preparation<\/h3>\n<p>Read your uploaded CSV file(s) and construct a DataFrame called <code>data<\/code> with one observation per S&amp;P 500 constituent and exactly the following columns, in this order:<\/p>\n<pre>Ticker\nSector\nROA\nTotal_Assets\nTotal_Debt\nSales_Growth\nAsset_Turnover<\/pre>\n<p>Convert the five quantitative variables to numeric values if necessary and remove observations with missing values in the variables required for the analysis. After cleaning, <code>data<\/code> should contain <strong>502 observations<\/strong>.<\/p>\n<p>Then create:<\/p>\n\\[\nSize_i=\\ln(TotalAssets_i), \\qquad\nLeverage_i=\\frac{TotalDebt_i}{TotalAssets_i}.\n\\]\n<p>Create dummy variables for <code>Sector<\/code>, using <strong>Finance as the reference category<\/strong>.<\/p>\n\n<h3>2. Full multiple regression<\/h3>\n<p>Estimate:<\/p>\n\\[\nROA_i=\\beta_0+\\beta_1 Size_i+\\beta_2 Leverage_i+\\beta_3 SalesGrowth_i+\\beta_4 AssetTurnover_i+\\sum_s\\gamma_s Sector_{is}+u_i.\n\\]\n<p>Use the matrix OLS estimator \\(\\hat\\beta=(X'X)^{-1}X'y\\). Calculate classical standard errors, t-statistics and two-sided p-values for every coefficient.<\/p>\n\n<h3>3. Model fit and overall significance<\/h3>\n<p>Calculate \\(R^2\\), adjusted \\(R^2\\), and the overall F-test:<\/p>\n\\[\nH_0:\\beta_1=\\beta_2=\\cdots=\\beta_{k-1}=0.\n\\]\n\n<h3>4. Joint hypothesis test<\/h3>\n<p>Test whether sector effects are jointly zero:<\/p>\n\\[\nH_0:\\gamma_1=\\gamma_2=\\cdots=\\gamma_m=0.\n\\]\n<p>Estimate the restricted model containing the intercept and the four continuous regressors only. Calculate its \\(R^2\\) and adjusted \\(R^2\\), and use the restricted and unrestricted RSS values to calculate the joint F-statistic and p-value.<\/p>\n\n<h3>5. Heteroskedasticity and robust inference<\/h3>\n<p>Conduct a White test. For this practice, construct the auxiliary regression using the four continuous regressors (<code>Size<\/code>, <code>Leverage<\/code>, <code>Sales_Growth<\/code>, <code>Asset_Turnover<\/code>), their squares, and all pairwise cross-products. Regress the squared OLS residuals on these terms and an intercept. Use \\(LM=T R^2_{aux}\\).<\/p>\n<p><strong>Why only the continuous regressors?<\/strong> Squaring a sector dummy does not create new information because \\(D^2=D\\), while cross-products between mutually exclusive sector dummies are always zero. Therefore, for this practice, construct the White auxiliary regression using the continuous regressors only.<\/p>\n<p>Then calculate White/HC0 robust standard errors for the <strong>full model<\/strong>:<\/p>\n\\[\n\\widehat{Var}_{HC0}(\\hat\\beta)=(X'X)^{-1}X'\\operatorname{diag}(\\hat u_i^2)X(X'X)^{-1}.\n\\]\n<p>Use them to obtain robust t-statistics and two-sided p-values.<\/p>\n\n<h3>6. Non-normality and multicollinearity<\/h3>\n<p>Calculate residual skewness, kurtosis and the Jarque-Bera statistic. Also calculate VIFs for the four continuous regressors. When calculating each VIF, regress that continuous regressor on all the other regressors in the full model, including the sector dummies.<\/p>\n\n<h3>Required outputs<\/h3>\n<p>Your code must create:<\/p>\n<pre>data\ncoef_names\nbeta\nse\nt_stat\np_value\nR2\nAdj_R2\nF_overall\np_F_overall\nR2_restricted\nAdj_R2_restricted\nF_joint\np_F_joint\nwhite_LM\nwhite_p\nrobust_se\nrobust_t\nrobust_p\nskewness\nkurtosis\nJB\nJB_p\nvif<\/pre>\n<p><code>coef_names<\/code> must follow the same order as <code>beta<\/code>: Intercept, Size, Leverage, Sales_Growth, Asset_Turnover, followed by the sector dummies in alphabetical order. <code>vif<\/code> must contain four values in the order Size, Leverage, Sales_Growth, Asset_Turnover.<\/p>\n<p><strong>Important:<\/strong> <em>Check Answer<\/em> will not provide diagnostic feedback until all required outputs have been created.<\/p>\n", "setup_code": "\nimport numpy as np\nimport pandas as pd\nfrom scipy import stats\n_ref_rows = 502\n_ref_coef_names = ['Intercept', 'Size', 'Leverage', 'Sales_Growth', 'Asset_Turnover', 'Commercial Services', 'Communications', 'Consumer Durables', 'Consumer Non-Durables', 'Consumer Services', 'Distribution Services', 'Electronic Technology', 'Energy Minerals', 'Health Services', 'Health Technology', 'Industrial Services', 'Miscellaneous', 'Non-Energy Minerals', 'Process Industries', 'Producer Manufacturing', 'Retail Trade', 'Technology Services', 'Transportation', 'Utilities']\n_ref_beta = np.array([8.133836420044712, -0.6186502576550106, 4.220186835694496, 0.084483996795513, 4.740808026733302, 3.4121493844283393, -7.855378358763079, -0.5255845762684968, 1.1420792464880782, -0.5052433946623068, -8.262709545285503, 4.197531715218933, -1.6347439526047751, -5.665279361397877, 2.6126310389247482, -0.621755672214366, 25.92706129164287, 0.4446109151239668, -4.623754272894847, -1.4472730765605233, -0.6340306993498002, 4.6194976711789835, 0.2978344395034283, -2.2040300997583278], dtype=float)\n_ref_se = np.array([4.769932230779043, 0.3930912336749713, 1.971621997050022, 0.028522407950322147, 1.060244692014439, 2.932547120395245, 5.10496126510649, 3.254302867017582, 2.2555332526650935, 2.2982402549892957, 4.393590692901739, 1.8133561683879849, 3.001931333506416, 3.3838673340771868, 1.9178703986560972, 3.127905387587282, 10.121887474710652, 3.9226401533960837, 2.5213619782939976, 2.145505944646041, 2.757726742611717, 1.8915916685689946, 2.9272378456870127, 2.052697660428259], dtype=float)\n_ref_t = np.array([1.7052310235267776, -1.5738083291029163, 2.140464471388947, 2.9620218931956894, 4.4714282112800605, 1.1635446062222026, -1.538773352200786, -0.16150450580224288, 0.5063455593654493, -0.21983924159602716, -1.8806279698822859, 2.3147861343480045, -0.5445640725883316, -1.6742025623598666, 1.3622563030095716, -0.198777007348665, 2.5614848373310957, 0.11334481312007126, -1.8338319974283777, -0.6745602733807806, -0.22991063238895768, 2.4421220223885176, 0.10174589671360565, -1.0737236867598396], dtype=float)\n_ref_p = np.array([0.08880105058336672, 0.11619338608854941, 0.03282262868342739, 0.0032084810576053498, 9.716185610766162e-06, 0.24518908923616928, 0.1245213191891722, 0.8717643029236193, 0.612847542277091, 0.826090208568764, 0.06063026631148355, 0.02104744218868372, 0.5863073203156702, 0.09474493111173572, 0.173758565411336, 0.842521700866089, 0.010728299171390059, 0.9098047779196046, 0.06730047370346491, 0.5002812932529758, 0.8182595665534808, 0.014962564262036945, 0.9190010365797918, 0.2834882716891181], dtype=float)\n_ref_R2 = 0.18576492129591504\n_ref_Adj_R2 = 0.1465862459607813\n_ref_F_overall = 4.7414804024608985\n_ref_p_F_overall = 1.2280553128731475e-11\n_ref_R2_r = 0.11236390751449776\n_ref_Adj_R2_r = 0.10521995505988602\n_ref_F_joint = 2.267913808416871\n_ref_p_F_joint = 0.001781652745892783\n_ref_white_LM = 69.71739346925835\n_ref_white_p = 2.1714060120848557e-09\n_ref_robust_se = np.array([4.63659485514202, 0.39877911618398293, 2.0816496877613146, 0.10249741630063117, 1.2417221133985217, 1.9711857880319634, 7.458663276313925, 2.451967766916807, 1.6197634388485886, 1.405218344379969, 4.786254944070738, 1.9322663487114233, 1.8542560724245025, 2.452496485045538, 1.2710541931742274, 1.2655082938935531, 1.7338742231329969, 1.282070293167903, 1.521259187689307, 4.434064926898006, 2.1583242513527763, 1.7751524000925163, 1.757888090051837, 0.6670803295650745], dtype=float)\n_ref_robust_t = np.array([1.7542693882395664, -1.5513607221336703, 2.027328066055651, 0.8242548919254343, 3.817929934224965, 1.7310135884426385, -1.0531884960819964, -0.21435215558701481, 0.7050901502628847, -0.35954796397511996, -1.7263412922709922, 2.172335981536994, -0.8816171492793291, -2.310005089076686, 2.0554835922457215, -0.49130904571271367, 14.953253786075887, 0.3467913713415552, -3.0394257009668597, -0.3263987109843721, -0.29376063348795145, 2.602310466942572, 0.1694274175864322, -3.3039950393910122], dtype=float)\n_ref_robust_p = np.array([0.08002512582919963, 0.12147707564475112, 0.04318324713001534, 0.4102058378926189, 0.00015228226979145337, 0.08409463606325072, 0.29278669560741255, 0.8303638590002484, 0.481097562601825, 0.7193439886496347, 0.08493217315079954, 0.030321066102438912, 0.37842697224895755, 0.021312991021526246, 0.04037501737536725, 0.6234333887124506, 9.468520671115169e-42, 0.7289006762115129, 0.002500235665682011, 0.7442655719330101, 0.7690683251747963, 0.009547269852327275, 0.8655321357338244, 0.001024733987736299], dtype=float)\n_ref_skewness = -3.94353519312524\n_ref_kurtosis = 76.13229394236109\n_ref_JB = 113170.42603616192\n_ref_JB_p = 0.0\n_ref_vif = np.array([1.3386039018731068, 1.2337937156450454, 1.142189931724166, 2.1602626722990776], dtype=float)\n", "imports": [], "exports": [], "required_outputs": ["data", "coef_names", "beta", "se", "t_stat", "p_value", "R2", "Adj_R2", "F_overall", "p_F_overall", "R2_restricted", "Adj_R2_restricted", "F_joint", "p_F_joint", "white_LM", "white_p", "robust_se", "robust_t", "robust_p", "skewness", "kurtosis", "JB", "JB_p", "vif"], "blocked_packages": ["statsmodels", "sklearn", "linearmodels", "pingouin"], "starter_code": "import numpy as np\nimport pandas as pd\nfrom scipy import stats\n\n# Write your code below.\n", "max_points": 10.0, "tests": [{"name": "Clean sample", "group": "Data acquisition and preparation", "points": 0.5, "code": "\ntry:\n    passed = isinstance(data,pd.DataFrame) and len(data)==_ref_rows\nexcept Exception:\n    passed=False\n"}, {"name": "Coefficient names", "group": "Data acquisition and preparation", "points": 0.5, "code": "\ntry:\n    passed = list(coef_names)==_ref_coef_names\nexcept Exception:\n    passed=False\n"}, {"name": "Constructed variables", "group": "Data acquisition and preparation", "points": 0.5, "code": "\ntry:\n    passed = (\"Size\" in data.columns and \"Leverage\" in data.columns and np.isfinite(np.asarray(data[\"Size\"],float)).all() and np.isfinite(np.asarray(data[\"Leverage\"],float)).all())\nexcept Exception:\n    passed=False\n"}, {"name": "OLS coefficients", "group": "OLS estimation", "points": 1.0, "code": "\ntry:\n    passed=np.allclose(np.asarray(beta,float).reshape(-1),_ref_beta,rtol=1e-6,atol=1e-8)\nexcept Exception:\n    passed=False\n"}, {"name": "Classical standard errors", "group": "OLS estimation", "points": 0.5, "code": "\ntry:\n    passed=np.allclose(np.asarray(se,float).reshape(-1),_ref_se,rtol=1e-6,atol=1e-8)\nexcept Exception:\n    passed=False\n"}, {"name": "Individual inference", "group": "Individual inference", "points": 1.0, "code": "\ntry:\n    passed=(np.allclose(np.asarray(t_stat,float).reshape(-1),_ref_t,rtol=1e-6,atol=1e-8) and np.allclose(np.asarray(p_value,float).reshape(-1),_ref_p,rtol=1e-5,atol=1e-10))\nexcept Exception:\n    passed=False\n"}, {"name": "R-squared and adjusted R-squared", "group": "Model fit and overall F-test", "points": 0.5, "code": "\ntry:\n    passed=np.isclose(float(R2),_ref_R2,rtol=1e-7) and np.isclose(float(Adj_R2),_ref_Adj_R2,rtol=1e-7)\nexcept Exception:\n    passed=False\n"}, {"name": "Overall F-test", "group": "Model fit and overall F-test", "points": 1.0, "code": "\ntry:\n    passed=np.isclose(float(F_overall),_ref_F_overall,rtol=1e-6) and np.isclose(float(p_F_overall),_ref_p_F_overall,rtol=1e-4,atol=1e-20)\nexcept Exception:\n    passed=False\n"}, {"name": "Restricted model fit", "group": "Joint hypothesis test", "points": 0.5, "code": "\ntry:\n    passed=np.isclose(float(R2_restricted),_ref_R2_r,rtol=1e-7) and np.isclose(float(Adj_R2_restricted),_ref_Adj_R2_r,rtol=1e-7)\nexcept Exception:\n    passed=False\n"}, {"name": "Joint F-test", "group": "Joint hypothesis test", "points": 1.0, "code": "\ntry:\n    passed=np.isclose(float(F_joint),_ref_F_joint,rtol=1e-6) and np.isclose(float(p_F_joint),_ref_p_F_joint,rtol=1e-5,atol=1e-12)\nexcept Exception:\n    passed=False\n"}, {"name": "White test", "group": "Heteroskedasticity and robust inference", "points": 0.75, "code": "\ntry:\n    passed=np.isclose(float(white_LM),_ref_white_LM,rtol=1e-5) and np.isclose(float(white_p),_ref_white_p,rtol=1e-4,atol=1e-15)\nexcept Exception:\n    passed=False\n"}, {"name": "White robust standard errors", "group": "Heteroskedasticity and robust inference", "points": 0.75, "code": "\ntry:\n    passed=np.allclose(np.asarray(robust_se,float).reshape(-1),_ref_robust_se,rtol=1e-5,atol=1e-8)\nexcept Exception:\n    passed=False\n"}, {"name": "Robust inference", "group": "Heteroskedasticity and robust inference", "points": 0.5, "code": "\ntry:\n    passed=(np.allclose(np.asarray(robust_t,float).reshape(-1),_ref_robust_t,rtol=1e-5,atol=1e-8) and np.allclose(np.asarray(robust_p,float).reshape(-1),_ref_robust_p,rtol=1e-4,atol=1e-10))\nexcept Exception:\n    passed=False\n"}, {"name": "Jarque-Bera diagnostics", "group": "Non-normality and multicollinearity", "points": 0.5, "code": "\ntry:\n    passed=(np.isclose(float(skewness),_ref_skewness,rtol=1e-5) and np.isclose(float(kurtosis),_ref_kurtosis,rtol=1e-5) and np.isclose(float(JB),_ref_JB,rtol=1e-4) and np.isclose(float(JB_p),_ref_JB_p,rtol=1e-4,atol=1e-300))\nexcept Exception:\n    passed=False\n"}, {"name": "Variance inflation factors", "group": "Non-normality and multicollinearity", "points": 0.5, "code": "\ntry:\n    passed=np.allclose(np.asarray(vif,float).reshape(-1),_ref_vif,rtol=1e-5,atol=1e-8)\nexcept Exception:\n    passed=False\n"}]}], "subtitle": "Multiple Regression · Model Fit · Diagnostics · Robust Inference", "instructions": "\n<p>In this practice you will estimate and diagnose a multiple regression model using cross-sectional firm data from the S&amp;P 500.<\/p>\n\n<h3>Data collection in FactSet<\/h3>\n<p>Using FactSet, obtain the current S&amp;P 500 constituents and collect the following information for each firm. For the accounting variables, use data from the <strong>last completed fiscal year<\/strong>.<\/p>\n\n<table style=\"border-collapse:collapse; margin:14px 0 18px; width:100%; max-width:650px;\">\n<tr><th style=\"text-align:left; border-bottom:1px solid #D9DEE7; padding:7px 10px;\">Variable<\/th><th style=\"text-align:left; border-bottom:1px solid #D9DEE7; padding:7px 10px;\">FactSet field<\/th><\/tr>\n<tr><td style=\"padding:6px 10px;\">Ticker<\/td><td style=\"padding:6px 10px;\">S&amp;P 500 constituents<\/td><\/tr>\n<tr><td style=\"padding:6px 10px;\">Sector<\/td><td style=\"padding:6px 10px;\"><code>FG_FACTSET_SECTOR<\/code><\/td><\/tr>\n<tr><td style=\"padding:6px 10px;\">Return on Assets<\/td><td style=\"padding:6px 10px;\"><code>FF_ROA<\/code><\/td><\/tr>\n<tr><td style=\"padding:6px 10px;\">Total Assets<\/td><td style=\"padding:6px 10px;\"><code>FF_ASSETS<\/code><\/td><\/tr>\n<tr><td style=\"padding:6px 10px;\">Total Debt<\/td><td style=\"padding:6px 10px;\"><code>FF_DEBT<\/code><\/td><\/tr>\n<tr><td style=\"padding:6px 10px;\">Sales Growth<\/td><td style=\"padding:6px 10px;\"><code>FF_SALES_GR<\/code><\/td><\/tr>\n<tr><td style=\"padding:6px 10px;\">Asset Turnover<\/td><td style=\"padding:6px 10px;\"><code>FF_ASSET_TURN<\/code><\/td><\/tr>\n<\/table>\n\n<p>You may organize and export the data from FactSet in any way you prefer. You may upload <strong>one CSV file or multiple CSV files<\/strong>. Filenames are not prescribed. Your Python code should read the uploaded file(s) and construct the required dataset.<\/p>\n<p>You may use <code>numpy<\/code>, <code>pandas<\/code> and <code>scipy<\/code>. Packages that estimate regression models directly, including <code>statsmodels<\/code>, <code>sklearn<\/code> and <code>linearmodels<\/code>, are not allowed.<\/p>\n", "presentation": {"seed": 20260922, "groups": {"1": {"topic": "Data Preparation & Model Specification", "members": [{"student_id": "202203982", "name": "Adrián López Lamata", "email": "202203982@alu.comillas.edu"}, {"student_id": "202211957", "name": "Adrián Muñoz Borbón", "email": "202211957@alu.comillas.edu"}, {"student_id": "202201639", "name": "Álvaro Revuelta Goicoechea", "email": "202201639@alu.comillas.edu"}, {"student_id": "201902403", "name": "Rafael Rius Matas", "email": "201902403@alu.comillas.edu"}, {"student_id": "202206527", "name": "Guillermo Sánchez Lanuza", "email": "202206527@alu.comillas.edu"}], "task": "<ul><li>Explain the main data preparation and transformations used in the analysis.<\/li><li>Present the final regression specification and explain the economic rationale for the explanatory variables.<\/li><li>Explain how Sector enters the model and interpret the role of the reference category.<\/li><\/ul>", "time_limit": "5 minutes"}, "2": {"topic": "Parameter Estimates & Individual Significance", "members": [{"student_id": "202214547", "name": "Almudena López Azcoitia", "email": "202214547@alu.comillas.edu"}, {"student_id": "202205653", "name": "Javier López-Montenegro Rodríguez", "email": "202205653@alu.comillas.edu"}, {"student_id": "202205654", "name": "Juan Rodríguez-Palacios San Nicolás", "email": "202205654@alu.comillas.edu"}, {"student_id": "202630675", "name": "Mariana Sofia Solano", "email": "202630675@alu.comillas.edu"}, {"student_id": "202203713", "name": "Alejandro Torres Faba", "email": "202203713@alu.comillas.edu"}], "task": "<ul><li>Economically interpret the estimated coefficients of the full model.<\/li><li>Assess the individual statistical significance of the coefficients using t-statistics and p-values.<\/li><li>Distinguish economic interpretation from statistical significance.<\/li><\/ul>", "time_limit": "5 minutes"}, "3": {"topic": "Model Fit & Joint Hypothesis Testing", "members": [{"student_id": "202204302", "name": "Luis Martínez Puchol", "email": "202204302@alu.comillas.edu"}, {"student_id": "202204645", "name": "María Cecilia Pardos Dobón", "email": "202204645@alu.comillas.edu"}, {"student_id": "202202349", "name": "Joaquin Pastor Frutos", "email": "202202349@alu.comillas.edu"}, {"student_id": "202202295", "name": "Claudia Ruiz de Alegría Marín", "email": "202202295@alu.comillas.edu"}, {"student_id": "202638373", "name": "Kristian Zak", "email": "202638373@alu.comillas.edu"}], "task": "<ul><li>Interpret R-squared and adjusted R-squared for the full model.<\/li><li>Present and interpret the overall F-test of the full model.<\/li><li>Compare R-squared and adjusted R-squared for the unrestricted and restricted models.<\/li><li>Present and interpret the joint F-test that all sector coefficients are zero, and explain how it differs from the overall F-test.<\/li><\/ul>", "time_limit": "5 minutes"}, "4": {"topic": "Heteroskedasticity: Diagnosis & Robust Inference", "members": [{"student_id": "202207420", "name": "Beatriz Díaz Shaw", "email": "202207420@alu.comillas.edu"}, {"student_id": "202201340", "name": "Sara Foncueva Cuerpo", "email": "202201340@alu.comillas.edu"}, {"student_id": "202213819", "name": "Ignacio García García de Viedma", "email": "202213819@alu.comillas.edu"}, {"student_id": "202104965", "name": "Celia Tejedor Pérez", "email": "202104965@alu.comillas.edu"}], "task": "<ul><li>Present and interpret the White test for heteroskedasticity.<\/li><li>Compare classical and White robust standard errors, t-statistics and p-values.<\/li><li>Identify whether inference changes for any coefficients.<\/li><li>Explain why the OLS coefficient estimates do not change when robust standard errors are used.<\/li><\/ul>", "time_limit": "5 minutes"}, "5": {"topic": "Non-Normality & Multicollinearity", "members": [{"student_id": "202206829", "name": "Iñigo Lage Aguilar", "email": "202206829@alu.comillas.edu"}, {"student_id": "202208708", "name": "Emilio José Ramírez Herráiz", "email": "202208708@alu.comillas.edu"}, {"student_id": "202201406", "name": "Carlos Ruiz-Labourdette Gallardo", "email": "202201406@alu.comillas.edu"}, {"student_id": "202203526", "name": "Irene Vinuesa Balmaseda", "email": "202203526@alu.comillas.edu"}], "task": "<ul><li>Present and interpret skewness, kurtosis and the Jarque-Bera test.<\/li><li>Present and interpret the VIFs for the continuous regressors.<\/li><li>Assess whether non-normality or multicollinearity are concerns and explain their implications for the regression analysis.<\/li><\/ul>", "time_limit": "5 minutes"}}, "assignments": {"202203982": "1", "202211957": "1", "202201639": "1", "201902403": "1", "202206527": "1", "202214547": "2", "202205653": "2", "202205654": "2", "202630675": "2", "202203713": "2", "202204302": "3", "202204645": "3", "202202349": "3", "202202295": "3", "202638373": "3", "202207420": "4", "202201340": "4", "202213819": "4", "202104965": "4", "202206829": "5", "202208708": "5", "202201406": "5", "202203526": "5"}, "time_limit": "5 minutes"}};
+
+
+// ============================================================
+// GLOBAL STATE
+// ============================================================
+
+let pyodide = null;
+let pythonReady = false;
+
+const questionState = {};
+const savedExports = {};
+const uploadedFiles = new Set();
+
+
+// ============================================================
+// ELEMENTS
+// ============================================================
+
+const courseName =
+    document.getElementById("courseName");
+
+const practiceTitle =
+    document.getElementById("practiceTitle");
+
+const practiceSubtitle =
+    document.getElementById("practiceSubtitle");
+
+const pythonStatus =
+    document.getElementById("pythonStatus");
+
+const practiceInfoCard =
+    document.getElementById("practiceInfoCard");
+
+const practiceInstructions =
+    document.getElementById("practiceInstructions");
+
+const uploadCard =
+    document.getElementById("uploadCard");
+
+const dataFiles =
+    document.getElementById("dataFiles");
+
+const uploadStatus =
+    document.getElementById("uploadStatus");
+
+const questionsContainer =
+    document.getElementById("questionsContainer");
+
+const overallScore =
+    document.getElementById("overallScore");
+
+const scoreNote =
+    document.getElementById("scoreNote");
+
+const submitButton =
+    document.getElementById("submitButton");
+
+const submitStatus =
+    document.getElementById("submitStatus");
+
+const presentationCard =
+    document.getElementById("presentationCard");
+
+const presentationContent =
+    document.getElementById("presentationContent");
+
+
+// ============================================================
+// HELPERS
+// ============================================================
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+
+// ============================================================
+// HEADER
+// ============================================================
+
+function buildHeader() {
+
+    courseName.textContent =
+        PRACTICE.course;
+
+    practiceTitle.textContent =
+        PRACTICE.title;
+
+    if (PRACTICE.subtitle) {
+
+        practiceSubtitle.textContent =
+            PRACTICE.subtitle;
+
+    } else {
+
+        practiceSubtitle.style.display =
+            "none";
+    }
+
+    if (PRACTICE.instructions) {
+
+        practiceInfoCard.style.display =
+            "block";
+
+        practiceInstructions.innerHTML =
+            PRACTICE.instructions;
+    }
+
+    if (PRACTICE.allow_file_upload) {
+
+        uploadCard.style.display =
+            "block";
+    }
+}
+
+
+// ============================================================
+// QUESTIONS
+// ============================================================
+
+function buildQuestions() {
+
+    questionsContainer.innerHTML = "";
+
+    PRACTICE.questions.forEach(
+        (question,index) => {
+
+            questionState[question.id] = {
+                checked: false,
+                score: 0,
+                maxScore: question.max_points,
+                tests: null,
+                code: null
+            };
+
+            const card =
+                document.createElement("section");
+
+            card.className =
+                "question-card";
+
+            const label =
+                document.createElement("div");
+
+            label.className =
+                "section-label";
+
+            label.textContent =
+                `Question ${index+1}`;
+
+            const title =
+                document.createElement("h2");
+
+            title.className =
+                "question-title";
+
+            title.textContent =
+                question.title;
+
+            const instructions =
+                document.createElement("div");
+
+            instructions.className =
+                "instructions";
+
+            instructions.innerHTML =
+                question.instructions;
+
+            const editorLabel =
+                document.createElement("label");
+
+            editorLabel.className =
+                "editor-label";
+
+            editorLabel.textContent =
+                "Your Python code";
+
+            const editor =
+                document.createElement("textarea");
+
+            editor.className =
+                "code-editor";
+
+            editor.id =
+                `editor-${question.id}`;
+
+            editor.value =
+                question.starter_code;
+
+            editor.spellcheck =
+                false;
+
+            const buttonRow =
+                document.createElement("div");
+
+            buttonRow.className =
+                "button-row";
+
+            const runButton =
+                document.createElement("button");
+
+            runButton.className =
+                "run-button";
+
+            runButton.id =
+                `run-${question.id}`;
+
+            runButton.textContent =
+                "Run Code";
+
+            runButton.disabled =
+                true;
+
+            const checkButton =
+                document.createElement("button");
+
+            checkButton.className =
+                "check-button";
+
+            checkButton.id =
+                `check-${question.id}`;
+
+            checkButton.textContent =
+                "Check Answer";
+
+            checkButton.disabled =
+                true;
+
+            buttonRow.appendChild(runButton);
+            buttonRow.appendChild(checkButton);
+
+            const outputContainer =
+                document.createElement("div");
+
+            outputContainer.className =
+                "output-container";
+
+            const outputTitle =
+                document.createElement("div");
+
+            outputTitle.className =
+                "output-title";
+
+            outputTitle.textContent =
+                "Output";
+
+            const output =
+                document.createElement("pre");
+
+            output.className =
+                "output-box";
+
+            output.id =
+                `output-${question.id}`;
+
+            output.textContent =
+                "Python is loading...";
+
+            outputContainer.appendChild(
+                outputTitle
+            );
+
+            outputContainer.appendChild(
+                output
+            );
+
+            const assessment =
+                document.createElement("div");
+
+            assessment.className =
+                "assessment";
+
+            assessment.id =
+                `assessment-${question.id}`;
+
+            assessment.innerHTML = `
+                <div class="assessment-title">
+                    Assessment
+                </div>
+                <div class="not-checked">
+                    Answer not checked yet.
+                </div>
+            `;
+
+            card.appendChild(label);
+            card.appendChild(title);
+            card.appendChild(instructions);
+            card.appendChild(editorLabel);
+            card.appendChild(editor);
+            card.appendChild(buttonRow);
+            card.appendChild(outputContainer);
+            card.appendChild(assessment);
+
+            questionsContainer.appendChild(
+                card
+            );
+
+            runButton.addEventListener(
+                "click",
+                () => runQuestion(question)
+            );
+
+            checkButton.addEventListener(
+                "click",
+                () => checkQuestion(question)
+            );
+        }
+    );
+
+    updateOverallScore();
+}
+
+
+// ============================================================
+// PYTHON
+// ============================================================
+
+async function initializePython() {
+
+    pythonStatus.textContent =
+        "Loading Python environment...";
+
+    try {
+
+        pyodide =
+            await loadPyodide();
+
+        await pyodide.loadPackage(
+            ["numpy","pandas","scipy"]
+        );
+
+        pythonReady = true;
+
+        pythonStatus.textContent =
+            "✓ Python ready";
+
+        pythonStatus.classList.add(
+            "python-ready"
+        );
+
+        PRACTICE.questions.forEach(
+            question => {
+
+                document.getElementById(
+                    `run-${question.id}`
+                ).disabled = false;
+
+                document.getElementById(
+                    `check-${question.id}`
+                ).disabled = false;
+
+                document.getElementById(
+                    `output-${question.id}`
+                ).textContent =
+                    "Python ready. You can run your code.";
+            }
+        );
+
+    } catch (error) {
+
+        pythonStatus.textContent =
+            "✗ Python failed to load";
+
+        PRACTICE.questions.forEach(
+            question => {
+
+                document.getElementById(
+                    `output-${question.id}`
+                ).textContent =
+                    "Could not initialize Python.\n\n"
+                    + error;
+            }
+        );
+    }
+}
+
+
+// ============================================================
+// FILE UPLOAD
+// ============================================================
+
+dataFiles.addEventListener(
+    "change",
+    async event => {
+
+        if (!pythonReady) {
+
+            uploadStatus.textContent =
+                "Python is still loading. "
+                + "Please try again in a moment.";
+
+            return;
+        }
+
+        const files =
+            Array.from(
+                event.target.files
+            );
+
+        if (files.length === 0) {
+            return;
+        }
+
+        try {
+
+            for (const file of files) {
+
+                if (
+                    !file.name
+                        .toLowerCase()
+                        .endsWith(".csv")
+                ) {
+                    throw new Error(
+                        `${file.name} is not a CSV file.`
+                    );
+                }
+
+                const buffer =
+                    await file.arrayBuffer();
+
+                const bytes =
+                    new Uint8Array(buffer);
+
+                try {
+                    pyodide.FS.unlink(
+                        file.name
+                    );
+                } catch (_) {
+                }
+
+                pyodide.FS.writeFile(
+                    file.name,
+                    bytes
+                );
+
+                uploadedFiles.add(
+                    file.name
+                );
+            }
+
+            const names =
+                Array.from(uploadedFiles)
+                    .sort();
+
+            uploadStatus.textContent =
+                `${names.length} CSV file`
+                + (names.length === 1 ? "" : "s")
+                + " available to Python:\n"
+                + names.join("\n");
+
+        } catch (error) {
+
+            uploadStatus.textContent =
+                "File upload failed:\n"
+                + error;
+        }
+
+        // Allows another selection without
+        // losing previously uploaded files.
+        event.target.value = "";
+    }
+);
+
+
+// ============================================================
+// RESET PYTHON NAMESPACE
+// ============================================================
+
+async function resetPythonNamespace() {
+
+    await pyodide.runPythonAsync(`
+
+protected_names = {
+    "__name__",
+    "__doc__",
+    "__package__",
+    "__loader__",
+    "__spec__",
+    "__annotations__",
+    "__builtins__"
+}
+
+for _name in list(globals().keys()):
+
+    if _name not in protected_names:
+
+        globals().pop(_name, None)
+
+`);
+}
+
+
+// ============================================================
+// PACKAGE RESTRICTIONS
+// ============================================================
+
+async function applyPackageRestrictions(
+    question
+) {
+
+    const blocked =
+        question.blocked_packages || [];
+
+    pyodide.globals.set(
+        "_blocked_packages_json",
+        JSON.stringify(blocked)
+    );
+
+    await pyodide.runPythonAsync(`
+
+import json as _json
+import builtins as _builtins
+
+_blocked_packages = set(
+    _json.loads(
+        _blocked_packages_json
+    )
+)
+
+_original_import = _builtins.__import__
+
+def _restricted_import(
+    name,
+    globals=None,
+    locals=None,
+    fromlist=(),
+    level=0
+):
+
+    root_name = name.split(".")[0]
+
+    if root_name in _blocked_packages:
+
+        raise ImportError(
+            f"The package '{root_name}' is not allowed "
+            "in this practice. Use the econometric formulas "
+            "covered in class."
+        )
+
+    return _original_import(
+        name,
+        globals,
+        locals,
+        fromlist,
+        level
+    )
+
+_builtins.__import__ = _restricted_import
+
+`);
+}
+
+
+// ============================================================
+// RESTORE NORMAL IMPORT BEHAVIOUR
+// ============================================================
+
+async function restoreNormalImports() {
+
+    await pyodide.runPythonAsync(`
+
+import builtins as _builtins
+
+if "_original_import" in globals():
+    _builtins.__import__ = _original_import
+
+`);
+}
+
+
+// ============================================================
+// RESTORE IMPORTED VARIABLES
+// ============================================================
+
+async function restoreQuestionImports(
+    question
+) {
+
+    const imports =
+        question.imports || [];
+
+    if (imports.length === 0) {
+        return;
+    }
+
+    const missing =
+        imports.filter(
+            name => !(name in savedExports)
+        );
+
+    if (missing.length > 0) {
+
+        throw new Error(
+            "Required output from a previous question "
+            + "is not available."
+        );
+    }
+
+    const payload = {};
+
+    imports.forEach(
+        name => {
+            payload[name] =
+                savedExports[name];
+        }
+    );
+
+    pyodide.globals.set(
+        "_import_payload_json",
+        JSON.stringify(payload)
+    );
+
+    await pyodide.runPythonAsync(`
+
+import json as _json
+import pickle as _pickle
+import base64 as _base64
+
+_import_payload = _json.loads(
+    _import_payload_json
+)
+
+for _import_name, _encoded_value in _import_payload.items():
+
+    globals()[_import_name] = _pickle.loads(
+        _base64.b64decode(
+            _encoded_value.encode("ascii")
+        )
+    )
+
+`);
+}
+
+
+// ============================================================
+// SAVE EXPORTS
+// ============================================================
+
+async function saveQuestionExports(
+    question
+) {
+
+    const exports =
+        question.exports || [];
+
+    if (exports.length === 0) {
+        return;
+    }
+
+    exports.forEach(
+        name => {
+            delete savedExports[name];
+        }
+    );
+
+    pyodide.globals.set(
+        "_export_names_json",
+        JSON.stringify(exports)
+    );
+
+    const result =
+        await pyodide.runPythonAsync(`
+
+import json as _json
+import pickle as _pickle
+import base64 as _base64
+
+_export_names = _json.loads(
+    _export_names_json
+)
+
+_export_payload = {}
+
+for _export_name in _export_names:
+
+    if _export_name in globals():
+
+        _export_payload[_export_name] = (
+            _base64.b64encode(
+                _pickle.dumps(
+                    globals()[_export_name]
+                )
+            ).decode("ascii")
+        )
+
+_json.dumps(_export_payload)
+
+`);
+
+    const exported =
+        JSON.parse(result);
+
+    Object.entries(exported).forEach(
+        ([name,value]) => {
+            savedExports[name] = value;
+        }
+    );
+}
+
+
+// ============================================================
+// COMPLETENESS GATE
+// ============================================================
+
+async function requiredOutputsExist(
+    question
+) {
+
+    const required =
+        question.required_outputs || [];
+
+    if (required.length === 0) {
+        return true;
+    }
+
+    pyodide.globals.set(
+        "_required_outputs_json",
+        JSON.stringify(required)
+    );
+
+    const complete =
+        await pyodide.runPythonAsync(`
+
+import json as _json
+
+_required_outputs = _json.loads(
+    _required_outputs_json
+)
+
+all(
+    _required_name in globals()
+    for _required_name in _required_outputs
+)
+
+`);
+
+    return Boolean(complete);
+}
+
+
+// ============================================================
+// RUN QUESTION
+// ============================================================
+
+async function runQuestion(question) {
+
+    if (!pythonReady) {
+        return;
+    }
+
+    const runButton =
+        document.getElementById(
+            `run-${question.id}`
+        );
+
+    const checkButton =
+        document.getElementById(
+            `check-${question.id}`
+        );
+
+    const editor =
+        document.getElementById(
+            `editor-${question.id}`
+        );
+
+    const output =
+        document.getElementById(
+            `output-${question.id}`
+        );
+
+    runButton.disabled = true;
+    checkButton.disabled = true;
+
+    runButton.textContent =
+        "Running...";
+
+    output.textContent =
+        "Running your code...";
+
+    try {
+
+        await resetPythonNamespace();
+
+        if (
+            question.setup_code &&
+            question.setup_code.trim() !== ""
+        ) {
+            await pyodide.runPythonAsync(
+                question.setup_code
+            );
+        }
+
+        await restoreQuestionImports(
+            question
+        );
+
+        await applyPackageRestrictions(
+            question
+        );
+
+        let capturedOutput = "";
+
+        pyodide.setStdout({
+            batched: text => {
+                capturedOutput +=
+                    text + "\n";
+            }
+        });
+
+        pyodide.setStderr({
+            batched: text => {
+                capturedOutput +=
+                    text + "\n";
+            }
+        });
+
+        await pyodide.runPythonAsync(
+            editor.value
+        );
+
+        if (
+            capturedOutput.trim() === ""
+        ) {
+
+            output.textContent =
+                "✓ Code executed successfully.\n"
+                + "No output was printed.";
+
+        } else {
+
+            output.textContent =
+                "✓ Code executed successfully.\n\n"
+                + capturedOutput;
+        }
+
+    } catch (error) {
+
+        output.textContent =
+            "✗ Python error:\n\n"
+            + error;
+
+    } finally {
+
+        try {
+            await restoreNormalImports();
+        } catch (_) {
+        }
+
+        runButton.disabled = false;
+        checkButton.disabled = false;
+
+        runButton.textContent =
+            "Run Code";
+    }
+}
+
+
+// ============================================================
+// CHECK QUESTION
+// ============================================================
+
+async function checkQuestion(question) {
+
+    if (!pythonReady) {
+        return;
+    }
+
+    const runButton =
+        document.getElementById(
+            `run-${question.id}`
+        );
+
+    const checkButton =
+        document.getElementById(
+            `check-${question.id}`
+        );
+
+    const editor =
+        document.getElementById(
+            `editor-${question.id}`
+        );
+
+    const output =
+        document.getElementById(
+            `output-${question.id}`
+        );
+
+    const assessment =
+        document.getElementById(
+            `assessment-${question.id}`
+        );
+
+    runButton.disabled = true;
+    checkButton.disabled = true;
+
+    checkButton.textContent =
+        "Checking...";
+
+    assessment.innerHTML = `
+        <div class="assessment-title">
+            Assessment
+        </div>
+        <div class="not-checked">
+            Checking your answer...
+        </div>
+    `;
+
+    try {
+
+        await resetPythonNamespace();
+
+        if (
+            question.setup_code &&
+            question.setup_code.trim() !== ""
+        ) {
+            await pyodide.runPythonAsync(
+                question.setup_code
+            );
+        }
+
+        await restoreQuestionImports(
+            question
+        );
+
+        await applyPackageRestrictions(
+            question
+        );
+
+        await pyodide.runPythonAsync(
+            editor.value
+        );
+
+        const complete =
+            await requiredOutputsExist(
+                question
+            );
+
+        if (!complete) {
+
+            questionState[
+                question.id
+            ] = {
+                checked: false,
+                score: 0,
+                maxScore:
+                    question.max_points,
+                tests: null,
+                code:
+                    editor.value
+            };
+
+            assessment.innerHTML = `
+                <div class="assessment-title">
+                    Assessment
+                </div>
+
+                <div class="test-fail">
+                    Analysis incomplete.
+                    Complete all required outputs before
+                    checking your results.
+                </div>
+            `;
+
+            output.textContent =
+                "✓ Code executed successfully, "
+                + "but the analysis is incomplete.";
+
+            return;
+        }
+
+        await saveQuestionExports(
+            question
+        );
+
+        const rawResults = [];
+
+        for (
+            const test of question.tests
+        ) {
+
+            let passed = false;
+
+            try {
+
+                await pyodide.runPythonAsync(
+                    test.code
+                );
+
+                passed =
+                    Boolean(
+                        pyodide.globals.get(
+                            "passed"
+                        )
+                    );
+
+            } catch (_) {
+
+                passed = false;
+            }
+
+            rawResults.push({
+                name: test.name,
+                group:
+                    test.group || test.name,
+                passed: passed,
+                points: test.points
+            });
+        }
+
+        // ----------------------------------------------------
+        // GROUP TESTS
+        //
+        // A visible block passes only when every hidden test
+        // in that block passes.
+        // ----------------------------------------------------
+
+        const grouped = new Map();
+
+        for (const result of rawResults) {
+
+            if (!grouped.has(result.group)) {
+
+                grouped.set(
+                    result.group,
+                    {
+                        name:
+                            result.group,
+                        passed:
+                            true,
+                        points:
+                            0,
+                        max_points:
+                            0
+                    }
+                );
+            }
+
+            const group =
+                grouped.get(
+                    result.group
+                );
+
+            group.passed =
+                group.passed
+                && result.passed;
+
+            group.max_points +=
+                result.points;
+
+            // Award points for each hidden test independently,
+            // while keeping only the aggregate group visible.
+            if (result.passed) {
+
+                group.points +=
+                    result.points;
+            }
+        }
+
+        const results =
+            Array.from(
+                grouped.values()
+            );
+
+        let score = 0;
+
+        results.forEach(
+            group => {
+
+                score +=
+                    group.points;
+            }
+        );
+
+        questionState[
+            question.id
+        ] = {
+            checked: true,
+            score: score,
+            maxScore:
+                question.max_points,
+            tests: results,
+            code:
+                editor.value
+        };
+
+        renderAssessment(
+            question,
+            results,
+            score
+        );
+
+        output.textContent =
+            "✓ Code executed and answer checked.";
+
+    } catch (error) {
+
+        questionState[
+            question.id
+        ] = {
+            checked: false,
+            score: 0,
+            maxScore:
+                question.max_points,
+            tests: null,
+            code:
+                editor.value
+        };
+
+        assessment.innerHTML = `
+            <div class="assessment-title">
+                Assessment
+            </div>
+
+            <div class="test-fail">
+                ✗ Your code could not be executed.
+            </div>
+
+            <pre
+                class="output-box"
+                style="margin-top:10px;"
+            >${escapeHtml(error)}</pre>
+        `;
+
+        output.textContent =
+            "✗ Python error. Review the assessment below.";
+
+    } finally {
+
+        try {
+            await restoreNormalImports();
+        } catch (_) {
+        }
+
+        runButton.disabled = false;
+        checkButton.disabled = false;
+
+        checkButton.textContent =
+            "Check Answer";
+
+        updateOverallScore();
+    }
+}
+
+
+// ============================================================
+// RENDER ASSESSMENT
+// ============================================================
+
+function renderAssessment(
+    question,
+    results,
+    score
+) {
+
+    const assessment =
+        document.getElementById(
+            `assessment-${question.id}`
+        );
+
+    let html = `
+        <div class="assessment-title">
+            Assessment
+        </div>
+    `;
+
+    results.forEach(
+        test => {
+
+            const symbol =
+                test.passed
+                ? "✓"
+                : "✗";
+
+            const statusClass =
+                test.passed
+                ? "test-pass"
+                : "test-fail";
+
+            html += `
+                <div class="test-row">
+
+                    <div
+                        class="test-description ${statusClass}">
+                        ${symbol}
+                        ${escapeHtml(test.name)}
+                    </div>
+
+                    <div class="test-points">
+                        ${test.points}
+                        /
+                        ${test.max_points}
+                    </div>
+
+                </div>
+            `;
+        }
+    );
+
+    html += `
+        <div class="question-score">
+            Question score:
+            ${score}
+            /
+            ${question.max_points}
+        </div>
+    `;
+
+    assessment.innerHTML =
+        html;
+}
+
+
+// ============================================================
+// SCORE
+// ============================================================
+
+function updateOverallScore() {
+
+    let score = 0;
+    let checkedQuestions = 0;
+
+    PRACTICE.questions.forEach(
+        question => {
+
+            const state =
+                questionState[
+                    question.id
+                ];
+
+            if (
+                state &&
+                state.checked
+            ) {
+                checkedQuestions += 1;
+                score += state.score;
+            }
+        }
+    );
+
+    overallScore.textContent =
+        `Score: ${score} / ${PRACTICE.max_points}`;
+
+    const allChecked =
+        checkedQuestions ===
+        PRACTICE.questions.length;
+
+    if (allChecked) {
+
+        submitButton.disabled =
+            false;
+
+        scoreNote.textContent =
+            "All questions have been checked. "
+            + "You may submit this practice attempt.";
+
+    } else {
+
+        submitButton.disabled =
+            true;
+
+        const remaining =
+            PRACTICE.questions.length
+            - checkedQuestions;
+
+        scoreNote.textContent =
+            `${remaining} question`
+            + (remaining === 1 ? "" : "s")
+            + " still need"
+            + (remaining === 1 ? "s" : "")
+            + " to be checked before submission.";
+    }
+}
+
+
+// ============================================================
+// STUDENT ID
+// ============================================================
+
+function validStudentId(studentId) {
+
+    return /^\d{6,12}$/.test(
+        studentId
+    );
+}
+
+
+// ============================================================
+// PRESENTATION GROUP
+// ============================================================
+
+function revealPresentationGroup(studentId) {
+
+    if (!PRACTICE.presentation) {
+        return;
+    }
+
+    const presentation =
+        PRACTICE.presentation;
+
+    const assignments =
+        presentation.assignments || {};
+
+    const groups =
+        presentation.groups || {};
+
+    const groupId =
+        assignments[String(studentId)];
+
+    if (!groupId) {
+
+        presentationCard.style.display =
+            "block";
+
+        presentationContent.innerHTML = `
+            <div class="test-fail">
+                Your practice was submitted successfully,
+                but no presentation group was found for
+                Student ID ${escapeHtml(studentId)}.
+                Please contact your instructor.
+            </div>
+        `;
+
+        presentationCard.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+        return;
+    }
+
+    const group =
+        groups[String(groupId)]
+        || groups[groupId];
+
+    if (!group) {
+        return;
+    }
+
+    const members =
+        group.members || [];
+
+    let membersHtml = "";
+
+    members.forEach(member => {
+
+        const memberId =
+            String(
+                member.student_id
+                ?? member.id
+                ?? ""
+            );
+
+        const memberName =
+            member.name
+            ?? member.full_name
+            ?? "";
+
+        const email =
+            member.email
+            || (
+                memberId
+                ? `${memberId}@alu.comillas.edu`
+                : ""
+            );
+
+        membersHtml += `
+            <li>
+                <strong>${escapeHtml(memberName)}</strong>
+                ${email
+                    ? ` — ${escapeHtml(email)}`
+                    : ""}
+            </li>
+        `;
+    });
+
+    const topic =
+        group.topic || "";
+
+    const task =
+        group.task
+        || group.requirements
+        || group.instructions
+        || "";
+
+    const timeLimit =
+        group.time_limit
+        || presentation.time_limit
+        || "5 minutes";
+
+    presentationContent.innerHTML = `
+        <p>
+            Your individual practice has been submitted successfully.
+            You will now prepare a short group presentation based on
+            the analysis you have just completed.
+        </p>
+
+        <h2 class="presentation-topic">
+            Group ${escapeHtml(groupId)}
+            ${topic ? ` · ${escapeHtml(topic)}` : ""}
+        </h2>
+
+        <p>
+            <strong>Team members</strong>
+        </p>
+
+        <ul class="presentation-members">
+            ${membersHtml}
+        </ul>
+
+        ${task ? `
+            <div class="presentation-task">
+                <strong>Your presentation must cover:</strong>
+                <div style="margin-top:8px;">
+                    ${task}
+                </div>
+            </div>
+        ` : ""}
+
+        <div class="presentation-time">
+            Maximum presentation time: ${escapeHtml(timeLimit)}.
+            You must respect the time limit. Presentations
+            exceeding the time limit will be cut off.
+        </div>
+    `;
+
+    presentationCard.style.display =
+        "block";
+
+    presentationCard.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+
+// ============================================================
+// SUBMISSION
+// ============================================================
+
+function buildSubmission() {
+
+    const studentId =
+        document
+            .getElementById(
+                "studentId"
+            )
+            .value
+            .trim();
+
+    const questions = {};
+
+    PRACTICE.questions.forEach(
+        question => {
+
+            const state =
+                questionState[
+                    question.id
+                ];
+
+            questions[
+                question.id
+            ] = {
+                title:
+                    question.title,
+                score:
+                    state.score,
+                max_score:
+                    state.maxScore,
+                code:
+                    state.code,
+                tests:
+                    state.tests
+            };
+        }
+    );
+
+    let totalScore = 0;
+
+    Object.values(
+        questions
+    ).forEach(
+        question => {
+            totalScore +=
+                question.score;
+        }
+    );
+
+    return {
+        student_id:
+            studentId,
+        practice_id:
+            PRACTICE.practice_id,
+        practice:
+            PRACTICE.title,
+        score:
+            totalScore,
+        max_score:
+            PRACTICE.max_points,
+        questions:
+            questions
+    };
+}
+
+
+submitButton.addEventListener(
+    "click",
+    async () => {
+
+        submitStatus.textContent = "";
+        submitStatus.className =
+            "submit-status";
+
+        const studentId =
+            document
+                .getElementById(
+                    "studentId"
+                )
+                .value
+                .trim();
+
+        if (!studentId) {
+
+            submitStatus.textContent =
+                "✗ Please enter your Student ID.";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+        if (
+            !validStudentId(studentId)
+        ) {
+
+            submitStatus.textContent =
+                "✗ Please enter a valid Student ID "
+                + "(digits only).";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+        const allChecked =
+            PRACTICE.questions.every(
+                question =>
+                    questionState[
+                        question.id
+                    ].checked
+            );
+
+        if (!allChecked) {
+
+            submitStatus.textContent =
+                "✗ Check every question before submitting.";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+        if (
+            SUBMIT_URL.includes(
+                "PASTE_YOUR"
+            )
+        ) {
+
+            submitStatus.textContent =
+                "✗ Submission endpoint has not been configured.";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+        const payload =
+            buildSubmission();
+
+        submitButton.disabled =
+            true;
+
+        submitButton.textContent =
+            "Submitting...";
+
+        submitStatus.textContent =
+            "Submitting your practice attempt...";
+
+        try {
+
+            const response =
+                await fetch(
+                    SUBMIT_URL,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type":
+                                "text/plain;charset=utf-8"
+                        },
+                        body:
+                            JSON.stringify(
+                                payload
+                            )
+                    }
+                );
+
+            const result =
+                await response.json();
+
+            if (result.success) {
+
+                submitStatus.textContent =
+                    `✓ Attempt ${result.attempt} `
+                    + `submitted successfully. `
+                    + `Score: ${payload.score}`
+                    + `/${payload.max_score}.`;
+
+                submitStatus.classList.add(
+                    "submit-success"
+                );
+
+                revealPresentationGroup(
+                    studentId
+                );
+
+            } else {
+
+                submitStatus.textContent =
+                    "✗ Submission failed: "
+                    + result.error;
+
+                submitStatus.classList.add(
+                    "submit-error"
+                );
+            }
+
+        } catch (error) {
+
+            submitStatus.textContent =
+                "✗ Could not submit attempt: "
+                + error;
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+        } finally {
+
+            submitButton.disabled =
+                false;
+
+            submitButton.textContent =
+                "Submit Practice Attempt";
+        }
+    }
+);
+
+
+// ============================================================
+// MODE
+// ============================================================
+
+function applyPracticeMode() {
+
+    const studentCard =
+        document.getElementById(
+            "studentCard"
+        );
+
+    if (
+        PRACTICE.mode === "graded"
+    ) {
+
+        studentCard.style.display =
+            "block";
+
+        submitButton.style.display =
+            "inline-block";
+
+        return;
+    }
+
+    studentCard.style.display =
+        "none";
+
+    submitButton.style.display =
+        "none";
+
+    presentationCard.style.display =
+        "none";
+
+    scoreNote.innerHTML = `
+        <strong>Review version.</strong>
+        You may run and check your answers as many times
+        as you wish.
+        Results from this version are not submitted
+        or recorded.
+    `;
+
+    const reviewNotice =
+        document.createElement("div");
+
+    reviewNotice.style.marginTop =
+        "12px";
+
+    reviewNotice.style.padding =
+        "7px 10px";
+
+    reviewNotice.style.background =
+        "rgba(255,255,255,0.15)";
+
+    reviewNotice.style.borderRadius =
+        "5px";
+
+    reviewNotice.style.fontSize =
+        "13px";
+
+    reviewNotice.style.display =
+        "inline-block";
+
+    reviewNotice.innerHTML =
+        "<strong>Review version</strong> · "
+        + "Submissions are disabled";
+
+    document
+        .querySelector(
+            ".header-inner"
+        )
+        .appendChild(
+            reviewNotice
+        );
+}
+
+
+// ============================================================
+// START
+// ============================================================
+
+buildHeader();
+buildQuestions();
+applyPracticeMode();
+initializePython();
+
+</script>
+
+</body>
+
+</html>
