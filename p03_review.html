@@ -1,0 +1,2475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Practice 3: Explaining Firm Profitability — Review</title>
+
+<script
+    src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js">
+</script>
+
+<style>
+
+:root {
+    --comillas-blue: #004A98;
+    --comillas-dark-blue: #00356E;
+    --comillas-gold: #D6A900;
+    --background: #F4F6F9;
+    --card-background: #FFFFFF;
+    --soft-blue: #EEF4FB;
+    --soft-gold: #FFF8E1;
+    --soft-green: #EDF8F1;
+    --soft-red: #FCEEEE;
+    --text-main: #2F343B;
+    --text-muted: #68717D;
+    --border: #D9DEE7;
+    --success: #287A4B;
+    --error: #B53C3C;
+    --shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text-main);
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+    line-height: 1.55;
+}
+
+.container {
+    max-width: 1050px;
+    margin: 32px auto 60px;
+    padding: 0 24px;
+}
+
+.header {
+    background: var(--comillas-blue);
+    color: white;
+    border-bottom: 5px solid var(--comillas-gold);
+}
+
+.header-inner {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 27px 32px 29px;
+}
+
+.course-name {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+.practice-title {
+    margin: 4px 0 0;
+    font-size: 29px;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.practice-subtitle {
+    margin: 8px 0 0;
+    font-size: 15px;
+    opacity: 0.88;
+}
+
+.student-card,
+.practice-info-card,
+.question-card,
+.summary-card,
+.upload-card,
+.presentation-card {
+    background: var(--card-background);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.student-card {
+    background: var(--soft-blue);
+    border-left: 4px solid var(--comillas-blue);
+}
+
+.upload-card {
+    background: var(--soft-blue);
+    border-left: 4px solid var(--comillas-gold);
+}
+
+.summary-card {
+    border-top: 4px solid var(--comillas-gold);
+}
+
+.presentation-card {
+    display: none;
+    border-top: 4px solid var(--comillas-blue);
+    background: var(--soft-blue);
+}
+
+.presentation-topic {
+    margin: 4px 0 14px;
+    color: var(--comillas-blue);
+    font-size: 22px;
+    line-height: 1.3;
+}
+
+.presentation-members {
+    margin: 10px 0 18px;
+    padding-left: 22px;
+}
+
+.presentation-members li {
+    margin: 5px 0;
+}
+
+.presentation-task {
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: white;
+    border-left: 4px solid var(--comillas-gold);
+    border-radius: 4px;
+}
+
+.presentation-time {
+    margin-top: 16px;
+    font-weight: 700;
+}
+
+.section-label {
+    color: var(--comillas-blue);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 4px;
+}
+
+.question-title {
+    color: var(--comillas-blue);
+    font-size: 21px;
+    line-height: 1.3;
+    margin: 2px 0 14px;
+}
+
+.instructions {
+    margin-bottom: 20px;
+}
+
+.instructions code {
+    background: #EEF1F5;
+    border-radius: 4px;
+    padding: 2px 5px;
+    font-size: 0.95em;
+}
+
+.student-id-label,
+.editor-label,
+.upload-label {
+    display: block;
+    font-weight: 600;
+    margin: 8px 0 6px;
+}
+
+.student-id {
+    width: 300px;
+    max-width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #BCC5D1;
+    border-radius: 6px;
+    background: white;
+    font-size: 15px;
+}
+
+.student-id:focus {
+    outline: 2px solid rgba(0,74,152,0.18);
+    border-color: var(--comillas-blue);
+}
+
+.file-input {
+    display: block;
+    margin-top: 10px;
+    max-width: 100%;
+}
+
+.upload-help {
+    margin-top: 8px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.upload-status {
+    margin-top: 13px;
+    padding: 11px 13px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 13px;
+    white-space: pre-wrap;
+}
+
+.code-editor {
+    width: 100%;
+    min-height: 520px;
+    resize: vertical;
+    padding: 15px;
+    background: #F8FAFC;
+    border: 1px solid #C9D1DC;
+    border-radius: 7px;
+    color: #20252B;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    tab-size: 4;
+}
+
+.code-editor:focus {
+    outline: 2px solid rgba(0,74,152,0.15);
+    border-color: var(--comillas-blue);
+}
+
+.button-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+button {
+    border: none;
+    border-radius: 6px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.52;
+    cursor: not-allowed;
+}
+
+.run-button {
+    background: var(--comillas-blue);
+    color: white;
+}
+
+.run-button:hover:not(:disabled) {
+    background: var(--comillas-dark-blue);
+}
+
+.check-button {
+    background: var(--soft-gold);
+    color: #493900;
+    border: 1px solid #E1C55E;
+}
+
+.check-button:hover:not(:disabled) {
+    background: #FFF0B7;
+}
+
+.submit-button {
+    background: var(--comillas-blue);
+    color: white;
+    padding: 12px 23px;
+    font-size: 15px;
+}
+
+.output-container {
+    margin-top: 20px;
+}
+
+.output-title,
+.assessment-title {
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.output-box {
+    margin: 0;
+    min-height: 48px;
+    padding: 13px 15px;
+    background: #F7F8FA;
+    border-left: 4px solid var(--comillas-blue);
+    border-radius: 4px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 13px;
+}
+
+.assessment {
+    margin-top: 19px;
+}
+
+.not-checked {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.test-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 9px 0;
+    border-bottom: 1px solid #ECEFF3;
+}
+
+.test-row:last-child {
+    border-bottom: none;
+}
+
+.test-description {
+    flex: 1;
+}
+
+.test-points {
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.test-pass {
+    color: var(--success);
+}
+
+.test-fail {
+    color: var(--error);
+}
+
+.question-score {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    color: var(--comillas-blue);
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.overall-score {
+    margin: 5px 0 8px;
+    color: var(--comillas-blue);
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.score-note {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.submit-status {
+    margin-top: 14px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.submit-success {
+    color: var(--success);
+}
+
+.submit-error {
+    color: var(--error);
+}
+
+.python-status {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 5px 9px;
+    background: rgba(255,255,255,0.13);
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.python-ready {
+    background: rgba(230,255,235,0.18);
+}
+
+.footer {
+    margin-top: 40px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+@media (max-width:700px) {
+    .header-inner {
+        padding: 22px 20px;
+    }
+
+    .practice-title {
+        font-size: 24px;
+    }
+
+    .container {
+        padding: 0 14px;
+        margin-top: 20px;
+    }
+
+    .question-card,
+    .student-card,
+    .practice-info-card,
+    .summary-card,
+    .upload-card,
+    .presentation-card {
+        padding: 18px;
+    }
+
+    .code-editor {
+        min-height: 400px;
+    }
+
+    .test-row {
+        align-items: flex-start;
+    }
+}
+
+</style>
+
+<script>
+
+window.MathJax = {
+    tex: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['\\[','\\]']]
+    }
+};
+
+document.addEventListener("keydown", function(event) {
+
+    const textarea = event.target;
+
+    if (textarea.tagName !== "TEXTAREA") {
+        return;
+    }
+
+    if (event.key === "Tab") {
+
+        event.preventDefault();
+
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const value = textarea.value;
+
+        if (!event.shiftKey) {
+
+            textarea.value =
+                value.substring(0,start)
+                + "    "
+                + value.substring(end);
+
+            textarea.selectionStart =
+                textarea.selectionEnd =
+                start + 4;
+
+        } else {
+
+            const beforeCursor =
+                value.substring(0,start);
+
+            let spacesToRemove = 0;
+
+            for (
+                let i = 1;
+                i <= 4 && start-i >= 0;
+                i++
+            ) {
+                if (
+                    beforeCursor[start-i] === " "
+                ) {
+                    spacesToRemove++;
+                } else {
+                    break;
+                }
+            }
+
+            if (spacesToRemove > 0) {
+
+                textarea.value =
+                    value.substring(
+                        0,
+                        start-spacesToRemove
+                    )
+                    + value.substring(end);
+
+                textarea.selectionStart =
+                    textarea.selectionEnd =
+                    start-spacesToRemove;
+            }
+        }
+    }
+});
+
+</script>
+
+<script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="header-inner">
+
+        <p
+            class="course-name"
+            id="courseName">
+        </p>
+
+        <h1
+            class="practice-title"
+            id="practiceTitle">
+        </h1>
+
+        <p
+            class="practice-subtitle"
+            id="practiceSubtitle">
+        </p>
+
+        <div
+            class="python-status"
+            id="pythonStatus">
+            Loading Python environment...
+        </div>
+
+    </div>
+
+</header>
+
+<main class="container">
+
+    <section
+        class="student-card"
+        id="studentCard">
+
+        <div class="section-label">
+            Student
+        </div>
+
+        <label
+            class="student-id-label"
+            for="studentId">
+            Comillas Student ID
+        </label>
+
+        <input
+            class="student-id"
+            id="studentId"
+            type="text"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="Enter your Student ID"
+        >
+
+    </section>
+
+    <section
+        class="practice-info-card"
+        id="practiceInfoCard"
+        style="display:none;">
+
+        <div class="section-label">
+            Instructions
+        </div>
+
+        <div id="practiceInstructions"></div>
+
+    </section>
+
+    <section
+        class="upload-card"
+        id="uploadCard"
+        style="display:none;">
+
+        <div class="section-label">
+            Data files
+        </div>
+
+        <label
+            class="upload-label"
+            for="dataFiles">
+            Upload CSV files
+        </label>
+
+        <input
+            class="file-input"
+            id="dataFiles"
+            type="file"
+            accept=".csv,text/csv"
+            multiple
+        >
+
+        <div class="upload-help">
+            You may upload as many CSV files as you need.
+            Filenames are not prescribed.
+        </div>
+
+        <div
+            class="upload-status"
+            id="uploadStatus">
+            No files uploaded yet.
+        </div>
+
+    </section>
+
+    <div id="questionsContainer"></div>
+
+    <section class="summary-card">
+
+        <div class="section-label">
+            Practice Summary
+        </div>
+
+        <div
+            class="overall-score"
+            id="overallScore">
+            Score: 0 / 0
+        </div>
+
+        <div
+            class="score-note"
+            id="scoreNote">
+            Check every question at least once before
+            submitting a practice attempt.
+        </div>
+
+        <button
+            class="submit-button"
+            id="submitButton"
+            disabled>
+            Submit Practice Attempt
+        </button>
+
+        <div
+            class="submit-status"
+            id="submitStatus">
+        </div>
+
+    </section>
+
+    <section
+        class="presentation-card"
+        id="presentationCard">
+
+        <div class="section-label">
+            Group Presentation
+        </div>
+
+        <div id="presentationContent"></div>
+
+    </section>
+
+    <footer class="footer">
+        Financial Econometrics · Python Practice Grader
+    </footer>
+
+</main>
+
+<script>
+
+// ============================================================
+// GOOGLE APPS SCRIPT ENDPOINT
+// ============================================================
+
+const SUBMIT_URL =
+    "https://script.google.com/macros/s/AKfycbyVgCDZdg9wulWgk4ihH4Hm0bdl-gq6bYC4A8x9RZ-hc7O6NrlhYxIO4bmZeBUZo8SUDg/exec";
+
+
+// ============================================================
+// PRACTICE CONFIGURATION
+// ============================================================
+
+const PRACTICE =
+    {"practice_id": "p03", "course": "Financial Econometrics", "title": "Practice 3: Explaining Firm Profitability", "mode": "review", "max_points": 10.0, "allow_file_upload": true, "questions": [{"id": "q1", "title": "Multiple Regression, Model Fit and Diagnostics", "instructions": "\n\n<h3>1. Data preparation<\/h3>\n\n<p>\nRead your uploaded CSV file(s) and construct a DataFrame called\n<code>data<\/code> with one observation per S&amp;P 500 constituent.\nThe first seven columns must be the following, in this order:\n<\/p>\n\n\n<pre>\nTicker\nSector\nROA\nTotal_Assets\nTotal_Debt\nSales_Growth\nAsset_Turnover\n<\/pre>\n\n\n<p>\nYou may add additional columns to <code>data<\/code> as needed for the\nanalysis.\n<\/p>\n\n\n<p>\nConvert the five quantitative variables to numeric values if necessary\nand remove observations with missing values in the variables required\nfor the analysis.\n<\/p>\n\n\n<p>\nThe exact number of constituents returned by FactSet may vary slightly\ndepending on the date and the FactSet interface used. After cleaning,\n<code>data<\/code> should contain approximately\n<strong>500 S&amp;P 500 constituents<\/strong>.\nDo not add or remove firms solely to obtain a predetermined number of\nobservations.\n<\/p>\n\n\n<p>\nThen create:\n<\/p>\n\n\n\\[\nSize_i=\\ln(TotalAssets_i), \\qquad\nLeverage_i=\\frac{TotalDebt_i}{TotalAssets_i}.\n\\]\n\n\n<p>\nCreate dummy variables for <code>Sector<\/code>, using\n<strong>Finance as the reference category<\/strong>.\n<\/p>\n\n\n<h3>2. Full multiple regression<\/h3>\n\n<p>\nEstimate:\n<\/p>\n\n\n\\[\nROA_i=\n\\beta_0+\n\\beta_1 Size_i+\n\\beta_2 Leverage_i+\n\\beta_3 SalesGrowth_i+\n\\beta_4 AssetTurnover_i+\n\\sum_s\\gamma_s Sector_{is}\n+\nu_i.\n\\]\n\n\n<p>\nUse the matrix OLS estimator\n\\(\\hat\\beta=(X'X)^{-1}X'y\\).\nCalculate classical standard errors, t-statistics and two-sided\np-values for every coefficient.\n<\/p>\n\n\n<h3>3. Model fit and overall significance<\/h3>\n\n<p>\nCalculate \\(R^2\\), adjusted \\(R^2\\), and the overall F-test:\n<\/p>\n\n\n\\[\nH_0:\n\\beta_1=\n\\beta_2=\n\\cdots=\n\\beta_{k-1}\n=\n0.\n\\]\n\n\n<h3>4. Joint hypothesis test<\/h3>\n\n<p>\nTest whether sector effects are jointly zero:\n<\/p>\n\n\n\\[\nH_0:\n\\gamma_1=\n\\gamma_2=\n\\cdots=\n\\gamma_m\n=\n0.\n\\]\n\n\n<p>\nEstimate the restricted model containing the intercept and the four\ncontinuous regressors only. Calculate its \\(R^2\\) and adjusted \\(R^2\\),\nand use the restricted and unrestricted RSS values to calculate the\njoint F-statistic and p-value.\n<\/p>\n\n\n<h3>5. Heteroskedasticity and robust inference<\/h3>\n\n<p>\nConduct a White test. For this practice, construct the auxiliary\nregression using the four continuous regressors\n(<code>Size<\/code>, <code>Leverage<\/code>,\n<code>Sales_Growth<\/code>, <code>Asset_Turnover<\/code>),\ntheir squares, and all pairwise cross-products.\nRegress the squared OLS residuals on these terms and an intercept.\nUse \\(LM=T R^2_{aux}\\).\n<\/p>\n\n\n<p>\n<strong>Why only the continuous regressors?<\/strong>\nSquaring a sector dummy does not create new information because\n\\(D^2=D\\), while cross-products between mutually exclusive sector\ndummies are always zero. Therefore, for this practice, construct\nthe White auxiliary regression using the continuous regressors only.\n<\/p>\n\n\n<p>\nThen calculate White/HC0 robust standard errors for the\n<strong>full model<\/strong>:\n<\/p>\n\n\n\\[\n\\widehat{Var}_{HC0}(\\hat\\beta)\n=\n(X'X)^{-1}\nX'\n\\operatorname{diag}(\\hat u_i^2)\nX\n(X'X)^{-1}.\n\\]\n\n\n<p>\nUse them to obtain robust t-statistics and two-sided p-values.\n<\/p>\n\n\n<h3>6. Non-normality and multicollinearity<\/h3>\n\n<p>\nCalculate residual skewness, kurtosis and the Jarque-Bera statistic.\nAlso calculate VIFs for the four continuous regressors.\nWhen calculating each VIF, regress that continuous regressor on all\nthe other regressors in the full model, including the sector dummies.\n<\/p>\n\n\n<h3>Required outputs<\/h3>\n\n<p>\nYour code must create:\n<\/p>\n\n\n<pre>\ndata\ncoef_names\nbeta\nse\nt_stat\np_value\nR2\nAdj_R2\nF_overall\np_F_overall\nR2_restricted\nAdj_R2_restricted\nF_joint\np_F_joint\nwhite_LM\nwhite_p\nrobust_se\nrobust_t\nrobust_p\nskewness\nkurtosis\nJB\nJB_p\nvif\n<\/pre>\n\n\n<p>\n<code>coef_names<\/code> must follow the same order as\n<code>beta<\/code>: Intercept, Size, Leverage, Sales_Growth,\nAsset_Turnover, followed by the sector dummies in alphabetical order.\n<code>vif<\/code> must contain four values in the order Size, Leverage,\nSales_Growth, Asset_Turnover.\n<\/p>\n\n\n<p>\n<strong>Important:<\/strong>\n<em>Check Answer<\/em> will not provide diagnostic feedback until all\nrequired outputs have been created.\n<\/p>\n\n", "setup_code": "\nimport numpy as np\nimport pandas as pd\nfrom scipy import stats\n\n_ref_snapshot = {'CTAS': ['Commercial Services', 18.94152927, 10888.515, 2705.957, 8.941622975, 1.070253846], 'RTX': ['Electronic Technology', 4.031862011, 171079.0, 39956.0, 9.741385717, 0.530652213], 'WEC': ['Utilities', 3.097286223, 52457.9, 22390.5, 13.95597623, 0.194737375], 'MAA': ['Finance', 3.75547887, 11975.383, 5429.651, 0.826603195, 0.185736424], 'AES': ['Utilities', 1.893641479, 51768.0, 30943.0, -0.366509203, 0.246697723], 'FAST': ['Distribution Services', 25.81095078, 5052.9, 441.9, 8.673469388, 1.681998585], 'ED': ['Utilities', 2.787173217, 74603.0, 28376.0, 10.89407446, 0.233086488], 'EQIX': ['Finance', 3.58918459, 40141.0, 22726.0, 5.361225423, 0.245048255], 'LMT': ['Electronic Technology', 8.690681379, 59840.0, 22771.0, 5.637430852, 1.300016456], 'UHS': ['Health Services', 9.664109935, 15957.085, 5166.503, 9.71000955, 1.127190135], 'ADSK': ['Technology Services', 9.64806867, 12467.0, 2734.0, 17.80104712, 0.618025751], 'COHR': ['Electronic Technology', 4.847810296, 18299.852, 3554.994, 22.51359913, 0.428666793], 'DHR': ['Health Technology', 4.471883035, 83464.0, 19696.0, 2.902617801, 0.305181173], 'ADI': ['Electronic Technology', 4.712780493, 47992.712, 8948.514, 16.89321606, 0.229049963], 'BSX': ['Health Technology', 6.977416093, 43673.0, 11972.0, 19.8662447, 0.483314875], 'ILMN': ['Health Technology', 13.13045493, 6644.0, 2553.0, -0.436079871, 0.670116629], 'KEY': ['Finance', 0.981837615, 184381.0, 11493.0, 21.49461547, 0.059989849], 'HSIC': ['Distribution Services', 3.713899128, 11215.0, 3436.0, 4.032194429, 1.230252415], 'FCX': ['Non-Energy Minerals', 3.887979472, 58167.0, 10492.0, -0.047732697, 0.444684334], 'GEN': ['Technology Services', 6.26045554, 15589.0, 8260.0, 27.06480305, 0.321708918], 'PRU': ['Finance', 0.473853578, 773740.0, 32964.0, -13.67942618, 0.080531257], 'SO': ['Utilities', 2.885343968, 155720.0, 74075.0, 10.58599012, 0.196430708], 'TTWO': ['Technology Services', -3.179714657, 9575.7, 2958.3, 18.15535359, 0.709773731], 'JKHY': ['Technology Services', 15.90611527, 3205.947, 77.821, 5.095297918, 0.789749114], 'CCI': ['Finance', -1.469169235, 31518.0, 29566.0, -4.394618834, 0.132723255], 'MSFT': ['Technology Services', 19.42079849, 758376.0, 128813.0, 17.7886868, 0.481841236], 'EFX': ['Commercial Services', 5.590172539, 11864.2, 5093.3, 6.924715284, 0.514273862], 'PHM': ['Consumer Durables', 12.53088414, 18048.423, 2296.679, -3.53818894, 0.977739866], 'MAR': ['Consumer Services', 9.683183798, 27540.0, 17182.0, 4.326693227, 0.97487063], 'AME': ['Producer Manufacturing', 9.64302346, 16067.543, 2571.508, 6.626193241, 0.482177624], 'IP': ['Process Industries', -9.341057205, 37964.0, 12665.0, 49.25165772, 0.777894806], 'MLM': ['Non-Energy Minerals', 5.24990057, 19132.0, 6007.0, 8.618862593, 0.326130187], 'UNH': ['Health Services', 3.915620585, 313688.0, 83004.0, 11.81403924, 1.453635168], 'MCO': ['Commercial Services', 15.69490985, 15830.0, 7351.0, 8.888261851, 0.492612095], 'JPM': ['Finance', 1.344958691, 4435143.0, 979666.0, 0.138508628, 0.066103606], 'GRMN': ['Electronic Technology', 16.1352908, 10993.669, 195.988, 15.06480249, 0.702623171], 'CPT': ['Finance', 4.287623903, 9042.989, 3923.49, 2.018404233, 0.17719533], 'ITW': ['Producer Manufacturing', 19.64440173, 16148.0, 9211.0, 0.91835451, 1.027967323], 'KO': ['Consumer Non-Durables', 12.76458988, 104816.0, 47214.0, 3.476884916, 0.471277968], 'VMC': ['Non-Energy Minerals', 6.241539256, 17074.3, 4940.0, 7.056095555, 0.458422932], 'WST': ['Health Technology', 12.47756969, 4270.0, 326.2, 6.291699796, 0.777086966], 'RMD': ['Health Technology', 17.7743605, 8965.95, 825.919, 9.85394049, 0.659665172], 'MKC': ['Consumer Non-Durables', 6.009737084, 13200.4, 4222.9, 1.734164225, 0.520755062], 'SBUX': ['Consumer Services', 5.859940971, 32019.7, 26611.5, 2.804857807, 1.173058287], 'HON': ['Producer Manufacturing', 5.944504524, 73681.0, 35563.0, 7.855393922, 0.502992403], 'EW': ['Health Technology', 7.925240632, 13697.2, 705.4, 11.54701719, 0.453609943], 'GLW': ['Electronic Technology', 5.4368006, 30976.0, 9377.0, 18.97838002, 0.53240449], 'BAX': ['Health Technology', -3.926958571, 20055.0, 9780.0, 5.71643475, 0.490608024], 'HAL': ['Industrial Services', 5.071446924, 25010.0, 8316.0, -3.312412831, 0.876889934], 'CLX': ['Consumer Non-Durables', 8.790715088, 7794.0, 5598.0, -5.405405405, 1.006364657], 'PCG': ['Utilities', 1.81710621, 152884.0, 61335.0, 2.113108645, 0.167626871], 'FITB': ['Finance', 1.180427004, 214376.0, 15226.0, -4.044977738, 0.059512805], 'MNST': ['Consumer Non-Durables', 21.52053695, 9988.945, 0.0, 10.69885405, 0.936788692], 'CAH': ['Distribution Services', 3.104481937, 57299.0, 9948.0, 14.22307087, 4.604776265], 'WRB': ['Finance', 4.692976805, 39646.227, 3100.176, 7.838723074, 0.387903286], 'LHX': ['Electronic Technology', 3.860762537, 41195.0, 11248.0, 2.532239156, 0.525626232], 'BAC': ['Finance', 0.914396249, 3411738.0, 719706.0, -0.819952518, 0.058222066], 'MGM': ['Consumer Services', 0.504967304, 41373.786, 31553.854, 1.723483799, 0.41953463], 'APH': ['Electronic Technology', 14.80760995, 36236.9, 16067.7, 51.71224553, 0.800827365], 'DVN': ['Energy Minerals', 8.346364656, 32289.0, 8688.0, 10.01477484, 0.541028922], 'AIG': ['Finance', 2.511610927, 123258.0, 10047.0, -1.746724891, 0.217210538], 'ARE': ['Finance', -4.016202704, 34081.835, 12894.131, -2.882754876, 0.08452971], 'EVRG': ['Utilities', 2.478591872, 35437.6, 15393.2, 1.650153682, 0.171490979], 'AOS': ['Producer Manufacturing', 17.11474588, 3142.8, 202.9, 0.316911553, 1.200162938], 'LLY': ['Health Technology', 21.59098576, 112476.0, 43865.0, 44.70491334, 0.681821154], 'TPR': ['Retail Trade', 23.02105152, 6691.7, 3953.0, 14.17119546, 1.206160245], 'DLTR': ['Retail Trade', 7.631842841, 13466.2, 7055.6, 10.42921751, 1.209073752], 'MCK': ['Distribution Services', 6.048405022, 82323.0, 8614.0, 12.36008255, 5.124124397], 'NEM': ['Non-Energy Minerals', 12.48788226, 57121.0, 5712.0, 19.07635933, 0.389477395], 'COST': ['Retail Trade', 11.02429728, 77099.0, 9935.0, 8.167323631, 3.746477915], 'MS': ['Finance', 1.276827114, 1423275.0, 471383.0, 11.47145637, 0.090657678], 'ALL': ['Finance', 9.615636398, 109108.0, 7674.0, 5.582940754, 0.632984195], 'ACN': ['Technology Services', 12.65739126, 65394.897, 8182.866, 7.360205326, 1.148513154], 'FISV': ['Commercial Services', 4.424413098, 80133.0, 29760.0, 3.602854908, 0.269444215], 'KIM': ['Finance', 2.907554765, 19688.25, 8640.538, 4.64926222, 0.107696042], 'TECH': ['Health Technology', 6.944619486, 2678.992, 289.087, -0.376834053, 0.464033409], 'LH': ['Health Services', 4.767253078, 18392.7, 6526.0, 7.247346048, 0.758828121], 'STLD': ['Non-Energy Minerals', 7.534346687, 16419.78, 4382.817, 3.627006013, 1.155104929], 'TJX': ['Retail Trade', 16.27466082, 35767.0, 13489.0, 7.118523776, 1.788376089], 'AXON': ['Electronic Technology', 2.172672339, 7000.313, 1909.664, 33.46945008, 0.484454899], 'BMY': ['Health Technology', 7.724443033, 90038.0, 47139.0, -0.219461698, 0.527745687], 'WAT': ['Health Technology', 13.34591855, 5076.55, 1491.084, 6.993642144, 0.65735672], 'WFC': ['Finance', 1.041740661, 2166760.0, 429884.0, -1.615521679, 0.060652662], 'AMT': ['Finance', 4.071046562, 63190.4, 44963.9, 5.10901335, 0.171317107], 'HSY': ['Consumer Non-Durables', 6.619107995, 13741.297, 5738.575, 4.376910273, 0.876237019], 'VRSN': ['Technology Services', 60.39571371, 1326.9, 1798.0, 6.369590343, 1.211717807], 'SWK': ['Consumer Durables', 1.865285455, 21243.7, 6340.4, -1.531332774, 0.702227297], 'COF': ['Finance', 0.35577702, 669009.0, 52259.0, 28.690403, 0.119176675], 'REGN': ['Health Technology', 11.490465, 40558.7, 2972.7, 0.992113787, 0.36583851], 'ODFL': ['Transportation', 18.29959097, 5587.893, 141.395, -5.476034471, 0.982527848], 'LNT': ['Utilities', 3.289340102, 25815.0, 12327.0, 9.570459683, 0.177137056], 'PGR': ['Finance', 10.18995783, 120123.0, 7102.0, 16.3173752, 0.789721732], 'ALGN': ['Health Technology', 6.592887876, 6233.693, 114.446, 0.899022058, 0.648275872], 'JNJ': ['Health Technology', 14.13288199, 199210.0, 49333.0, 6.033618933, 0.496570124], 'NDSN': ['Producer Manufacturing', 8.129681163, 5917.681, 2092.358, 3.783233783, 0.468457032], 'BEN': ['Finance', 1.455127651, 32368.3, 13299.9, 2.313838512, 0.269403759], 'GD': ['Electronic Technology', 7.442830751, 57249.0, 9789.0, 10.13077374, 0.929027924], 'NVR': ['Consumer Durables', 21.89614279, 5856.93, 1052.893, -1.996202248, 1.650414392], 'WMB': ['Industrial Services', 4.473034505, 60474.0, 29544.0, 10.01580954, 0.202123752], 'ROP': ['Technology Services', 4.661691323, 34577.0, 9534.5, 12.26417775, 0.239790508], 'ETR': ['Utilities', 2.594846523, 71890.73, 31328.863, 8.982021613, 0.189444159], 'QCOM': ['Electronic Technology', 10.52451637, 50143.0, 15643.0, 13.65946307, 0.841125578], 'FDX': ['Transportation', 4.744752471, 98937.0, 42943.0, 7.72695221, 1.015415621], 'APD': ['Process Industries', -0.958651489, 41059.5, 18406.2, -0.521461746, 0.298570952], 'ES': ['Utilities', 2.743321432, 63786.711, 30243.998, 13.83464771, 0.219599738], 'EG': ['Finance', 2.916563551, 56751.0, 3785.0, 1.238354262, 0.320712001], 'TER': ['Electronic Technology', 14.04016795, 4183.599, 283.239, 13.26969747, 0.808185129], 'SWKS': ['Electronic Technology', 5.890014382, 7917.0, 1203.1, -2.180469124, 0.504546212], 'VZ': ['Communications', 4.353529733, 404258.0, 181643.0, 2.524705463, 0.350307807], 'SRE': ['Utilities', 1.77459632, 110878.0, 36287.0, 5.826966119, 0.132461975], 'MMM': ['Producer Manufacturing', 8.376180719, 37733.0, 13132.0, 1.517802645, 0.642981405], 'CVX': ['Energy Minerals', 4.23409932, 324012.0, 46743.0, -4.619296949, 0.635283587], 'ZBRA': ['Electronic Technology', 5.088038859, 8502.0, 2697.0, 9.356136821, 0.659987857], 'BXP': ['Finance', 1.059498334, 26166.164, 17358.735, 2.187973832, 0.133290058], 'SYY': ['Distribution Services', 6.369288213, 28397.0, 14967.0, 3.911761091, 3.065124794], 'USB': ['Finance', 1.097716944, 692345.0, 79345.0, -0.415074761, 0.061613978], 'TSCO': ['Retail Trade', 10.57021392, 10933.679, 5942.869, 4.30561751, 1.497075388], 'EXPD': ['Transportation', 16.5799305, 4893.638, 570.589, 4.419539994, 2.264792702], 'IEX': ['Producer Manufacturing', 7.068305991, 6927.0, 1942.7, 5.772760646, 0.505767135], 'PPL': ['Utilities', 2.731917556, 45244.0, 19350.0, 6.854171591, 0.209516527], 'BLK': ['Finance', 3.598681844, 169998.0, 14996.0, 19.22120168, 0.161509723], 'FIX': ['Industrial Services', 18.3381355, 6441.169, 483.358, 29.51507768, 1.632250943], 'CINF': ['Finance', 6.205349618, 40763.0, 878.0, 11.41395431, 0.327537698], 'TXT': ['Electronic Technology', 5.279263305, 18129.0, 4282.0, 8.006130492, 0.846455229], 'AEE': ['Utilities', 3.128693298, 48476.0, 19830.0, 15.42699725, 0.189075359], 'ETN': ['Producer Manufacturing', 10.2647177, 41251.0, 10684.0, 10.33041241, 0.689371107], 'ROL': ['Commercial Services', 17.67401796, 3140.523, 1038.005, 10.98772748, 1.262051153], 'SBAC': ['Finance', 9.165066569, 11575.012, 15319.13, 5.056847316, 0.244876165], 'ATO': ['Utilities', 4.374672087, 28905.706, 9303.506, 12.90621526, 0.171689707], 'FICO': ['Commercial Services', 35.40866862, 1917.311, 3091.7, 15.91492647, 1.081286191], 'SJM': ['Consumer Non-Durables', -0.810326847, 16438.3, 7129.8, 3.722166833, 0.528780625], 'ADP': ['Technology Services', 7.572754897, 63193.3, 5514.7, 6.743381856, 0.37657705], 'BIIB': ['Health Technology', 4.497919595, 29439.5, 6657.6, 2.875919971, 0.331650687], 'TRGP': ['Utilities', 7.33007844, 26293.7, 17522.0, 3.37826053, 0.68422823], 'AJG': ['Finance', 2.214642433, 70665.0, 13485.0, 20.65876814, 0.206670313], 'TDY': ['Electronic Technology', 6.069362201, 15285.3, 2642.1, 7.74136716, 0.414803058], 'FRT': ['Finance', 4.641517575, 9130.46, 5230.973, 6.364906677, 0.14486415], 'O': ['Finance', 1.494860036, 72795.612, 30839.804, 8.616702942, 0.081330276], 'TSN': ['Consumer Non-Durables', 1.285284308, 36658.0, 9695.0, 2.123468833, 1.476205971], 'WTW': ['Finance', 5.61080911, 29530.0, 6903.0, -2.22513089, 0.33948017], 'GILD': ['Health Technology', 14.42152892, 59023.0, 25541.0, 2.509833954, 0.499042519], 'RJF': ['Finance', 2.490334186, 88230.0, 5869.0, 6.467595072, 0.185747159], 'TRMB': ['Technology Services', 4.510566321, 9312.0, 1561.1, -2.606358429, 0.38162157], 'ERIE': ['Finance', 17.68212109, 3399.299, 0.0, 7.192857213, 1.285898498], 'LEN': ['Consumer Durables', 5.434369055, 34430.437, 6139.152, -3.792994314, 0.901230259], 'URI': ['Finance', 8.406080421, 30541.0, 15670.0, 4.913652656, 0.542620243], 'ALB': ['Process Industries', -3.096229489, 16374.211, 3321.212, -4.366189954, 0.311833303], 'AKAM': ['Technology Services', 4.137881224, 11479.643, 5675.388, 5.437180294, 0.385215357], 'CSGP': ['Technology Services', 0.070725645, 10538.0, 1144.0, 18.66822601, 0.328065957], 'IBM': ['Technology Services', 7.314178962, 151880.0, 64607.0, 7.621946361, 0.467288232], 'TFC': ['Finance', 0.977615425, 551053.0, 71078.0, 24.55803699, 0.056199532], 'DOV': ['Producer Manufacturing', 8.464033993, 13422.423, 3584.452, 4.475420509, 0.624147859], 'DTE': ['Utilities', 2.835432214, 54066.0, 26290.0, 23.80296524, 0.29697217], 'YUM': ['Consumer Services', 20.89252211, 8197.0, 13189.0, 8.80911379, 1.100777272], 'AMGN': ['Health Technology', 8.453885158, 90586.0, 55435.0, 10.55909966, 0.402806633], 'PG': ['Consumer Non-Durables', 12.74746576, 126521.0, 35025.0, 3.260405296, 0.691410595], 'ROST': ['Retail Trade', 13.14481703, 16669.562, 5212.338, 7.673449738, 1.394152919], 'GE': ['Electronic Technology', 6.652152224, 132832.0, 21557.0, 18.48224898, 0.354649971], 'HAS': ['Consumer Durables', -5.421995745, 5552.0, 3401.1, 13.6, 0.790461055], 'NSC': ['Transportation', 6.398394828, 45603.0, 17839.0, 0.470180648, 0.271541634], 'SCHW': ['Finance', 1.81526984, 493193.0, 31865.0, 6.446401785, 0.056752816], 'JBHT': ['Transportation', 7.17861072, 8141.387, 1720.497, -0.728936154, 1.439736432], 'TXN': ['Electronic Technology', 14.18951693, 34585.0, 14779.0, 13.04903779, 0.504522498], 'GPC': ['Distribution Services', 0.329081276, 20795.54, 6929.765, 3.46398829, 1.212634984], 'AMZN': ['Retail Trade', 10.76555024, 818042.0, 169934.0, 12.37775468, 0.99370173], 'HIG': ['Finance', 4.992191567, 79449.0, 4371.0, 6.907857547, 0.369182717], 'DECK': ['Consumer Non-Durables', 27.69719972, 3761.533, 375.194, 9.353575653, 1.475219081], 'GS': ['Finance', 0.985627603, 1809320.0, 663178.0, -0.484908695, 0.072426069], 'BA': ['Electronic Technology', 1.376471821, 168235.0, 56365.0, 34.49291921, 0.551217198], 'CL': ['Consumer Non-Durables', 13.17024957, 16330.0, 8554.0, 1.397940401, 1.259080801], 'ESS': ['Finance', 5.134221828, 13159.009, 6903.243, 6.362253093, 0.144699714], 'GWW': ['Distribution Services', 19.17823619, 8962.0, 2862.0, 4.508387698, 2.016974875], 'TT': ['Producer Manufacturing', 14.22075954, 21420.7, 6264.5, 7.479005153, 1.025895293], 'SNA': ['Consumer Durables', 12.47033865, 8412.3, 1293.3, 0.933756166, 0.632297306], 'WELL': ['Finance', 1.5832124, 67303.047, 21380.295, 35.61774899, 0.183011069], 'XOM': ['Energy Minerals', 6.392340892, 448980.0, 50487.0, -4.708038646, 0.717830806], 'BRO': ['Finance', 4.304936437, 30653.0, 7918.0, 22.83038502, 0.243602443], 'MTD': ['Health Technology', 25.00323258, 3712.646, 2265.323, 3.97788326, 1.158235175], 'HST': ['Finance', 5.862742844, 13049.0, 5640.0, 7.565095004, 0.468559605], 'AVY': ['Process Industries', 7.997256755, 8801.7, 3953.6, 1.139828911, 1.029356209], 'HBAN': ['Finance', 1.029962547, 225106.0, 18918.0, 4.448759075, 0.057637841], 'MRSH': ['Finance', 7.222786502, 58710.0, 21449.0, 10.64919107, 0.469047061], 'CNC': ['Health Services', -8.278086142, 77661.0, 18162.0, 19.44306468, 2.415913672], 'EQT': ['Energy Minerals', 4.905317904, 42520.831, 7915.794, 59.95614485, 0.200932917], 'EME': ['Industrial Services', 14.45568672, 9600.429, 474.557, 16.61600114, 1.929188524], 'MAS': ['Producer Manufacturing', 15.8559264, 5201.0, 3215.0, -3.398058252, 1.480277968], 'CTSH': ['Technology Services', 10.96955089, 20692.0, 1164.0, 6.951763275, 1.038319642], 'ORLY': ['Retail Trade', 15.35435592, 17376.839, 8491.499, 6.424959447, 1.075683815], 'SLB': ['Industrial Services', 6.500775507, 54868.0, 12541.0, -1.699350006, 0.687667986], 'AON': ['Finance', 7.408595575, 50784.0, 16071.0, 9.792341398, 0.346650092], 'NVDA': ['Electronic Technology', 75.41802239, 206803.0, 11412.0, 65.47353579, 1.356377432], 'PEG': ['Utilities', 3.762386825, 57576.0, 24244.0, 19.61414791, 0.218792329], 'KLAC': ['Electronic Technology', 28.40004432, 17951.535, 6151.713, 11.72104397, 0.797934453], 'APO': ['Finance', 0.80682463, 460949.0, 19407.0, 23.31244065, 0.077396989], 'AEP': ['Utilities', 3.211109362, 117246.0, 49663.0, 9.371626541, 0.195384344], 'L': ['Finance', 2.139112916, 79967.0, 9864.0, 5.391205026, 0.236803778], 'GIS': ['Consumer Non-Durables', -0.27770821, 30016.7, 13940.4, -5.449898905, 0.584093914], 'TMO': ['Health Technology', 6.455620618, 110343.0, 40855.0, 3.911005387, 0.429116265], 'WM': ['Industrial Services', 5.911502107, 46395.0, 23917.0, 14.23650456, 0.550197559], 'ADBE': ['Technology Services', 23.87569903, 29496.0, 6648.0, 10.41579559, 0.795867796], 'JBL': ['Producer Manufacturing', 3.66077896, 18543.0, 3731.0, 3.181802444, 1.660556082], 'MTB': ['Finance', 1.349572477, 213510.0, 13712.0, -1.67847818, 0.062521495], 'D': ['Utilities', 2.759859258, 115857.0, 49677.0, 16.62134839, 0.153267483], 'VLO': ['Energy Minerals', 3.879617507, 59265.0, 11703.0, -5.442973602, 2.033741569], 'NOC': ['Electronic Technology', 8.302890724, 51377.0, 17884.0, 2.244534887, 0.832949492], 'VMRK': ['Finance', 5.387607693, 20746.023, 8479.585, 3.964942929, 0.147363075], 'AMD': ['Electronic Technology', 5.841863266, 76926.0, 4006.0, 34.33779329, 0.474013356], 'DE': ['Producer Manufacturing', 4.713195447, 105996.0, 64250.0, -11.55478881, 0.427797259], 'PCAR': ['Producer Manufacturing', 5.414614079, 44336.2, 15700.1, -15.4562771, 0.64840448], 'NFLX': ['Technology Services', 19.86374078, 55596.993, 16975.837, 16.45505116, 0.818958287], 'PNC': ['Finance', 1.210175092, 576253.0, 60334.0, 0.038362794, 0.059516808], 'TROW': ['Finance', 14.41116945, 14606.3, 469.0, 3.118303823, 0.517627411], 'OXY': ['Energy Minerals', 2.324608889, 86783.0, 23351.0, -3.715446791, 0.247022633], 'MCHP': ['Electronic Technology', 1.546493997, 14370.1, 5642.2, 7.07697201, 0.316903516], 'MRVL': ['Electronic Technology', 12.56819284, 22285.3, 5034.8, 42.08728521, 0.385720808], 'MU': ['Electronic Technology', 11.21973012, 82798.0, 15352.0, 48.85110111, 0.491124338], 'FLEX': ['Electronic Technology', 4.352018991, 22060.0, 4465.0, 8.13930965, 1.380480206], 'SPGI': ['Commercial Services', 7.364459196, 61200.0, 13706.0, 7.939189189, 0.252608692], 'CDNS': ['Technology Services', 11.59461993, 10153.148, 2666.328, 14.12320006, 0.553833277], 'WAB': ['Producer Manufacturing', 5.724657232, 22069.0, 5933.0, 7.509386733, 0.547791322], 'CSX': ['Transportation', 6.597848677, 44242.0, 19419.0, -3.081155433, 0.32183068], 'ON': ['Electronic Technology', 0.909299276, 12524.1, 3253.2, -15.3467094, 0.450546519], 'AZO': ['Retail Trade', 13.6770855, 19355.324, 12577.215, 2.4253245, 1.036832834], 'PLD': ['Finance', 3.430225938, 98724.256, 37118.146, 7.175627712, 0.090595039], 'NI': ['Utilities', 2.686020465, 36552.0, 16240.4, 21.7612876, 0.192481229], 'TGT': ['Retail Trade', 6.319344357, 59490.0, 20290.0, -1.675956684, 1.787154931], 'SYK': ['Health Technology', 7.1485988, 47844.0, 16360.0, 11.15733569, 0.553124484], 'DGX': ['Health Services', 6.102909383, 16225.0, 6585.0, 11.78079417, 0.681635679], 'PH': ['Producer Manufacturing', 12.08527273, 30877.0, 8733.0, 8.307304786, 0.712229382], 'GL': ['Finance', 3.877911045, 30813.692, 2625.449, 3.742582513, 0.200178017], 'AAPL': ['Electronic Technology', 30.93254683, 359241.0, 112377.0, 6.425511783, 1.14926521], 'MDT': ['Health Technology', 5.198475431, 93028.0, 29148.0, 8.429495781, 0.393745804], 'SHW': ['Process Industries', 10.37059169, 25901.7, 13951.0, 2.059874018, 0.951837414], 'EBAY': ['Retail Trade', 10.79648411, 17610.0, 7180.0, 7.777885267, 0.602623394], 'NKE': ['Consumer Non-Durables', 8.289215752, 38410.0, 11033.0, -0.008620318, 1.237461494], 'WY': ['Finance', 1.9548101, 16613.0, 5719.0, -3.074115665, 0.416603819], 'AIZ': ['Finance', 3.048233129, 29818.3, 2301.1, 7.887181646, 0.447587645], 'AXP': ['Finance', 3.746633027, 301503.0, 57758.0, 8.48654769, 0.280271412], 'LUV': ['Transportation', 1.324681941, 31104.0, 5981.0, 2.110395517, 0.841053152], 'LRCX': ['Producer Manufacturing', 32.38059282, 23529.743, 4121.565, 26.02085824, 1.035440154], 'PWR': ['Industrial Services', 4.716162592, 24926.901, 6418.954, 20.30559552, 1.306084743], 'INCY': ['Health Technology', 20.66382487, 6970.851, 54.92, 21.22091371, 0.825692491], 'SNPS': ['Technology Services', 4.359422886, 48224.461, 14293.418, 15.13101723, 0.230057113], 'STZ': ['Consumer Non-Durables', 7.745541044, 21900.5, 11202.6, -10.48011834, 0.419633181], 'ECL': ['Process Industries', 8.816564403, 24696.3, 8997.5, 2.158639003, 0.683084098], 'GPN': ['Finance', 2.140575669, 53338.484, 22171.173, -0.388988065, 0.153765838], 'EIX': ['Utilities', 5.072241864, 94026.0, 41549.0, 9.761918291, 0.21510537], 'DIS': ['Consumer Services', 6.300716475, 197514.0, 45423.0, 3.608559327, 0.47836986], 'CRL': ['Commercial Services', -1.968634663, 7135.422, 2631.465, -0.854496148, 0.547660366], 'EMR': ['Electronic Technology', 5.301009164, 41964.0, 13759.0, 2.967070661, 0.417840158], 'A': ['Health Technology', 10.54847197, 12774.0, 3543.0, 6.728110599, 0.562477231], 'EL': ['Consumer Non-Durables', 0.917940183, 19762.0, 9246.0, 5.529115342, 0.760478136], 'COR': ['Distribution Services', 2.163198216, 76590.112, 9331.176, 9.312270535, 4.472528926], 'RCL': ['Consumer Services', 10.84776779, 41619.0, 22035.0, 8.802475127, 0.455845163], 'UPS': ['Transportation', 7.78429729, 73090.0, 28590.0, -2.485312562, 1.238264878], 'PSA': ['Finance', 8.929880032, 20208.604, 10253.881, 2.736531267, 0.241425722], 'KR': ['Retail Trade', 1.911690871, 49953.0, 24692.0, 0.352766053, 2.797283088], 'TYL': ['Technology Services', 5.65659017, 5783.49, 642.608, 9.099856254, 0.418028077], 'DHI': ['Consumer Durables', 9.891066396, 36006.1, 6031.1, -6.931801508, 0.944920731], 'CNP': ['Utilities', 2.246807057, 48247.0, 23606.0, 8.261020479, 0.199841955], 'CHD': ['Consumer Non-Durables', 8.280745132, 8912.4, 2382.0, 1.573578294, 0.697165014], 'VTR': ['Finance', 0.93486936, 27591.945, 13284.075, 17.98851971, 0.217051123], 'WDC': ['Electronic Technology', 66.74083911, 13861.0, 1191.0, 35.70378151, 0.927322973], 'RL': ['Consumer Non-Durables', 12.72892039, 7739.5, 3009.4, 14.62777228, 1.097532935], 'WSM': ['Retail Trade', 20.31894469, 5411.912, 1456.905, 1.235485878, 1.45737661], 'BDX': ['Health Technology', 2.980170676, 55325.0, 20020.0, 8.236693428, 0.387883954], 'OMC': ['Commercial Services', -0.129706316, 54415.3, 11163.9, 10.0885328, 0.411059546], 'PFG': ['Finance', 0.384676995, 322179.3, 4120.6, -3.113897208, 0.050719521], 'CASY': ['Retail Trade', 8.106114895, 9189.229, 2905.075, 10.16380569, 1.992479542], 'FFIV': ['Technology Services', 11.60494837, 6319.492, 261.791, 9.656974845, 0.517590285], 'IDXX': ['Health Technology', 31.8913844, 3350.759, 976.062, 10.42200342, 1.295475965], 'TPL': ['Miscellaneous', 33.24209831, 1639.074, 16.175, 13.08642535, 0.551201357], 'INTC': ['Electronic Technology', -0.130909947, 211429.0, 46976.0, -0.467034519, 0.259137956], 'REG': ['Finance', 4.154333334, 13001.283, 5338.123, 6.799828167, 0.122577249], 'BG': ['Process Industries', 2.359312659, 44528.0, 15855.0, 32.40887182, 2.025868898], 'SPG': ['Finance', 12.67627801, 40606.466, 57622.189, 6.718990147, 0.174340966], 'WMT': ['Retail Trade', 8.026896869, 284668.0, 67095.0, 4.725214212, 2.614756247], 'BALL': ['Process Industries', 4.909560724, 19524.0, 7373.0, 11.73080183, 0.709625323], 'CSCO': ['Electronic Technology', 10.53237433, 129637.0, 31185.0, 11.774985, 0.502723], 'HRL': ['Consumer Non-Durables', 3.564929994, 13393.119, 3025.41, 1.554954757, 0.902506977], 'RVTY': ['Health Technology', 1.953373919, 12168.411, 3398.207, 3.666934541, 0.232569025], 'BBY': ['Retail Trade', 7.038683128, 15593.0, 4133.0, 0.392506261, 2.74508642], 'F': ['Consumer Durables', -2.84910404, 289160.0, 165738.0, 1.22978291, 0.652093823], 'APA': ['Energy Minerals', 7.471084714, 18998.0, 4810.0, -8.390674746, 0.464728561], 'ABT': ['Health Technology', 7.732250025, 86713.0, 14136.0, 5.668653159, 0.52731566], 'ACGL': ['Finance', 6.912645159, 67056.0, 2885.0, 15.21352313, 0.305246948], 'KMB': ['Consumer Non-Durables', 9.636190703, 17098.0, 7554.0, -2.130318358, 0.977707764], 'PFE': ['Health Technology', 3.674956589, 208160.0, 67416.0, -1.647099502, 0.296895312], 'ORCL': ['Technology Services', 7.945224588, 261759.0, 167432.0, 17.3487343, 0.313200967], 'RSG': ['Industrial Services', 6.40800683, 34366.0, 13806.0, 3.486776447, 0.496974599], 'ISRG': ['Health Technology', 14.47182403, 20631.2, 170.9, 20.50502269, 0.509994984], 'FE': ['Utilities', 1.889798792, 55904.0, 26843.0, 12.01009501, 0.279579057], 'PEP': ['Consumer Non-Durables', 7.966509721, 107399.0, 53028.0, 2.254689558, 0.908066091], 'NUE': ['Non-Energy Minerals', 5.031574069, 35104.0, 7249.0, 5.726556908, 0.941254852], 'CAT': ['Producer Manufacturing', 9.534797611, 98585.0, 44058.0, 4.289527689, 0.725402336], 'CMI': ['Producer Manufacturing', 8.676677043, 33992.0, 8114.0, -1.266787872, 1.027589575], 'MCD': ['Consumer Services', 14.93151521, 59515.0, 54814.0, 3.722993827, 0.468800405], 'STT': ['Finance', 0.818310355, 366047.0, 30668.0, 1.963375496, 0.060070598], 'CI': ['Health Services', 3.902148245, 153816.0, 31463.0, 12.47708524, 1.800582342], 'HD': ['Retail Trade', 14.07059151, 105095.0, 65350.0, 3.240467921, 1.636894053], 'NTRS': ['Finance', 1.034748863, 177132.7, 17051.9, -9.933183735, 0.086152914], 'PKG': ['Process Industries', 7.709584591, 10924.6, 4364.9, 7.228656973, 0.901336569], 'LOW': ['Retail Trade', 13.17542414, 56160.0, 44677.0, 3.121638741, 1.713162519], 'ROK': ['Producer Manufacturing', 7.723486704, 11219.0, 3647.0, 0.980392157, 0.743218565], 'FDS': ['Commercial Services', 14.28442915, 4304.272, 1558.509, 5.387607033, 0.55548782], 'INTU': ['Technology Services', 12.38338034, 36786.0, 8421.0, 13.89729701, 0.581688002], 'UNP': ['Transportation', 10.27767579, 70424.0, 32822.0, 1.072164948, 0.352908145], 'XEL': ['Utilities', 2.574324367, 83955.0, 36080.0, 8.93970894, 0.187167924], 'AFL': ['Finance', 3.120079414, 116309.0, 8409.0, -9.314735563, 0.146881632], 'MET': ['Finance', 0.475038011, 745166.0, 20535.0, 8.590426281, 0.108368837], 'HUBB': ['Producer Manufacturing', 11.74808477, 8228.8, 2487.3, 3.839388825, 0.775325838], 'IRM': ['Finance', 0.725819556, 21125.019, 19053.93, 12.22502642, 0.346454183], 'LII': ['Producer Manufacturing', 20.92497858, 4081.8, 1770.7, -2.733416958, 1.349113194], 'DRI': ['Consumer Services', 8.364259108, 14653.7, 8010.6, 9.391638444, 0.910434132], 'CVS': ['Retail Trade', 0.677542605, 261064.0, 79950.0, 7.893649448, 1.540991711], 'CPRT': ['Retail Trade', 14.75511951, 10027.81, 88.367, 0.414271013, 0.463867568], 'ADM': ['Process Industries', 2.040507288, 52389.0, 9758.0, -6.042034596, 1.520632217], 'BKNG': ['Consumer Services', 18.97072246, 29264.0, 19414.0, 13.38725304, 0.944920312], 'EOG': ['Energy Minerals', 10.06213063, 51799.0, 9135.0, -3.509668626, 0.457725918], 'HUM': ['Health Services', 2.49942143, 48750.0, 12937.0, 10.10092436, 2.728976878], 'BF.B': ['Consumer Non-Durables', 8.948685857, 7894.0, 2611.0, -0.428967954, 0.493867334], 'PAYX': ['Technology Services', 10.75244513, 16174.5, 4630.3, 16.87635731, 0.397817866], 'PPG': ['Process Industries', 7.56543305, 22098.0, 7896.0, 0.189334175, 0.764489177], 'WYNN': ['Consumer Services', 2.435123042, 13500.643, 12292.054, 0.139773492, 0.531008792], 'ZBH': ['Health Technology', 3.172053895, 23091.7, 7752.1, 7.200531347, 0.370312887], 'J': ['Technology Services', 2.73092544, 11252.535, 2709.857, 4.629994792, 1.044778663], 'AMAT': ['Producer Manufacturing', 19.79408271, 36299.0, 7050.0, 4.386223138, 0.802398597], 'VRTX': ['Health Technology', 16.05901685, 26142.8, 2036.0, 9.924984524, 0.490504414], 'C': ['Finance', 0.563226093, 2662497.0, 718966.0, -1.067954919, 0.067387544], 'CMS': ['Utilities', 2.785471853, 40388.0, 18920.0, 13.62608117, 0.222083512], 'COP': ['Energy Minerals', 6.506237767, 121939.0, 24394.0, 7.511169706, 0.479848316], 'IFF': ['Consumer Non-Durables', -1.330581254, 25539.0, 6651.0, -5.172413793, 0.401385869], 'DVA': ['Health Services', 4.001041552, 18108.835, 13074.271, 6.457147762, 0.756251858], 'EXC': ['Utilities', 2.467528994, 116570.0, 50553.0, 5.341323606, 0.216247537], 'ULTA': ['Retail Trade', 16.11905484, 7679.717, 2182.061, 9.71316933, 1.73180912], 'MSCI': ['Commercial Services', 21.57007536, 5702.459, 6338.406, 9.74504644, 0.562340811], 'MA': ['Finance', 29.28069798, 54157.0, 19676.0, 16.60925459, 0.642344334], 'CMG': ['Consumer Services', 14.67980172, 10411.912, 5075.814, 5.407070429, 1.139926447], 'DXCM': ['Health Technology', 13.04232557, 6339.9, 1389.7, 15.59633028, 0.727051558], 'CBOE': ['Finance', 12.59186842, 9453.0, 1590.7, 15.13493711, 0.542204842], 'LULU': ['Consumer Non-Durables', 19.66599699, 8456.743, 1798.441, 4.858971266, 1.382637086], 'GOOGL': ['Technology Services', 25.28270162, 595281.0, 66996.0, 15.1955221, 0.770823032], 'MPWR': ['Electronic Technology', 16.12143469, 4194.199, 24.103, 26.43101808, 0.723852503], 'ALLE': ['Consumer Durables', 13.25850795, 5223.7, 2150.3, 7.82302105, 0.837625496], 'MO': ['Consumer Non-Durables', 19.73672964, 35017.0, 25709.0, -1.604382704, 0.573154401], 'TDG': ['Electronic Technology', 7.695638726, 22909.0, 30081.0, 11.29032258, 0.364243736], 'P': ['Electronic Technology', 4.35694886, 4674.259, 219.036, 15.61405912, 0.848056904], 'GNRC': ['Producer Manufacturing', 2.987060763, 5573.679, 1384.947, -2.017931792, 0.788007687], 'DLR': ['Finance', 2.76382419, 49410.468, 21413.554, 10.04009384, 0.129103989], 'KMI': ['Industrial Services', 4.165496263, 74554.0, 32219.0, 11.53055132, 0.230349203], 'PNW': ['Utilities', 2.092348674, 31682.735, 14299.632, 4.19565983, 0.181223885], 'BRK.B': ['Finance', 5.636901808, 1222176.0, 135538.0, 0.002961503, 0.312655799], 'GM': ['Consumer Durables', 0.961420207, 281284.0, 131578.0, -1.292666532, 0.659551373], 'KDP': ['Consumer Non-Durables', 3.818567532, 55459.0, 17981.0, 8.155820468, 0.30495275], 'ABBV': ['Health Technology', 3.110868345, 133960.0, 68379.0, 8.566762524, 0.454516742], 'LDOS': ['Technology Services', 10.92706486, 13493.0, 5342.0, 3.072860401, 1.296004226], 'ANET': ['Electronic Technology', 20.96826333, 19448.6, 0.0, 28.59506285, 0.537773791], 'CIEN': ['Electronic Technology', 2.143889399, 5864.667, 1625.554, 18.79353567, 0.829046644], 'ECHO': ['Communications', -27.89124937, 43016.355, 31006.514, -5.184835679, 0.288682275], 'BNY': ['Finance', 1.24926269, 472300.0, 76605.0, 2.025412002, 0.091291408], 'DUK': ['Utilities', 2.543442583, 199837.0, 91107.0, 6.19297032, 0.165075415], 'IT': ['Technology Services', 8.775305473, 8085.4, 3347.95, 3.666825105, 0.781852978], 'IQV': ['Health Technology', 4.785109864, 29944.0, 16260.0, 5.835767608, 0.57365023], 'CPAY': ['Commercial Services', 4.822819777, 26408.135, 10116.212, 13.93386838, 0.204142277], 'NRG': ['Utilities', 3.250442045, 29140.0, 16622.0, 9.117437722, 1.153530717], 'NEE': ['Utilities', 3.393196232, 212721.0, 96077.0, 8.686388593, 0.131686793], 'BKR': ['Industrial Services', 6.531724799, 40881.0, 6702.0, -0.344963887, 0.699939428], 'NDAQ': ['Finance', 5.819554745, 31053.0, 9526.0, 11.64864865, 0.268910298], 'CDW': ['Technology Services', 6.947040701, 16028.2, 6173.1, 6.78803926, 1.460539428], 'NXPI': ['Electronic Technology', 7.934046521, 26560.0, 12496.0, -2.735056286, 0.481656689], 'NTAP': ['Electronic Technology', 11.83289285, 10744.0, 2733.0, 5.3568711, 0.641999351], 'AWK': ['Utilities', 3.157326361, 36525.0, 15921.0, 9.735269001, 0.146072525], 'DPZ': ['Consumer Services', 33.25583638, 1801.414, 5048.284, 4.962969699, 2.730306466], 'KKR': ['Finance', 0.615510044, 410144.072, 54765.833, -17.99470588, 0.05267948], 'MDLZ': ['Consumer Non-Durables', 3.50182878, 71487.0, 21968.0, 5.751763124, 0.550591496], 'PANW': ['Technology Services', 0.852349236, 48460.0, 2567.0, 24.49167706, 0.318728639], 'HCA': ['Health Services', 11.28475543, 60720.0, 48697.0, 7.077602935, 1.257558241], 'STX': ['Electronic Technology', 35.38760767, 9972.0, 3898.0, 34.05518303, 1.355376493], 'PTC': ['Technology Services', 11.29164137, 6617.172, 1369.867, 19.1759569, 0.42139624], 'CMCSA': ['Consumer Services', 7.422583986, 272631.0, 105033.0, -0.019396918, 0.459158714], 'GDDY': ['Technology Services', 10.7557943, 8034.9, 3862.6, 8.327314906, 0.608446064], 'MRK': ['Health Technology', 14.37481297, 136866.0, 50534.0, 1.489690963, 0.511284709], 'IR': ['Producer Manufacturing', 3.202688187, 18297.2, 5017.5, 5.748445059, 0.421455918], 'CRM': ['Technology Services', 6.757558869, 115449.0, 17711.0, 9.579100145, 0.376300968], 'JCI': ['Producer Manufacturing', 4.268670784, 37939.0, 11190.0, 2.805855699, 0.5852618], 'CBRE': ['Finance', 4.18747738, 30877.0, 10227.0, 13.37266195, 1.467607673], 'VRSK': ['Technology Services', 17.36678075, 6195.5, 4900.4, 6.628032064, 0.587503107], 'ELV': ['Health Services', 4.750338741, 121494.0, 32706.0, 12.62089248, 1.670630876], 'AVGO': ['Electronic Technology', 13.73534836, 171092.0, 66461.0, 23.87443285, 0.379447462], 'LYV': ['Consumer Services', -0.257707731, 22912.533, 10404.386, 8.834920241, 1.184518623], 'TRV': ['Finance', 4.82767622, 135547.0, 9512.0, 5.219152696, 0.374881957], 'TSLA': ['Consumer Durables', 2.919854084, 137806.0, 14719.0, -2.93069915, 0.729786514], 'GOOG': ['Technology Services', 25.28270162, 595281.0, 66996.0, 15.1955221, 0.770823032], 'DG': ['Retail Trade', 4.870844254, 30963.73, 15718.656, 5.200544131, 1.376064495], 'DOC': ['Finance', 0.350163987, 20336.018, 10317.851, 4.520100176, 0.140164516], 'HLT': ['Consumer Services', 8.751802018, 16774.0, 13214.0, 7.231072132, 0.719726093], 'CME': ['Finance', 2.406099411, 198548.4, 3757.2, 6.370206033, 0.03879723], 'CHTR': ['Consumer Services', 3.252260507, 155497.0, 97116.0, -0.56458201, 0.357207373], 'RF': ['Finance', 1.364056233, 158814.0, 5423.0, 2.753482345, 0.060205747], 'AMP': ['Finance', 1.914011824, 190904.0, 6138.0, 5.485561378, 0.101647296], 'FIS': ['Technology Services', 1.135687953, 33488.0, 13331.0, 5.43102597, 0.317427756], 'FTNT': ['Technology Services', 18.39393022, 10389.2, 1061.8, 14.16770207, 0.674821236], 'CHRW': ['Transportation', 11.33765154, 5058.381, 1395.386, -8.418599177, 3.134855504], 'UAL': ['Transportation', 4.454896334, 76448.0, 31036.0, 3.517165238, 0.784821731], 'NCLH': ['Consumer Services', 1.991220575, 22541.401, 15536.139, 3.670398836, 0.462352944], 'IVZ': ['Finance', -1.041348985, 27094.0, 9784.5, 7.253998103, 0.238249706], 'T': ['Communications', 5.387285535, 420198.0, 158624.0, 2.707297934, 0.308341299], 'EXR': ['Finance', 3.346160753, 29264.046, 14132.292, 3.70413356, 0.116242553], 'TMUS': ['Communications', 4.802537585, 233440.0, 122269.0, 8.487714988, 0.385832689], 'LVS': ['Consumer Services', 7.641008782, 21920.0, 15971.0, 15.21508232, 0.611327666], 'LYB': ['Process Industries', -2.271000301, 34003.0, 14635.0, -9.699928126, 0.864614546], 'HPE': ['Electronic Technology', 0.077462492, 75906.0, 24077.0, 14.17121192, 0.46652805], 'PM': ['Consumer Non-Durables', 17.28042514, 69185.0, 49361.0, 7.555980049, 0.619077797], 'CF': ['Process Industries', 10.41405719, 14309.0, 3636.0, 19.33962264, 0.507032173], 'FSLR': ['Electronic Technology', 12.01170132, 13321.31, 655.335, 24.08505455, 0.410236853], 'CEG': ['Utilities', 4.20966644, 57249.0, 9497.0, 13.82965193, 0.487388246], 'UDR': ['Finance', 3.512992914, 10605.674, 6004.332, 2.420982366, 0.159261154], 'SMCI': ['Electronic Technology', 10.00068431, 30084.89, 9259.887, 77.78535104, 1.768537036], 'PODD': ['Health Technology', 7.87180835, 3190.4, 1001.9, 30.72504344, 0.862713241], 'DAL': ['Transportation', 6.044612988, 84835.0, 20274.0, 2.79188229, 0.765256458], 'NWS': ['Consumer Services', 3.691059005, 15544.0, 2915.0, 6.81495504, 0.581551147], 'IBKR': ['Finance', 0.556904426, 203240.0, 24922.0, 11.04248749, 0.059018286], 'BX': ['Finance', 6.622619171, 47708.975, 13306.165, 9.598211903, 0.29951367], 'ZTS': ['Health Technology', 17.99757608, 15467.0, 9297.0, 2.27960242, 0.637422569], 'BR': ['Technology Services', 12.8562689, 8945.3, 3517.6, 8.530867602, 0.854965324], 'VST': ['Utilities', 2.300054821, 41550.0, 20395.0, -12.41162203, 0.413522568], 'NWSA': ['Consumer Services', 3.691059005, 15544.0, 2915.0, 6.81495504, 0.581551147], 'ICE': ['Finance', 2.399435427, 136887.0, 20316.0, 10.34109367, 0.088507681], 'V': ['Finance', 20.45246165, 99627.0, 26084.0, 11.33997662, 0.412078006], 'ARES': ['Finance', 1.792289913, 28993.001, 14314.993, 46.96398833, 0.229289421], 'HPQ': ['Technology Services', 6.192610005, 41769.0, 10882.0, 4.09399635, 1.354758931], 'LITE': ['Producer Manufacturing', -120.3362774, 7307.5, 1671.2, 83.2218845, 0.522982423], 'PNR': ['Producer Manufacturing', 9.755694577, 6868.8, 1765.9, 2.282747134, 0.627248353], 'CB': ['Finance', 4.378542171, 247829.0, 22187.0, 6.980406191, 0.253904483], 'VLTO': ['Producer Manufacturing', 13.33427903, 7693.0, 2879.0, 5.969574427, 0.780622739], 'VEEV': ['Technology Services', 11.1391689, 8979.343, 95.859, 16.33615729, 0.39160385], 'CVNA': ['Retail Trade', 12.97671201, 13201.0, 5655.0, 48.62868427, 1.874290985], 'MSI': ['Electronic Technology', 12.67655367, 19389.0, 9766.0, 7.996671905, 0.6875], 'TEL': ['Electronic Technology', 7.689579639, 25081.0, 6185.0, 8.942884191, 0.720225305], 'HII': ['Electronic Technology', 4.654383198, 13227.0, 2981.0, 8.227134807, 0.96041851], 'SYF': ['Finance', 2.977892169, 119095.0, 15182.0, -7.914639433, 0.160262913], 'META': ['Technology Services', 18.8320679, 366021.0, 85081.0, 22.1670385, 0.625989176], 'MOS': ['Process Industries', 2.281237277, 24480.1, 5759.6, 8.357607797, 0.508496101], 'MPC': ['Energy Minerals', 4.873638594, 85560.0, 34358.0, -4.313549961, 1.59772893], 'KEYS': ['Electronic Technology', 8.449197861, 11301.0, 2778.0, 7.953404298, 0.522605737], 'XYL': ['Producer Manufacturing', 5.608462508, 17634.0, 2509.0, 5.465374285, 0.529258358], 'EXPE': ['Consumer Services', 5.525192143, 24452.0, 6476.0, 7.610839237, 0.629077711], 'COIN': ['Finance', 4.744849517, 30109.14, 7831.459, 9.404240811, 0.270360839], 'FANG': ['Energy Minerals', 2.393911139, 71059.0, 14879.0, 35.78528827, 0.217215633], 'CFG': ['Finance', 0.825012616, 226351.0, 12324.0, -1.814335693, 0.054376036], 'PSX': ['Energy Minerals', 6.008395892, 73680.0, 21586.0, -7.636356014, 1.807564508], 'NOW': ['Technology Services', 7.531074298, 26038.0, 2403.0, 20.88492353, 0.572068676], 'WDAY': ['Technology Services', 3.8069602, 18430.0, 3821.0, 13.28422053, 0.523745434], 'STE': ['Health Technology', 7.491855851, 10737.2, 2087.1, 8.725775092, 0.568463596], 'PYPL': ['Commercial Services', 6.586615313, 80173.0, 12096.0, 4.872754726, 0.419615099], 'KHC': ['Consumer Non-Durables', -6.874694984, 81786.0, 21772.0, -3.497639867, 0.293309344], 'XYZ': ['Commercial Services', 3.421142597, 39549.887, 8966.376, 0.301106258, 0.633944219], 'FTV': ['Electronic Technology', 3.705249393, 11737.7, 3306.6, 1.916243966, 0.289290459], 'CRH': ['Non-Energy Minerals', 6.847680417, 58329.0, 19705.0, 5.270999664, 0.687466725], 'HWM': ['Electronic Technology', 13.89989861, 11179.0, 3213.0, 11.06325707, 0.760623099], 'INVH': ['Finance', 3.140420084, 18680.29, 8429.026, 2.412909125, 0.147653471], 'FERG': ['Distribution Services', 10.82184193, 17729.0, 5966.0, 3.802935717, 1.793650331], 'SW': ['Process Industries', 1.572270458, 45157.0, 14868.0, 47.70477048, 0.701313599], 'VICI': ['Finance', 6.027580261, 46724.168, 17689.74, 4.076452151, 0.087001429], 'APTV': ['Producer Manufacturing', 0.70406008, 23413.0, 8094.0, 3.474864303, 0.87038894], 'MRNA': ['Health Technology', -21.3141994, 12338.0, 1305.0, -39.92583436, 0.146827795], 'BE': ['Electronic Technology', -2.462152692, 4462.57, 2995.8, 37.32644166, 0.56351429], 'VRT': ['Electronic Technology', 12.48822904, 12212.4, 3227.9, 27.68541401, 0.95853342], 'DOW': ['Process Industries', -4.547259387, 58538.0, 19598.0, -6.973279955, 0.689995684], 'LIN': ['Process Industries', 8.262859059, 86817.0, 28069.0, 2.972276928, 0.407105723], 'DELL': ['Electronic Technology', 6.557956604, 101286.0, 32230.0, 19.12493322, 1.256407707], 'FOX': ['Consumer Services', 7.377892594, 22482.0, 7568.0, 5.067484663, 0.749874116], 'FOXA': ['Consumer Services', 7.377892594, 22482.0, 7568.0, 5.067484663, 0.749874116], 'UBER': ['Transportation', 17.78568017, 61802.0, 12302.0, 18.27959434, 0.92028024], 'CTVA': ['Process Industries', 2.851679216, 42845.0, 2995.0, 2.915779513, 0.415943588], 'CRWD': ['Technology Services', -1.642408009, 11086.684, 820.077, 21.71124518, 0.486349433], 'AMCR': ['Process Industries', 2.982699802, 37095.0, 15080.0, 56.62313433, 0.633918097], 'VTRS': ['Health Technology', -8.933082573, 37193.1, 14701.4, -2.831464952, 0.363260223], 'DDOG': ['Technology Services', 1.733677909, 6643.844, 1279.005, 27.67536858, 0.551469554], 'PSKY': ['Consumer Services', -1.387492459, 43342.0, 15092.0, -1.102248999, 0.645507965], 'CARR': ['Producer Manufacturing', 3.901170351, 37190.0, 12393.0, -3.286489371, 0.583084204], 'OTIS': ['Industrial Services', 12.59957212, 10653.0, 8511.0, 1.192062268, 1.313760299], 'PLTR': ['Technology Services', 21.32410698, 8900.392, 229.338, 56.18339093, 0.5872797], 'DASH': ['Transportation', 5.753138075, 19659.0, 3290.0, 27.93322141, 0.844019198], 'ABNB': ['Consumer Services', 11.633887, 22208.0, 2271.0, 10.83588543, 0.570111428], 'EXE': ['Energy Minerals', 6.475498834, 28287.0, 5060.0, 173.7485311, 0.41465976], 'APP': ['Technology Services', 52.29265369, 7259.61, 3544.741, 69.99436735, 0.83491076], 'HOOD': ['Finance', 5.854735402, 38137.0, 15629.0, 51.42857143, 0.140072135], 'GEHC': ['Health Technology', 5.954711051, 36906.0, 10463.0, 4.844448963, 0.589327809], 'TKO': ['Consumer Services', 1.276826545, 15495.821, 4063.035, -3.052470179, 0.309410116], 'WBD': ['Consumer Services', 0.711475971, 100085.0, 36761.0, -5.02328422, 0.364758484], 'KVUE': ['Consumer Non-Durables', 5.581183439, 27076.0, 8674.0, -2.154503106, 0.574178484], 'COO': ['Health Technology', 3.034399029, 12394.8, 2783.6, 5.057247009, 0.331234318], 'RDDT': ['Technology Services', 19.00082643, 3239.173, 23.214, 69.39682589, 0.790027849], 'GEV': ['Producer Manufacturing', 8.530929861, 63016.0, 1196.0, 8.925965143, 0.664832622], 'SOLV': ['Health Services', 10.82397134, 14294.0, 5247.0, 0.860188999, 0.579110292], 'SNDK': ['Electronic Technology', 64.42578609, 22507.0, 201.0, 175.2957172, 1.140989519], 'Q': ['Electronic Technology', 5.253767604, 14070.0, 4525.0, 9.665513264, 0.360930798], 'CCL': ['Consumer Services', 5.479234495, 51687.0, 27993.0, 6.398625155, 0.528507901], 'FDXF': ['Transportation', 11.0028557, 6884.0, 6365.0, -1.090868196, 1.47740635], 'DD': ['Process Industries', 0.195839274, 21575.0, 3411.0, 1.934811728, 0.235316349], 'OKE': ['Industrial Services', 4.933191817, 69848.0, 33053.0, 55.17145762, 0.488172262]}\n\n_ref_base_cols = [\n    \"Ticker\",\n    \"Sector\",\n    \"ROA\",\n    \"Total_Assets\",\n    \"Total_Debt\",\n    \"Sales_Growth\",\n    \"Asset_Turnover\",\n]\n\n_ref_numeric_cols = [\n    \"ROA\",\n    \"Total_Assets\",\n    \"Total_Debt\",\n    \"Sales_Growth\",\n    \"Asset_Turnover\",\n]\n\n_ref_continuous_names = [\n    \"Size\",\n    \"Leverage\",\n    \"Sales_Growth\",\n    \"Asset_Turnover\",\n]\n\n\n# ------------------------------------------------------------\n# Ticker normalization\n# ------------------------------------------------------------\n\ndef _norm_ticker(x):\n\n    s = str(x).strip().upper()\n\n    if s.endswith(\"-USA\"):\n        s = s[:-4]\n\n    elif s.endswith(\"-US\"):\n        s = s[:-3]\n\n    return s\n\n\n# ------------------------------------------------------------\n# Validate the student's FactSet dataset\n# ------------------------------------------------------------\n\ndef _validate_student_data(df):\n\n    try:\n\n        # Must be a DataFrame.\n        if not isinstance(df, pd.DataFrame):\n            return False\n\n\n        # FactSet may return slightly different constituent\n        # counts depending on interface/date.\n        if len(df) < 490 or len(df) > 510:\n            return False\n\n\n        # The original seven variables must appear first and\n        # in the required order. Additional columns are allowed.\n        if list(df.columns[:7]) != _ref_base_cols:\n            return False\n\n\n        d = df[_ref_base_cols].copy()\n\n\n        # Ticker and Sector must be available.\n        if d[\"Ticker\"].isna().any():\n            return False\n\n        if d[\"Sector\"].isna().any():\n            return False\n\n\n        # Convert accounting variables to numeric.\n        for c in _ref_numeric_cols:\n\n            d[c] = pd.to_numeric(\n                d[c],\n                errors=\"coerce\"\n            )\n\n\n        # The final analysis dataset should contain complete\n        # observations.\n        if d[_ref_numeric_cols].isna().any().any():\n            return False\n\n\n        # Normalize ticker format.\n        d[\"_key\"] = (\n            d[\"Ticker\"]\n            .map(_norm_ticker)\n        )\n\n\n        # No duplicate firms after ticker normalization.\n        if d[\"_key\"].duplicated().any():\n            return False\n\n\n        # ----------------------------------------------------\n        # Match firms against the instructor FactSet snapshot.\n        # ----------------------------------------------------\n\n        matched = d[\n            d[\"_key\"].isin(_ref_snapshot)\n        ].copy()\n\n\n        match_ratio = (\n            len(matched)\n            /\n            len(d)\n        )\n\n\n        # Small changes in index composition are allowed.\n        if match_ratio < 0.95:\n            return False\n\n\n        # ----------------------------------------------------\n        # Validate FactSet values for matching firms.\n        #\n        # We do NOT require every single observation to be\n        # identical because FactSet is a live database.\n        # ----------------------------------------------------\n\n        sector_ok = []\n\n        numeric_ok = {\n            c: []\n            for c in _ref_numeric_cols\n        }\n\n\n        for _, row in matched.iterrows():\n\n            refrow = _ref_snapshot[\n                row[\"_key\"]\n            ]\n\n\n            sector_ok.append(\n                str(row[\"Sector\"]).strip()\n                ==\n                str(refrow[0]).strip()\n            )\n\n\n            for j, c in enumerate(\n                _ref_numeric_cols,\n                start=1\n            ):\n\n                numeric_ok[c].append(\n\n                    np.isclose(\n                        float(row[c]),\n                        float(refrow[j]),\n                        rtol=0.01,\n                        atol=0.05\n                    )\n                )\n\n\n        # Sector should agree for at least 95% of matched firms.\n        if np.mean(sector_ok) < 0.95:\n            return False\n\n\n        # Each FactSet accounting variable should agree for at\n        # least 95% of matched firms.\n        for values in numeric_ok.values():\n\n            if np.mean(values) < 0.95:\n                return False\n\n\n        return True\n\n\n    except Exception:\n\n        return False\n\n\n# ------------------------------------------------------------\n# Calculate the correct answer from the student's own dataset\n# ------------------------------------------------------------\n\ndef _expected_from_student_data(df):\n\n    # ========================================================\n    # DATA\n    # ========================================================\n\n    d = df[\n        _ref_base_cols\n    ].copy()\n\n\n    for c in _ref_numeric_cols:\n\n        d[c] = pd.to_numeric(\n            d[c],\n            errors=\"coerce\"\n        )\n\n\n    d = d.dropna(\n        subset=_ref_base_cols\n    ).copy()\n\n\n    # ========================================================\n    # CONSTRUCT VARIABLES\n    # ========================================================\n\n    d[\"Size\"] = np.log(\n        d[\"Total_Assets\"]\n    )\n\n\n    d[\"Leverage\"] = (\n        d[\"Total_Debt\"]\n        /\n        d[\"Total_Assets\"]\n    )\n\n\n    # ========================================================\n    # SECTOR DUMMIES\n    # Finance = reference category\n    # ========================================================\n\n    sector_dummies = pd.get_dummies(\n        d[\"Sector\"],\n        dtype=float\n    )\n\n\n    if \"Finance\" not in sector_dummies.columns:\n\n        raise ValueError(\n            \"Finance is not present in Sector.\"\n        )\n\n\n    sector_dummies = (\n        sector_dummies\n        .drop(columns=[\"Finance\"])\n    )\n\n\n    # Explicit alphabetical order.\n    sector_dummies = sector_dummies[\n        sorted(sector_dummies.columns)\n    ]\n\n\n    sector_names = (\n        sector_dummies\n        .columns\n        .tolist()\n    )\n\n\n    continuous_names = [\n        \"Size\",\n        \"Leverage\",\n        \"Sales_Growth\",\n        \"Asset_Turnover\",\n    ]\n\n\n    expected_coef_names = (\n        [\"Intercept\"]\n        +\n        continuous_names\n        +\n        sector_names\n    )\n\n\n    # ========================================================\n    # FULL MODEL\n    # ========================================================\n\n    y = d[\n        \"ROA\"\n    ].to_numpy(\n        dtype=float\n    )\n\n\n    X = np.column_stack(\n        [\n            np.ones(len(d)),\n\n            d[\n                continuous_names\n            ].to_numpy(\n                dtype=float\n            ),\n\n            sector_dummies.to_numpy(\n                dtype=float\n            ),\n        ]\n    )\n\n\n    T, k = X.shape\n\n\n    XtX_inv = np.linalg.inv(\n        X.T @ X\n    )\n\n\n    expected_beta = (\n        XtX_inv\n        @ X.T\n        @ y\n    )\n\n\n    residuals = (\n        y\n        -\n        X @ expected_beta\n    )\n\n\n    RSS = float(\n        residuals\n        @ residuals\n    )\n\n\n    TSS = float(\n        (\n            (y - y.mean()) ** 2\n        ).sum()\n    )\n\n\n    df_resid = (\n        T - k\n    )\n\n\n    # ========================================================\n    # CLASSICAL INFERENCE\n    # ========================================================\n\n    sigma2 = (\n        RSS\n        /\n        df_resid\n    )\n\n\n    cov_classical = (\n        sigma2\n        *\n        XtX_inv\n    )\n\n\n    expected_se = np.sqrt(\n        np.diag(\n            cov_classical\n        )\n    )\n\n\n    expected_t = (\n        expected_beta\n        /\n        expected_se\n    )\n\n\n    expected_p = (\n        2\n        *\n        stats.t.sf(\n            np.abs(expected_t),\n            df=df_resid\n        )\n    )\n\n\n    # ========================================================\n    # MODEL FIT\n    # ========================================================\n\n    expected_R2 = (\n        1\n        -\n        RSS / TSS\n    )\n\n\n    expected_Adj_R2 = (\n\n        1\n        -\n        (1 - expected_R2)\n        *\n        (T - 1)\n        /\n        (T - k)\n    )\n\n\n    expected_F_overall = (\n\n        (\n            expected_R2\n            /\n            (k - 1)\n        )\n\n        /\n\n        (\n            (1 - expected_R2)\n            /\n            (T - k)\n        )\n    )\n\n\n    expected_p_F_overall = (\n        stats.f.sf(\n            expected_F_overall,\n            k - 1,\n            T - k\n        )\n    )\n\n\n    # ========================================================\n    # RESTRICTED MODEL\n    #\n    # H0: all sector coefficients = 0\n    # ========================================================\n\n    X_restricted = np.column_stack(\n        [\n            np.ones(T),\n\n            d[\n                continuous_names\n            ].to_numpy(\n                dtype=float\n            ),\n        ]\n    )\n\n\n    k_r = (\n        X_restricted.shape[1]\n    )\n\n\n    beta_r = (\n\n        np.linalg.inv(\n            X_restricted.T\n            @ X_restricted\n        )\n\n        @ X_restricted.T\n        @ y\n    )\n\n\n    u_r = (\n        y\n        -\n        X_restricted\n        @ beta_r\n    )\n\n\n    RSS_r = float(\n        u_r\n        @ u_r\n    )\n\n\n    expected_R2_r = (\n        1\n        -\n        RSS_r / TSS\n    )\n\n\n    expected_Adj_R2_r = (\n\n        1\n        -\n        (1 - expected_R2_r)\n        *\n        (T - 1)\n        /\n        (T - k_r)\n    )\n\n\n    m_restrictions = (\n        k\n        -\n        k_r\n    )\n\n\n    expected_F_joint = (\n\n        (\n            (RSS_r - RSS)\n            /\n            m_restrictions\n        )\n\n        /\n\n        (\n            RSS\n            /\n            (T - k)\n        )\n    )\n\n\n    expected_p_F_joint = (\n        stats.f.sf(\n            expected_F_joint,\n            m_restrictions,\n            T - k\n        )\n    )\n\n\n    # ========================================================\n    # WHITE TEST\n    #\n    # Four continuous regressors:\n    # levels + squares + pairwise cross-products\n    # ========================================================\n\n    C = d[\n        continuous_names\n    ].to_numpy(\n        dtype=float\n    )\n\n\n    white_cols = [\n        np.ones(T)\n    ]\n\n\n    # Levels.\n    for j in range(\n        C.shape[1]\n    ):\n\n        white_cols.append(\n            C[:, j]\n        )\n\n\n    # Squares.\n    for j in range(\n        C.shape[1]\n    ):\n\n        white_cols.append(\n            C[:, j] ** 2\n        )\n\n\n    # Pairwise cross-products.\n    for j in range(\n        C.shape[1]\n    ):\n\n        for l in range(\n            j + 1,\n            C.shape[1]\n        ):\n\n            white_cols.append(\n                C[:, j]\n                *\n                C[:, l]\n            )\n\n\n    Z = np.column_stack(\n        white_cols\n    )\n\n\n    u2 = (\n        residuals ** 2\n    )\n\n\n    gamma = np.linalg.lstsq(\n        Z,\n        u2,\n        rcond=None\n    )[0]\n\n\n    white_resid = (\n        u2\n        -\n        Z @ gamma\n    )\n\n\n    white_TSS = float(\n        (\n            (u2 - u2.mean()) ** 2\n        ).sum()\n    )\n\n\n    white_R2 = (\n\n        1\n        -\n        float(\n            white_resid\n            @ white_resid\n        )\n        /\n        white_TSS\n    )\n\n\n    expected_white_LM = (\n        T\n        *\n        white_R2\n    )\n\n\n    white_df = (\n        Z.shape[1]\n        -\n        1\n    )\n\n\n    expected_white_p = (\n        stats.chi2.sf(\n            expected_white_LM,\n            white_df\n        )\n    )\n\n\n    # ========================================================\n    # WHITE / HC0 ROBUST INFERENCE\n    # ========================================================\n\n    meat = (\n\n        X.T\n\n        @\n\n        (\n            (residuals ** 2)[:, None]\n            *\n            X\n        )\n    )\n\n\n    cov_robust = (\n\n        XtX_inv\n        @ meat\n        @ XtX_inv\n    )\n\n\n    expected_robust_se = np.sqrt(\n        np.diag(\n            cov_robust\n        )\n    )\n\n\n    expected_robust_t = (\n        expected_beta\n        /\n        expected_robust_se\n    )\n\n\n    expected_robust_p = (\n\n        2\n        *\n        stats.t.sf(\n            np.abs(\n                expected_robust_t\n            ),\n            df=df_resid\n        )\n    )\n\n\n    # ========================================================\n    # NON-NORMALITY\n    # ========================================================\n\n    expected_skewness = stats.skew(\n        residuals,\n        bias=False\n    )\n\n\n    expected_kurtosis = stats.kurtosis(\n        residuals,\n        fisher=False,\n        bias=False\n    )\n\n\n    expected_JB = (\n\n        T / 6\n\n        *\n\n        (\n            expected_skewness ** 2\n\n            +\n\n            (\n                (\n                    expected_kurtosis\n                    -\n                    3\n                ) ** 2\n            )\n\n            / 4\n        )\n    )\n\n\n    expected_JB_p = (\n        stats.chi2.sf(\n            expected_JB,\n            2\n        )\n    )\n\n\n    # ========================================================\n    # VIF\n    #\n    # Four continuous regressors, conditioning on all\n    # remaining regressors including sector dummies.\n    # ========================================================\n\n    expected_vif = []\n\n\n    for idx in range(\n        1,\n        5\n    ):\n\n        xj = X[:, idx]\n\n\n        X_other = np.delete(\n            X,\n            idx,\n            axis=1\n        )\n\n\n        bj = np.linalg.lstsq(\n            X_other,\n            xj,\n            rcond=None\n        )[0]\n\n\n        ej = (\n            xj\n            -\n            X_other @ bj\n        )\n\n\n        r2j = (\n\n            1\n            -\n            float(\n                ej @ ej\n            )\n\n            /\n\n            float(\n                (\n                    (xj - xj.mean()) ** 2\n                ).sum()\n            )\n        )\n\n\n        expected_vif.append(\n            1\n            /\n            (1 - r2j)\n        )\n\n\n    expected_vif = np.asarray(\n        expected_vif,\n        dtype=float\n    )\n\n\n    # ========================================================\n    # RETURN EXPECTED RESULTS\n    # ========================================================\n\n    return {\n        \"coef_names\": expected_coef_names,\n        \"beta\": expected_beta,\n        \"se\": expected_se,\n        \"t\": expected_t,\n        \"p\": expected_p,\n        \"R2\": expected_R2,\n        \"Adj_R2\": expected_Adj_R2,\n        \"F_overall\": expected_F_overall,\n        \"p_F_overall\": expected_p_F_overall,\n        \"R2_r\": expected_R2_r,\n        \"Adj_R2_r\": expected_Adj_R2_r,\n        \"F_joint\": expected_F_joint,\n        \"p_F_joint\": expected_p_F_joint,\n        \"white_LM\": expected_white_LM,\n        \"white_p\": expected_white_p,\n        \"robust_se\": expected_robust_se,\n        \"robust_t\": expected_robust_t,\n        \"robust_p\": expected_robust_p,\n        \"skewness\": expected_skewness,\n        \"kurtosis\": expected_kurtosis,\n        \"JB\": expected_JB,\n        \"JB_p\": expected_JB_p,\n        \"vif\": expected_vif,\n    }\n", "imports": [], "exports": [], "required_outputs": ["data", "coef_names", "beta", "se", "t_stat", "p_value", "R2", "Adj_R2", "F_overall", "p_F_overall", "R2_restricted", "Adj_R2_restricted", "F_joint", "p_F_joint", "white_LM", "white_p", "robust_se", "robust_t", "robust_p", "skewness", "kurtosis", "JB", "JB_p", "vif"], "blocked_packages": ["statsmodels", "sklearn", "linearmodels", "pingouin"], "starter_code": "import numpy as np\nimport pandas as pd\nfrom scipy import stats\n\n# Write your code below.\n", "max_points": 10.0, "tests": [{"name": "FactSet dataset", "group": "Data acquisition and preparation", "points": 0.5, "code": "\n\ntry:\n\n    passed = (\n        _validate_student_data(\n            data\n        )\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Coefficient names", "group": "Data acquisition and preparation", "points": 0.5, "code": "\n\ntry:\n\n    _e = (\n        _expected_from_student_data(\n            data\n        )\n    )\n\n    passed = (\n        list(coef_names)\n        ==\n        _e[\"coef_names\"]\n    )\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Constructed variables", "group": "Data acquisition and preparation", "points": 0.5, "code": "\n\ntry:\n\n    _base = data[\n        _ref_base_cols\n    ].copy()\n\n\n    for _c in _ref_numeric_cols:\n\n        _base[_c] = pd.to_numeric(\n            _base[_c],\n            errors=\"coerce\"\n        )\n\n\n    _expected_size = np.log(\n        _base[\"Total_Assets\"]\n        .to_numpy(dtype=float)\n    )\n\n\n    _expected_leverage = (\n\n        _base[\"Total_Debt\"]\n        .to_numpy(dtype=float)\n\n        /\n\n        _base[\"Total_Assets\"]\n        .to_numpy(dtype=float)\n    )\n\n\n    passed = (\n\n        \"Size\" in data.columns\n\n        and\n\n        \"Leverage\" in data.columns\n\n        and\n\n        np.allclose(\n            np.asarray(\n                data[\"Size\"],\n                dtype=float\n            ),\n            _expected_size,\n            rtol=1e-7,\n            atol=1e-9\n        )\n\n        and\n\n        np.allclose(\n            np.asarray(\n                data[\"Leverage\"],\n                dtype=float\n            ),\n            _expected_leverage,\n            rtol=1e-7,\n            atol=1e-9\n        )\n    )\n\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "OLS coefficients", "group": "OLS estimation", "points": 1.0, "code": "\n\ntry:\n\n    _e = (\n        _expected_from_student_data(\n            data\n        )\n    )\n\n\n    passed = np.allclose(\n\n        np.asarray(\n            beta,\n            dtype=float\n        ).reshape(-1),\n\n        _e[\"beta\"],\n\n        rtol=1e-6,\n        atol=1e-8\n    )\n\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Classical standard errors", "group": "OLS estimation", "points": 0.5, "code": "\n\ntry:\n\n    _e = (\n        _expected_from_student_data(\n            data\n        )\n    )\n\n\n    passed = np.allclose(\n\n        np.asarray(\n            se,\n            dtype=float\n        ).reshape(-1),\n\n        _e[\"se\"],\n\n        rtol=1e-6,\n        atol=1e-8\n    )\n\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Individual inference", "group": "Individual inference", "points": 1.0, "code": "\n\ntry:\n\n    _e = (\n        _expected_from_student_data(\n            data\n        )\n    )\n\n\n    passed = (\n\n        np.allclose(\n\n            np.asarray(\n                t_stat,\n                dtype=float\n            ).reshape(-1),\n\n            _e[\"t\"],\n\n            rtol=1e-6,\n            atol=1e-8\n        )\n\n        and\n\n        np.allclose(\n\n            np.asarray(\n                p_value,\n                dtype=float\n            ).reshape(-1),\n\n            _e[\"p\"],\n\n            rtol=1e-5,\n            atol=1e-10\n        )\n    )\n\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "R-squared and adjusted R-squared", "group": "Model fit and overall F-test", "points": 0.5, "code": "\n\ntry:\n\n    _e = (\n        _expected_from_student_data(\n            data\n        )\n    )\n\n\n    passed = (\n\n        np.isclose(\n            float(R2),\n            _e[\"R2\"],\n            rtol=1e-7\n        )\n\n        and\n\n        np.isclose(\n            float(Adj_R2),\n            _e[\"Adj_R2\"],\n            rtol=1e-7\n        )\n    )\n\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Overall F-test", "group": "Model fit and overall F-test", "points": 1.0, "code": "\n\ntry:\n\n    _e = (\n        _expected_from_student_data(\n            data\n        )\n    )\n\n\n    passed = (\n\n        np.isclose(\n            float(F_overall),\n            _e[\"F_overall\"],\n            rtol=1e-6\n        )\n\n        and\n\n        np.isclose(\n            float(p_F_overall),\n            _e[\"p_F_overall\"],\n            rtol=1e-4,\n            atol=1e-20\n        )\n    )\n\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Restricted model fit", "group": "Joint hypothesis test", "points": 0.5, "code": "\n\ntry:\n\n    _e = (\n        _expected_from_student_data(\n            data\n        )\n    )\n\n\n    passed = (\n\n        np.isclose(\n            float(R2_restricted),\n            _e[\"R2_r\"],\n            rtol=1e-7\n        )\n\n        and\n\n        np.isclose(\n            float(Adj_R2_restricted),\n            _e[\"Adj_R2_r\"],\n            rtol=1e-7\n        )\n    )\n\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Joint F-test", "group": "Joint hypothesis test", "points": 1.0, "code": "\n\ntry:\n\n    _e = (\n        _expected_from_student_data(\n            data\n        )\n    )\n\n\n    passed = (\n\n        np.isclose(\n            float(F_joint),\n            _e[\"F_joint\"],\n            rtol=1e-6\n        )\n\n        and\n\n        np.isclose(\n            float(p_F_joint),\n            _e[\"p_F_joint\"],\n            rtol=1e-5,\n            atol=1e-12\n        )\n    )\n\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "White test", "group": "Heteroskedasticity and robust inference", "points": 0.75, "code": "\n\ntry:\n\n    _e = (\n        _expected_from_student_data(\n            data\n        )\n    )\n\n\n    passed = (\n\n        np.isclose(\n            float(white_LM),\n            _e[\"white_LM\"],\n            rtol=1e-5\n        )\n\n        and\n\n        np.isclose(\n            float(white_p),\n            _e[\"white_p\"],\n            rtol=1e-4,\n            atol=1e-15\n        )\n    )\n\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "White robust standard errors", "group": "Heteroskedasticity and robust inference", "points": 0.75, "code": "\n\ntry:\n\n    _e = (\n        _expected_from_student_data(\n            data\n        )\n    )\n\n\n    passed = np.allclose(\n\n        np.asarray(\n            robust_se,\n            dtype=float\n        ).reshape(-1),\n\n        _e[\"robust_se\"],\n\n        rtol=1e-5,\n        atol=1e-8\n    )\n\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Robust inference", "group": "Heteroskedasticity and robust inference", "points": 0.5, "code": "\n\ntry:\n\n    _e = (\n        _expected_from_student_data(\n            data\n        )\n    )\n\n\n    passed = (\n\n        np.allclose(\n\n            np.asarray(\n                robust_t,\n                dtype=float\n            ).reshape(-1),\n\n            _e[\"robust_t\"],\n\n            rtol=1e-5,\n            atol=1e-8\n        )\n\n        and\n\n        np.allclose(\n\n            np.asarray(\n                robust_p,\n                dtype=float\n            ).reshape(-1),\n\n            _e[\"robust_p\"],\n\n            rtol=1e-4,\n            atol=1e-10\n        )\n    )\n\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Jarque-Bera diagnostics", "group": "Non-normality and multicollinearity", "points": 0.5, "code": "\n\ntry:\n\n    _e = (\n        _expected_from_student_data(\n            data\n        )\n    )\n\n\n    passed = (\n\n        np.isclose(\n            float(skewness),\n            _e[\"skewness\"],\n            rtol=1e-5\n        )\n\n        and\n\n        np.isclose(\n            float(kurtosis),\n            _e[\"kurtosis\"],\n            rtol=1e-5\n        )\n\n        and\n\n        np.isclose(\n            float(JB),\n            _e[\"JB\"],\n            rtol=1e-4\n        )\n\n        and\n\n        np.isclose(\n            float(JB_p),\n            _e[\"JB_p\"],\n            rtol=1e-4,\n            atol=1e-300\n        )\n    )\n\n\nexcept Exception:\n\n    passed = False\n\n"}, {"name": "Variance inflation factors", "group": "Non-normality and multicollinearity", "points": 0.5, "code": "\n\ntry:\n\n    _e = (\n        _expected_from_student_data(\n            data\n        )\n    )\n\n\n    passed = np.allclose(\n\n        np.asarray(\n            vif,\n            dtype=float\n        ).reshape(-1),\n\n        _e[\"vif\"],\n\n        rtol=1e-5,\n        atol=1e-8\n    )\n\n\nexcept Exception:\n\n    passed = False\n\n"}]}], "subtitle": "Multiple Regression · Model Fit · Diagnostics · Robust Inference", "instructions": "\n\n<p>\nIn this practice you will estimate and diagnose a multiple regression\nmodel using cross-sectional firm data from the S&amp;P 500.\n<\/p>\n\n\n<h3>Data collection in FactSet<\/h3>\n\n<p>\nUsing FactSet, obtain the current S&amp;P 500 constituents and collect\nthe following information for each firm. For the accounting variables,\nuse data from the <strong>last completed fiscal year<\/strong>.\n<\/p>\n\n\n<table style=\"\nborder-collapse:collapse;\nmargin:14px 0 18px;\nwidth:100%;\nmax-width:650px;\n\">\n\n<tr>\n\n<th style=\"\ntext-align:left;\nborder-bottom:1px solid #D9DEE7;\npadding:7px 10px;\n\">\nVariable\n<\/th>\n\n<th style=\"\ntext-align:left;\nborder-bottom:1px solid #D9DEE7;\npadding:7px 10px;\n\">\nFactSet field\n<\/th>\n\n<\/tr>\n\n\n<tr>\n<td style=\"padding:6px 10px;\">Ticker<\/td>\n<td style=\"padding:6px 10px;\">S&amp;P 500 constituents<\/td>\n<\/tr>\n\n\n<tr>\n<td style=\"padding:6px 10px;\">Sector<\/td>\n<td style=\"padding:6px 10px;\"><code>FG_FACTSET_SECTOR<\/code><\/td>\n<\/tr>\n\n\n<tr>\n<td style=\"padding:6px 10px;\">Return on Assets<\/td>\n<td style=\"padding:6px 10px;\"><code>FF_ROA<\/code><\/td>\n<\/tr>\n\n\n<tr>\n<td style=\"padding:6px 10px;\">Total Assets<\/td>\n<td style=\"padding:6px 10px;\"><code>FF_ASSETS<\/code><\/td>\n<\/tr>\n\n\n<tr>\n<td style=\"padding:6px 10px;\">Total Debt<\/td>\n<td style=\"padding:6px 10px;\"><code>FF_DEBT<\/code><\/td>\n<\/tr>\n\n\n<tr>\n<td style=\"padding:6px 10px;\">Sales Growth<\/td>\n<td style=\"padding:6px 10px;\"><code>FF_SALES_GR<\/code><\/td>\n<\/tr>\n\n\n<tr>\n<td style=\"padding:6px 10px;\">Asset Turnover<\/td>\n<td style=\"padding:6px 10px;\"><code>FF_ASSET_TURN<\/code><\/td>\n<\/tr>\n\n<\/table>\n\n\n<p>\nYou may organize and export the data from FactSet in any way you\nprefer. You may upload <strong>one CSV file or multiple CSV files<\/strong>.\nFilenames are not prescribed. Your Python code should read the uploaded\nfile(s) and construct the required dataset.\n<\/p>\n\n\n<p>\nYou may use <code>numpy<\/code>, <code>pandas<\/code> and\n<code>scipy<\/code>. Packages that estimate regression models directly,\nincluding <code>statsmodels<\/code>, <code>sklearn<\/code> and\n<code>linearmodels<\/code>, are not allowed.\n<\/p>\n\n", "presentation": {"seed": 20260922, "groups": {"1": {"topic": "Data Preparation & Model Specification", "members": [{"student_id": "202203982", "name": "Adrián López Lamata", "email": "202203982@alu.comillas.edu"}, {"student_id": "202211957", "name": "Adrián Muñoz Borbón", "email": "202211957@alu.comillas.edu"}, {"student_id": "202201639", "name": "Álvaro Revuelta Goicoechea", "email": "202201639@alu.comillas.edu"}, {"student_id": "201902403", "name": "Rafael Rius Matas", "email": "201902403@alu.comillas.edu"}, {"student_id": "202206527", "name": "Guillermo Sánchez Lanuza", "email": "202206527@alu.comillas.edu"}], "task": "<ul><li>Explain the main data preparation and transformations used in the analysis.<\/li><li>Present the final regression specification and explain the economic rationale for the explanatory variables.<\/li><li>Explain how Sector enters the model and interpret the role of the reference category.<\/li><\/ul>", "time_limit": "5 minutes"}, "2": {"topic": "Parameter Estimates & Individual Significance", "members": [{"student_id": "202214547", "name": "Almudena López Azcoitia", "email": "202214547@alu.comillas.edu"}, {"student_id": "202205653", "name": "Javier López-Montenegro Rodríguez", "email": "202205653@alu.comillas.edu"}, {"student_id": "202205654", "name": "Juan Rodríguez-Palacios San Nicolás", "email": "202205654@alu.comillas.edu"}, {"student_id": "202630675", "name": "Mariana Sofia Solano", "email": "202630675@alu.comillas.edu"}, {"student_id": "202203713", "name": "Alejandro Torres Faba", "email": "202203713@alu.comillas.edu"}], "task": "<ul><li>Economically interpret the estimated coefficients of the full model.<\/li><li>Assess the individual statistical significance of the coefficients using t-statistics and p-values.<\/li><li>Distinguish economic interpretation from statistical significance.<\/li><\/ul>", "time_limit": "5 minutes"}, "3": {"topic": "Model Fit & Joint Hypothesis Testing", "members": [{"student_id": "202204302", "name": "Luis Martínez Puchol", "email": "202204302@alu.comillas.edu"}, {"student_id": "202204645", "name": "María Cecilia Pardos Dobón", "email": "202204645@alu.comillas.edu"}, {"student_id": "202202349", "name": "Joaquin Pastor Frutos", "email": "202202349@alu.comillas.edu"}, {"student_id": "202202295", "name": "Claudia Ruiz de Alegría Marín", "email": "202202295@alu.comillas.edu"}, {"student_id": "202638373", "name": "Kristian Zak", "email": "202638373@alu.comillas.edu"}], "task": "<ul><li>Interpret R-squared and adjusted R-squared for the full model.<\/li><li>Present and interpret the overall F-test of the full model.<\/li><li>Compare R-squared and adjusted R-squared for the unrestricted and restricted models.<\/li><li>Present and interpret the joint F-test that all sector coefficients are zero, and explain how it differs from the overall F-test.<\/li><\/ul>", "time_limit": "5 minutes"}, "4": {"topic": "Heteroskedasticity: Diagnosis & Robust Inference", "members": [{"student_id": "202207420", "name": "Beatriz Díaz Shaw", "email": "202207420@alu.comillas.edu"}, {"student_id": "202201340", "name": "Sara Foncueva Cuerpo", "email": "202201340@alu.comillas.edu"}, {"student_id": "202213819", "name": "Ignacio García García de Viedma", "email": "202213819@alu.comillas.edu"}, {"student_id": "202104965", "name": "Celia Tejedor Pérez", "email": "202104965@alu.comillas.edu"}], "task": "<ul><li>Present and interpret the White test for heteroskedasticity.<\/li><li>Compare classical and White robust standard errors, t-statistics and p-values.<\/li><li>Identify whether inference changes for any coefficients.<\/li><li>Explain why the OLS coefficient estimates do not change when robust standard errors are used.<\/li><\/ul>", "time_limit": "5 minutes"}, "5": {"topic": "Non-Normality & Multicollinearity", "members": [{"student_id": "202206829", "name": "Iñigo Lage Aguilar", "email": "202206829@alu.comillas.edu"}, {"student_id": "202208708", "name": "Emilio José Ramírez Herráiz", "email": "202208708@alu.comillas.edu"}, {"student_id": "202201406", "name": "Carlos Ruiz-Labourdette Gallardo", "email": "202201406@alu.comillas.edu"}, {"student_id": "202203526", "name": "Irene Vinuesa Balmaseda", "email": "202203526@alu.comillas.edu"}], "task": "<ul><li>Present and interpret skewness, kurtosis and the Jarque-Bera test.<\/li><li>Present and interpret the VIFs for the continuous regressors.<\/li><li>Assess whether non-normality or multicollinearity are concerns and explain their implications for the regression analysis.<\/li><\/ul>", "time_limit": "5 minutes"}}, "assignments": {"202203982": "1", "202211957": "1", "202201639": "1", "201902403": "1", "202206527": "1", "202214547": "2", "202205653": "2", "202205654": "2", "202630675": "2", "202203713": "2", "202204302": "3", "202204645": "3", "202202349": "3", "202202295": "3", "202638373": "3", "202207420": "4", "202201340": "4", "202213819": "4", "202104965": "4", "202206829": "5", "202208708": "5", "202201406": "5", "202203526": "5"}, "time_limit": "5 minutes"}};
+
+
+// ============================================================
+// GLOBAL STATE
+// ============================================================
+
+let pyodide = null;
+let pythonReady = false;
+
+const questionState = {};
+const savedExports = {};
+const uploadedFiles = new Set();
+
+
+// ============================================================
+// ELEMENTS
+// ============================================================
+
+const courseName =
+    document.getElementById("courseName");
+
+const practiceTitle =
+    document.getElementById("practiceTitle");
+
+const practiceSubtitle =
+    document.getElementById("practiceSubtitle");
+
+const pythonStatus =
+    document.getElementById("pythonStatus");
+
+const practiceInfoCard =
+    document.getElementById("practiceInfoCard");
+
+const practiceInstructions =
+    document.getElementById("practiceInstructions");
+
+const uploadCard =
+    document.getElementById("uploadCard");
+
+const dataFiles =
+    document.getElementById("dataFiles");
+
+const uploadStatus =
+    document.getElementById("uploadStatus");
+
+const questionsContainer =
+    document.getElementById("questionsContainer");
+
+const overallScore =
+    document.getElementById("overallScore");
+
+const scoreNote =
+    document.getElementById("scoreNote");
+
+const submitButton =
+    document.getElementById("submitButton");
+
+const submitStatus =
+    document.getElementById("submitStatus");
+
+const presentationCard =
+    document.getElementById("presentationCard");
+
+const presentationContent =
+    document.getElementById("presentationContent");
+
+
+// ============================================================
+// HELPERS
+// ============================================================
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+
+// ============================================================
+// HEADER
+// ============================================================
+
+function buildHeader() {
+
+    courseName.textContent =
+        PRACTICE.course;
+
+    practiceTitle.textContent =
+        PRACTICE.title;
+
+    if (PRACTICE.subtitle) {
+
+        practiceSubtitle.textContent =
+            PRACTICE.subtitle;
+
+    } else {
+
+        practiceSubtitle.style.display =
+            "none";
+    }
+
+    if (PRACTICE.instructions) {
+
+        practiceInfoCard.style.display =
+            "block";
+
+        practiceInstructions.innerHTML =
+            PRACTICE.instructions;
+    }
+
+    if (PRACTICE.allow_file_upload) {
+
+        uploadCard.style.display =
+            "block";
+    }
+}
+
+
+// ============================================================
+// QUESTIONS
+// ============================================================
+
+function buildQuestions() {
+
+    questionsContainer.innerHTML = "";
+
+    PRACTICE.questions.forEach(
+        (question,index) => {
+
+            questionState[question.id] = {
+                checked: false,
+                score: 0,
+                maxScore: question.max_points,
+                tests: null,
+                code: null
+            };
+
+            const card =
+                document.createElement("section");
+
+            card.className =
+                "question-card";
+
+            const label =
+                document.createElement("div");
+
+            label.className =
+                "section-label";
+
+            label.textContent =
+                `Question ${index+1}`;
+
+            const title =
+                document.createElement("h2");
+
+            title.className =
+                "question-title";
+
+            title.textContent =
+                question.title;
+
+            const instructions =
+                document.createElement("div");
+
+            instructions.className =
+                "instructions";
+
+            instructions.innerHTML =
+                question.instructions;
+
+            const editorLabel =
+                document.createElement("label");
+
+            editorLabel.className =
+                "editor-label";
+
+            editorLabel.textContent =
+                "Your Python code";
+
+            const editor =
+                document.createElement("textarea");
+
+            editor.className =
+                "code-editor";
+
+            editor.id =
+                `editor-${question.id}`;
+
+            editor.value =
+                question.starter_code;
+
+            editor.spellcheck =
+                false;
+
+            const buttonRow =
+                document.createElement("div");
+
+            buttonRow.className =
+                "button-row";
+
+            const runButton =
+                document.createElement("button");
+
+            runButton.className =
+                "run-button";
+
+            runButton.id =
+                `run-${question.id}`;
+
+            runButton.textContent =
+                "Run Code";
+
+            runButton.disabled =
+                true;
+
+            const checkButton =
+                document.createElement("button");
+
+            checkButton.className =
+                "check-button";
+
+            checkButton.id =
+                `check-${question.id}`;
+
+            checkButton.textContent =
+                "Check Answer";
+
+            checkButton.disabled =
+                true;
+
+            buttonRow.appendChild(runButton);
+            buttonRow.appendChild(checkButton);
+
+            const outputContainer =
+                document.createElement("div");
+
+            outputContainer.className =
+                "output-container";
+
+            const outputTitle =
+                document.createElement("div");
+
+            outputTitle.className =
+                "output-title";
+
+            outputTitle.textContent =
+                "Output";
+
+            const output =
+                document.createElement("pre");
+
+            output.className =
+                "output-box";
+
+            output.id =
+                `output-${question.id}`;
+
+            output.textContent =
+                "Python is loading...";
+
+            outputContainer.appendChild(
+                outputTitle
+            );
+
+            outputContainer.appendChild(
+                output
+            );
+
+            const assessment =
+                document.createElement("div");
+
+            assessment.className =
+                "assessment";
+
+            assessment.id =
+                `assessment-${question.id}`;
+
+            assessment.innerHTML = `
+                <div class="assessment-title">
+                    Assessment
+                </div>
+                <div class="not-checked">
+                    Answer not checked yet.
+                </div>
+            `;
+
+            card.appendChild(label);
+            card.appendChild(title);
+            card.appendChild(instructions);
+            card.appendChild(editorLabel);
+            card.appendChild(editor);
+            card.appendChild(buttonRow);
+            card.appendChild(outputContainer);
+            card.appendChild(assessment);
+
+            questionsContainer.appendChild(
+                card
+            );
+
+            runButton.addEventListener(
+                "click",
+                () => runQuestion(question)
+            );
+
+            checkButton.addEventListener(
+                "click",
+                () => checkQuestion(question)
+            );
+        }
+    );
+
+    updateOverallScore();
+}
+
+
+// ============================================================
+// PYTHON
+// ============================================================
+
+async function initializePython() {
+
+    pythonStatus.textContent =
+        "Loading Python environment...";
+
+    try {
+
+        pyodide =
+            await loadPyodide();
+
+        await pyodide.loadPackage(
+            ["numpy","pandas","scipy"]
+        );
+
+        pythonReady = true;
+
+        pythonStatus.textContent =
+            "✓ Python ready";
+
+        pythonStatus.classList.add(
+            "python-ready"
+        );
+
+        PRACTICE.questions.forEach(
+            question => {
+
+                document.getElementById(
+                    `run-${question.id}`
+                ).disabled = false;
+
+                document.getElementById(
+                    `check-${question.id}`
+                ).disabled = false;
+
+                document.getElementById(
+                    `output-${question.id}`
+                ).textContent =
+                    "Python ready. You can run your code.";
+            }
+        );
+
+    } catch (error) {
+
+        pythonStatus.textContent =
+            "✗ Python failed to load";
+
+        PRACTICE.questions.forEach(
+            question => {
+
+                document.getElementById(
+                    `output-${question.id}`
+                ).textContent =
+                    "Could not initialize Python.\n\n"
+                    + error;
+            }
+        );
+    }
+}
+
+
+// ============================================================
+// FILE UPLOAD
+// ============================================================
+
+dataFiles.addEventListener(
+    "change",
+    async event => {
+
+        if (!pythonReady) {
+
+            uploadStatus.textContent =
+                "Python is still loading. "
+                + "Please try again in a moment.";
+
+            return;
+        }
+
+        const files =
+            Array.from(
+                event.target.files
+            );
+
+        if (files.length === 0) {
+            return;
+        }
+
+        try {
+
+            for (const file of files) {
+
+                if (
+                    !file.name
+                        .toLowerCase()
+                        .endsWith(".csv")
+                ) {
+                    throw new Error(
+                        `${file.name} is not a CSV file.`
+                    );
+                }
+
+                const buffer =
+                    await file.arrayBuffer();
+
+                const bytes =
+                    new Uint8Array(buffer);
+
+                try {
+                    pyodide.FS.unlink(
+                        file.name
+                    );
+                } catch (_) {
+                }
+
+                pyodide.FS.writeFile(
+                    file.name,
+                    bytes
+                );
+
+                uploadedFiles.add(
+                    file.name
+                );
+            }
+
+            const names =
+                Array.from(uploadedFiles)
+                    .sort();
+
+            uploadStatus.textContent =
+                `${names.length} CSV file`
+                + (names.length === 1 ? "" : "s")
+                + " available to Python:\n"
+                + names.join("\n");
+
+        } catch (error) {
+
+            uploadStatus.textContent =
+                "File upload failed:\n"
+                + error;
+        }
+
+        // Allows another selection without
+        // losing previously uploaded files.
+        event.target.value = "";
+    }
+);
+
+
+// ============================================================
+// RESET PYTHON NAMESPACE
+// ============================================================
+
+async function resetPythonNamespace() {
+
+    await pyodide.runPythonAsync(`
+
+protected_names = {
+    "__name__",
+    "__doc__",
+    "__package__",
+    "__loader__",
+    "__spec__",
+    "__annotations__",
+    "__builtins__"
+}
+
+for _name in list(globals().keys()):
+
+    if _name not in protected_names:
+
+        globals().pop(_name, None)
+
+`);
+}
+
+
+// ============================================================
+// PACKAGE RESTRICTIONS
+// ============================================================
+
+async function applyPackageRestrictions(
+    question
+) {
+
+    const blocked =
+        question.blocked_packages || [];
+
+    pyodide.globals.set(
+        "_blocked_packages_json",
+        JSON.stringify(blocked)
+    );
+
+    await pyodide.runPythonAsync(`
+
+import json as _json
+import builtins as _builtins
+
+_blocked_packages = set(
+    _json.loads(
+        _blocked_packages_json
+    )
+)
+
+_original_import = _builtins.__import__
+
+def _restricted_import(
+    name,
+    globals=None,
+    locals=None,
+    fromlist=(),
+    level=0
+):
+
+    root_name = name.split(".")[0]
+
+    if root_name in _blocked_packages:
+
+        raise ImportError(
+            f"The package '{root_name}' is not allowed "
+            "in this practice. Use the econometric formulas "
+            "covered in class."
+        )
+
+    return _original_import(
+        name,
+        globals,
+        locals,
+        fromlist,
+        level
+    )
+
+_builtins.__import__ = _restricted_import
+
+`);
+}
+
+
+// ============================================================
+// RESTORE NORMAL IMPORT BEHAVIOUR
+// ============================================================
+
+async function restoreNormalImports() {
+
+    await pyodide.runPythonAsync(`
+
+import builtins as _builtins
+
+if "_original_import" in globals():
+    _builtins.__import__ = _original_import
+
+`);
+}
+
+
+// ============================================================
+// RESTORE IMPORTED VARIABLES
+// ============================================================
+
+async function restoreQuestionImports(
+    question
+) {
+
+    const imports =
+        question.imports || [];
+
+    if (imports.length === 0) {
+        return;
+    }
+
+    const missing =
+        imports.filter(
+            name => !(name in savedExports)
+        );
+
+    if (missing.length > 0) {
+
+        throw new Error(
+            "Required output from a previous question "
+            + "is not available."
+        );
+    }
+
+    const payload = {};
+
+    imports.forEach(
+        name => {
+            payload[name] =
+                savedExports[name];
+        }
+    );
+
+    pyodide.globals.set(
+        "_import_payload_json",
+        JSON.stringify(payload)
+    );
+
+    await pyodide.runPythonAsync(`
+
+import json as _json
+import pickle as _pickle
+import base64 as _base64
+
+_import_payload = _json.loads(
+    _import_payload_json
+)
+
+for _import_name, _encoded_value in _import_payload.items():
+
+    globals()[_import_name] = _pickle.loads(
+        _base64.b64decode(
+            _encoded_value.encode("ascii")
+        )
+    )
+
+`);
+}
+
+
+// ============================================================
+// SAVE EXPORTS
+// ============================================================
+
+async function saveQuestionExports(
+    question
+) {
+
+    const exports =
+        question.exports || [];
+
+    if (exports.length === 0) {
+        return;
+    }
+
+    exports.forEach(
+        name => {
+            delete savedExports[name];
+        }
+    );
+
+    pyodide.globals.set(
+        "_export_names_json",
+        JSON.stringify(exports)
+    );
+
+    const result =
+        await pyodide.runPythonAsync(`
+
+import json as _json
+import pickle as _pickle
+import base64 as _base64
+
+_export_names = _json.loads(
+    _export_names_json
+)
+
+_export_payload = {}
+
+for _export_name in _export_names:
+
+    if _export_name in globals():
+
+        _export_payload[_export_name] = (
+            _base64.b64encode(
+                _pickle.dumps(
+                    globals()[_export_name]
+                )
+            ).decode("ascii")
+        )
+
+_json.dumps(_export_payload)
+
+`);
+
+    const exported =
+        JSON.parse(result);
+
+    Object.entries(exported).forEach(
+        ([name,value]) => {
+            savedExports[name] = value;
+        }
+    );
+}
+
+
+// ============================================================
+// COMPLETENESS GATE
+// ============================================================
+
+async function requiredOutputsExist(
+    question
+) {
+
+    const required =
+        question.required_outputs || [];
+
+    if (required.length === 0) {
+        return true;
+    }
+
+    pyodide.globals.set(
+        "_required_outputs_json",
+        JSON.stringify(required)
+    );
+
+    const complete =
+        await pyodide.runPythonAsync(`
+
+import json as _json
+
+_required_outputs = _json.loads(
+    _required_outputs_json
+)
+
+all(
+    _required_name in globals()
+    for _required_name in _required_outputs
+)
+
+`);
+
+    return Boolean(complete);
+}
+
+
+// ============================================================
+// RUN QUESTION
+// ============================================================
+
+async function runQuestion(question) {
+
+    if (!pythonReady) {
+        return;
+    }
+
+    const runButton =
+        document.getElementById(
+            `run-${question.id}`
+        );
+
+    const checkButton =
+        document.getElementById(
+            `check-${question.id}`
+        );
+
+    const editor =
+        document.getElementById(
+            `editor-${question.id}`
+        );
+
+    const output =
+        document.getElementById(
+            `output-${question.id}`
+        );
+
+    runButton.disabled = true;
+    checkButton.disabled = true;
+
+    runButton.textContent =
+        "Running...";
+
+    output.textContent =
+        "Running your code...";
+
+    try {
+
+        await resetPythonNamespace();
+
+        if (
+            question.setup_code &&
+            question.setup_code.trim() !== ""
+        ) {
+            await pyodide.runPythonAsync(
+                question.setup_code
+            );
+        }
+
+        await restoreQuestionImports(
+            question
+        );
+
+        await applyPackageRestrictions(
+            question
+        );
+
+        let capturedOutput = "";
+
+        pyodide.setStdout({
+            batched: text => {
+                capturedOutput +=
+                    text + "\n";
+            }
+        });
+
+        pyodide.setStderr({
+            batched: text => {
+                capturedOutput +=
+                    text + "\n";
+            }
+        });
+
+        await pyodide.runPythonAsync(
+            editor.value
+        );
+
+        if (
+            capturedOutput.trim() === ""
+        ) {
+
+            output.textContent =
+                "✓ Code executed successfully.\n"
+                + "No output was printed.";
+
+        } else {
+
+            output.textContent =
+                "✓ Code executed successfully.\n\n"
+                + capturedOutput;
+        }
+
+    } catch (error) {
+
+        output.textContent =
+            "✗ Python error:\n\n"
+            + error;
+
+    } finally {
+
+        try {
+            await restoreNormalImports();
+        } catch (_) {
+        }
+
+        runButton.disabled = false;
+        checkButton.disabled = false;
+
+        runButton.textContent =
+            "Run Code";
+    }
+}
+
+
+// ============================================================
+// CHECK QUESTION
+// ============================================================
+
+async function checkQuestion(question) {
+
+    if (!pythonReady) {
+        return;
+    }
+
+    const runButton =
+        document.getElementById(
+            `run-${question.id}`
+        );
+
+    const checkButton =
+        document.getElementById(
+            `check-${question.id}`
+        );
+
+    const editor =
+        document.getElementById(
+            `editor-${question.id}`
+        );
+
+    const output =
+        document.getElementById(
+            `output-${question.id}`
+        );
+
+    const assessment =
+        document.getElementById(
+            `assessment-${question.id}`
+        );
+
+    runButton.disabled = true;
+    checkButton.disabled = true;
+
+    checkButton.textContent =
+        "Checking...";
+
+    assessment.innerHTML = `
+        <div class="assessment-title">
+            Assessment
+        </div>
+        <div class="not-checked">
+            Checking your answer...
+        </div>
+    `;
+
+    try {
+
+        await resetPythonNamespace();
+
+        if (
+            question.setup_code &&
+            question.setup_code.trim() !== ""
+        ) {
+            await pyodide.runPythonAsync(
+                question.setup_code
+            );
+        }
+
+        await restoreQuestionImports(
+            question
+        );
+
+        await applyPackageRestrictions(
+            question
+        );
+
+        await pyodide.runPythonAsync(
+            editor.value
+        );
+
+        const complete =
+            await requiredOutputsExist(
+                question
+            );
+
+        if (!complete) {
+
+            questionState[
+                question.id
+            ] = {
+                checked: false,
+                score: 0,
+                maxScore:
+                    question.max_points,
+                tests: null,
+                code:
+                    editor.value
+            };
+
+            assessment.innerHTML = `
+                <div class="assessment-title">
+                    Assessment
+                </div>
+
+                <div class="test-fail">
+                    Analysis incomplete.
+                    Complete all required outputs before
+                    checking your results.
+                </div>
+            `;
+
+            output.textContent =
+                "✓ Code executed successfully, "
+                + "but the analysis is incomplete.";
+
+            return;
+        }
+
+        await saveQuestionExports(
+            question
+        );
+
+        const rawResults = [];
+
+        for (
+            const test of question.tests
+        ) {
+
+            let passed = false;
+
+            try {
+
+                await pyodide.runPythonAsync(
+                    test.code
+                );
+
+                passed =
+                    Boolean(
+                        pyodide.globals.get(
+                            "passed"
+                        )
+                    );
+
+            } catch (_) {
+
+                passed = false;
+            }
+
+            rawResults.push({
+                name: test.name,
+                group:
+                    test.group || test.name,
+                passed: passed,
+                points: test.points
+            });
+        }
+
+        // ----------------------------------------------------
+        // GROUP TESTS
+        //
+        // A visible block passes only when every hidden test
+        // in that block passes.
+        // ----------------------------------------------------
+
+        const grouped = new Map();
+
+        for (const result of rawResults) {
+
+            if (!grouped.has(result.group)) {
+
+                grouped.set(
+                    result.group,
+                    {
+                        name:
+                            result.group,
+                        passed:
+                            true,
+                        points:
+                            0,
+                        max_points:
+                            0
+                    }
+                );
+            }
+
+            const group =
+                grouped.get(
+                    result.group
+                );
+
+            group.passed =
+                group.passed
+                && result.passed;
+
+            group.max_points +=
+                result.points;
+
+            // Award points for each hidden test independently,
+            // while keeping only the aggregate group visible.
+            if (result.passed) {
+
+                group.points +=
+                    result.points;
+            }
+        }
+
+        const results =
+            Array.from(
+                grouped.values()
+            );
+
+        let score = 0;
+
+        results.forEach(
+            group => {
+
+                score +=
+                    group.points;
+            }
+        );
+
+        questionState[
+            question.id
+        ] = {
+            checked: true,
+            score: score,
+            maxScore:
+                question.max_points,
+            tests: results,
+            code:
+                editor.value
+        };
+
+        renderAssessment(
+            question,
+            results,
+            score
+        );
+
+        output.textContent =
+            "✓ Code executed and answer checked.";
+
+    } catch (error) {
+
+        questionState[
+            question.id
+        ] = {
+            checked: false,
+            score: 0,
+            maxScore:
+                question.max_points,
+            tests: null,
+            code:
+                editor.value
+        };
+
+        assessment.innerHTML = `
+            <div class="assessment-title">
+                Assessment
+            </div>
+
+            <div class="test-fail">
+                ✗ Your code could not be executed.
+            </div>
+
+            <pre
+                class="output-box"
+                style="margin-top:10px;"
+            >${escapeHtml(error)}</pre>
+        `;
+
+        output.textContent =
+            "✗ Python error. Review the assessment below.";
+
+    } finally {
+
+        try {
+            await restoreNormalImports();
+        } catch (_) {
+        }
+
+        runButton.disabled = false;
+        checkButton.disabled = false;
+
+        checkButton.textContent =
+            "Check Answer";
+
+        updateOverallScore();
+    }
+}
+
+
+// ============================================================
+// RENDER ASSESSMENT
+// ============================================================
+
+function renderAssessment(
+    question,
+    results,
+    score
+) {
+
+    const assessment =
+        document.getElementById(
+            `assessment-${question.id}`
+        );
+
+    let html = `
+        <div class="assessment-title">
+            Assessment
+        </div>
+    `;
+
+    results.forEach(
+        test => {
+
+            const symbol =
+                test.passed
+                ? "✓"
+                : "✗";
+
+            const statusClass =
+                test.passed
+                ? "test-pass"
+                : "test-fail";
+
+            html += `
+                <div class="test-row">
+
+                    <div
+                        class="test-description ${statusClass}">
+                        ${symbol}
+                        ${escapeHtml(test.name)}
+                    </div>
+
+                    <div class="test-points">
+                        ${test.points}
+                        /
+                        ${test.max_points}
+                    </div>
+
+                </div>
+            `;
+        }
+    );
+
+    html += `
+        <div class="question-score">
+            Question score:
+            ${score}
+            /
+            ${question.max_points}
+        </div>
+    `;
+
+    assessment.innerHTML =
+        html;
+}
+
+
+// ============================================================
+// SCORE
+// ============================================================
+
+function updateOverallScore() {
+
+    let score = 0;
+    let checkedQuestions = 0;
+
+    PRACTICE.questions.forEach(
+        question => {
+
+            const state =
+                questionState[
+                    question.id
+                ];
+
+            if (
+                state &&
+                state.checked
+            ) {
+                checkedQuestions += 1;
+                score += state.score;
+            }
+        }
+    );
+
+    overallScore.textContent =
+        `Score: ${score} / ${PRACTICE.max_points}`;
+
+    const allChecked =
+        checkedQuestions ===
+        PRACTICE.questions.length;
+
+    if (allChecked) {
+
+        submitButton.disabled =
+            false;
+
+        scoreNote.textContent =
+            "All questions have been checked. "
+            + "You may submit this practice attempt.";
+
+    } else {
+
+        submitButton.disabled =
+            true;
+
+        const remaining =
+            PRACTICE.questions.length
+            - checkedQuestions;
+
+        scoreNote.textContent =
+            `${remaining} question`
+            + (remaining === 1 ? "" : "s")
+            + " still need"
+            + (remaining === 1 ? "s" : "")
+            + " to be checked before submission.";
+    }
+}
+
+
+// ============================================================
+// STUDENT ID
+// ============================================================
+
+function validStudentId(studentId) {
+
+    return /^\d{6,12}$/.test(
+        studentId
+    );
+}
+
+
+// ============================================================
+// PRESENTATION GROUP
+// ============================================================
+
+function revealPresentationGroup(studentId) {
+
+    if (!PRACTICE.presentation) {
+        return;
+    }
+
+    const presentation =
+        PRACTICE.presentation;
+
+    const assignments =
+        presentation.assignments || {};
+
+    const groups =
+        presentation.groups || {};
+
+    const groupId =
+        assignments[String(studentId)];
+
+    if (!groupId) {
+
+        presentationCard.style.display =
+            "block";
+
+        presentationContent.innerHTML = `
+            <div class="test-fail">
+                Your practice was submitted successfully,
+                but no presentation group was found for
+                Student ID ${escapeHtml(studentId)}.
+                Please contact your instructor.
+            </div>
+        `;
+
+        presentationCard.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+        return;
+    }
+
+    const group =
+        groups[String(groupId)]
+        || groups[groupId];
+
+    if (!group) {
+        return;
+    }
+
+    const members =
+        group.members || [];
+
+    let membersHtml = "";
+
+    members.forEach(member => {
+
+        const memberId =
+            String(
+                member.student_id
+                ?? member.id
+                ?? ""
+            );
+
+        const memberName =
+            member.name
+            ?? member.full_name
+            ?? "";
+
+        const email =
+            member.email
+            || (
+                memberId
+                ? `${memberId}@alu.comillas.edu`
+                : ""
+            );
+
+        membersHtml += `
+            <li>
+                <strong>${escapeHtml(memberName)}</strong>
+                ${email
+                    ? ` — ${escapeHtml(email)}`
+                    : ""}
+            </li>
+        `;
+    });
+
+    const topic =
+        group.topic || "";
+
+    const task =
+        group.task
+        || group.requirements
+        || group.instructions
+        || "";
+
+    const timeLimit =
+        group.time_limit
+        || presentation.time_limit
+        || "5 minutes";
+
+    presentationContent.innerHTML = `
+        <p>
+            Your individual practice has been submitted successfully.
+            You will now prepare a short group presentation based on
+            the analysis you have just completed.
+        </p>
+
+        <h2 class="presentation-topic">
+            Group ${escapeHtml(groupId)}
+            ${topic ? ` · ${escapeHtml(topic)}` : ""}
+        </h2>
+
+        <p>
+            <strong>Team members</strong>
+        </p>
+
+        <ul class="presentation-members">
+            ${membersHtml}
+        </ul>
+
+        ${task ? `
+            <div class="presentation-task">
+                <strong>Your presentation must cover:</strong>
+                <div style="margin-top:8px;">
+                    ${task}
+                </div>
+            </div>
+        ` : ""}
+
+        <div class="presentation-time">
+            Maximum presentation time: ${escapeHtml(timeLimit)}.
+            You must respect the time limit. Presentations
+            exceeding the time limit will be cut off.
+        </div>
+    `;
+
+    presentationCard.style.display =
+        "block";
+
+    presentationCard.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+
+// ============================================================
+// SUBMISSION
+// ============================================================
+
+function buildSubmission() {
+
+    const studentId =
+        document
+            .getElementById(
+                "studentId"
+            )
+            .value
+            .trim();
+
+    const questions = {};
+
+    PRACTICE.questions.forEach(
+        question => {
+
+            const state =
+                questionState[
+                    question.id
+                ];
+
+            questions[
+                question.id
+            ] = {
+                title:
+                    question.title,
+                score:
+                    state.score,
+                max_score:
+                    state.maxScore,
+                code:
+                    state.code,
+                tests:
+                    state.tests
+            };
+        }
+    );
+
+    let totalScore = 0;
+
+    Object.values(
+        questions
+    ).forEach(
+        question => {
+            totalScore +=
+                question.score;
+        }
+    );
+
+    return {
+        student_id:
+            studentId,
+        practice_id:
+            PRACTICE.practice_id,
+        practice:
+            PRACTICE.title,
+        score:
+            totalScore,
+        max_score:
+            PRACTICE.max_points,
+        questions:
+            questions
+    };
+}
+
+
+submitButton.addEventListener(
+    "click",
+    async () => {
+
+        submitStatus.textContent = "";
+        submitStatus.className =
+            "submit-status";
+
+        const studentId =
+            document
+                .getElementById(
+                    "studentId"
+                )
+                .value
+                .trim();
+
+        if (!studentId) {
+
+            submitStatus.textContent =
+                "✗ Please enter your Student ID.";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+        if (
+            !validStudentId(studentId)
+        ) {
+
+            submitStatus.textContent =
+                "✗ Please enter a valid Student ID "
+                + "(digits only).";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+        const allChecked =
+            PRACTICE.questions.every(
+                question =>
+                    questionState[
+                        question.id
+                    ].checked
+            );
+
+        if (!allChecked) {
+
+            submitStatus.textContent =
+                "✗ Check every question before submitting.";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+        if (
+            SUBMIT_URL.includes(
+                "PASTE_YOUR"
+            )
+        ) {
+
+            submitStatus.textContent =
+                "✗ Submission endpoint has not been configured.";
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+            return;
+        }
+
+        const payload =
+            buildSubmission();
+
+        submitButton.disabled =
+            true;
+
+        submitButton.textContent =
+            "Submitting...";
+
+        submitStatus.textContent =
+            "Submitting your practice attempt...";
+
+        try {
+
+            const response =
+                await fetch(
+                    SUBMIT_URL,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type":
+                                "text/plain;charset=utf-8"
+                        },
+                        body:
+                            JSON.stringify(
+                                payload
+                            )
+                    }
+                );
+
+            const result =
+                await response.json();
+
+            if (result.success) {
+
+                submitStatus.textContent =
+                    `✓ Attempt ${result.attempt} `
+                    + `submitted successfully. `
+                    + `Score: ${payload.score}`
+                    + `/${payload.max_score}.`;
+
+                submitStatus.classList.add(
+                    "submit-success"
+                );
+
+                revealPresentationGroup(
+                    studentId
+                );
+
+            } else {
+
+                submitStatus.textContent =
+                    "✗ Submission failed: "
+                    + result.error;
+
+                submitStatus.classList.add(
+                    "submit-error"
+                );
+            }
+
+        } catch (error) {
+
+            submitStatus.textContent =
+                "✗ Could not submit attempt: "
+                + error;
+
+            submitStatus.classList.add(
+                "submit-error"
+            );
+
+        } finally {
+
+            submitButton.disabled =
+                false;
+
+            submitButton.textContent =
+                "Submit Practice Attempt";
+        }
+    }
+);
+
+
+// ============================================================
+// MODE
+// ============================================================
+
+function applyPracticeMode() {
+
+    const studentCard =
+        document.getElementById(
+            "studentCard"
+        );
+
+    if (
+        PRACTICE.mode === "graded"
+    ) {
+
+        studentCard.style.display =
+            "block";
+
+        submitButton.style.display =
+            "inline-block";
+
+        return;
+    }
+
+    studentCard.style.display =
+        "none";
+
+    submitButton.style.display =
+        "none";
+
+    presentationCard.style.display =
+        "none";
+
+    scoreNote.innerHTML = `
+        <strong>Review version.</strong>
+        You may run and check your answers as many times
+        as you wish.
+        Results from this version are not submitted
+        or recorded.
+    `;
+
+    const reviewNotice =
+        document.createElement("div");
+
+    reviewNotice.style.marginTop =
+        "12px";
+
+    reviewNotice.style.padding =
+        "7px 10px";
+
+    reviewNotice.style.background =
+        "rgba(255,255,255,0.15)";
+
+    reviewNotice.style.borderRadius =
+        "5px";
+
+    reviewNotice.style.fontSize =
+        "13px";
+
+    reviewNotice.style.display =
+        "inline-block";
+
+    reviewNotice.innerHTML =
+        "<strong>Review version</strong> · "
+        + "Submissions are disabled";
+
+    document
+        .querySelector(
+            ".header-inner"
+        )
+        .appendChild(
+            reviewNotice
+        );
+}
+
+
+// ============================================================
+// START
+// ============================================================
+
+buildHeader();
+buildQuestions();
+applyPracticeMode();
+initializePython();
+
+</script>
+
+</body>
+
+</html>
